@@ -35,7 +35,7 @@ struct DynamicStuff {
 };
 
 struct AllTokenDynamicStuff {
-    AllTokenDynamicEvaluator* evaluator;
+    AllTokenDynamicEvaluator<string>* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
@@ -64,9 +64,12 @@ class TokenCategorizer {
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string,
-            AllTokenDynamicEvaluator*>& type2all_token_dymamic,
+            AllTokenDynamicEvaluator<string>*>& type2all_token_dymamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens);
+
+    // Nuke everything.  Deletes all objects (ie, the Evaluators).
+    void Clear();
 
     // Token -> CategoryIDs, per token.
     //
@@ -87,11 +90,14 @@ class TokenCategorizer {
 
   private:
     // Init() helpers.
+
     IndexExpressionResult IndexPrecomputeExpression(
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
         const Expression& expr, ExpressionID expr_id);
+
     IndexExpressionResult IndexDynamicExpression(
         const Expression& expr, ExpressionID expr_id);
+
     IndexExpressionResult IndexAllTokenDynamicExpression(
         const Expression& expr, ExpressionID expr_id);
 

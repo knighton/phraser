@@ -8,6 +8,8 @@
 
 class DynamicEvaluator {
   public:
+    virtual ~DynamicEvaluator() = 0;
+
     // Is the expression possible?
     //
     // Reasons for false:

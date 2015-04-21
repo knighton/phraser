@@ -11,6 +11,8 @@ using std::vector;
 
 class PrecomputeEvaluator {
   public:
+    virtual ~PrecomputeEvaluator() = 0;
+
     // Expression -> list of tokens that it matches.
     //
     // Returns false on invalid Expression.

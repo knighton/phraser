@@ -6,9 +6,21 @@
 
 #include "cc/base/token_categorization/expression.h"
 
+using std::string;
+using std::vector;
+
 template <typename TokenDescription>
 class AllTokenDynamicEvaluator {
   public:
+    virtual ~AllTokenDynamicEvaluator() = 0;
+
+    // Is the expression possible?
+    //
+    // Reasons for false:
+    // * Its type does not match my type
+    // * It has a filter dimension I have never heard of
+    virtual bool IsExpressionPossible(const Expression& expr) const = 0;
+
     // Tokens -> list of corresponding opaque objects (eg. tags, maps of
     // features, etc.).
     virtual void DescribeTokens(

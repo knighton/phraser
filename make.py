@@ -15,6 +15,7 @@ BASE_FLAGS = """
     -std=c++11
     -fcolor-diagnostics
     -O3
+    -ferror-limit=5
 """.split()
 
 
@@ -33,6 +34,7 @@ DISABLE_WARN_FLAGS = """
     -Wno-exit-time-destructors
     -Wno-global-constructors
     -Wno-padded
+    -Wno-weak-vtables
 """.split()
 
 
@@ -47,6 +49,7 @@ def find_cc_files(root_dir):
 
 
 def main():
+    print '\n' * 10
     flags = BASE_FLAGS + WARN_FLAGS + DISABLE_WARN_FLAGS
     ff = find_cc_files('.')
     os.system('mkdir -p %s' % os.path.dirname(TARGET))

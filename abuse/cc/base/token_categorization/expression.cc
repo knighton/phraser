@@ -4,15 +4,13 @@
 
 void Expression::Init(
         const string& type, const vector<string>& args,
-        const unordered_map<string, vector<string>>& dim2filters) {
+        const unordered_map<string, vector<string>>& dimension2filters) {
     type_ = type;
     args_ = args;
-    dim2filters_ = dim2filters;
+    dimension2filters_ = dimension2filters;
 }
 
 void Expression::ToCanonicalString(string* s) const {
-    XXX make this match (...|...) etc. and upper case (PDT) (DT) (NN) and so on?
-
     s->clear();
 
     *s += type_;
@@ -24,15 +22,15 @@ void Expression::ToCanonicalString(string* s) const {
     }
 
     vector<string> dims;
-    for (auto& it : dim2filters) {
-        dims.emplace_back(it->first);
+    for (auto& it : dimension2filters_) {
+        dims.emplace_back(it.first);
     }
     sort(dims.begin(), dims.end());
 
     vector<string> v;
     for (auto& dim : dims) {
         v.clear();
-        for (auto& filter : dim2filters_.get(dim)->second) {
+        for (auto& filter : dimension2filters_.find(dim)->second) {
             v.emplace_back(filter);
         }
         sort(v.begin(), v.end());

@@ -1,42 +1,28 @@
 #include "token_categorizer.h"
 
+#include <algorithm>
+#include <unordered_set>
+
+using std::unordered_set;
+
 TokenCategorizer::TokenCategorizer() {
 }
 
 TokenCategorizer::~TokenCategorizer() {
-    for (auto& it : precompute_type2stuff_) {
-        auto& stuff = it->second;
-        if (stuff.evaluator) {
-            delete stuff.evaluator;
-        }
-    }
-
-    for (auto& it : dynamic_type2stuff_) {
-        auto& stuff = it->second;
-        if (stuff.evaluator) {
-            delete stuff.evaluator;
-        }
-    }
-
-    for (auto& it : all_token_dynamic_type2stuff_) {
-        auto& stuff = it->second;
-        if (stuff.evaluator) {
-            delete stuff.evaluator;
-        }
-    }
+    Clear();
 }
 
 IndexExpressionResult TokenCategorizer::IndexPrecomputeExpression(
-        const unordered_map<,string, PrecomputeEvaluator*>& type2precompute,
+        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
         const Expression& expr, ExpressionID expr_id) {
-    auto& it = type2precompute.find(expr.type());
+    auto it = type2precompute.find(expr.type());
     if (it == type2precompute.end()) {
         return IER_NOT_MY_TYPE;
     }
 
-    auto& evaluator = *(it->second);
+    auto* evaluator = it->second;
     vector<string> tokens;
-    if (!evaluator.Evaluate(expr, &tokens)) {
+    if (!evaluator->GetExpressionMatches(expr, &tokens)) {
         return IER_INVALID;
     }
 
@@ -44,19 +30,21 @@ IndexExpressionResult TokenCategorizer::IndexPrecomputeExpression(
     for (auto& token : tokens) {
         token2catids_[token].push_back(expr_id);
     }
+
+    precompute_type2stuff_[expr.type()].expr_ids.emplace_back(expr_id);
     return IER_SUCCESS;
 }
 
 IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
-        const Expression expr, ExpressionID expr_id) {
-    auto& it = dynamic_type2stuff_.find(expr.type());
+        const Expression& expr, ExpressionID expr_id) {
+    auto it = dynamic_type2stuff_.find(expr.type());
     if (it == dynamic_type2stuff_.end()) {
         return IER_NOT_MY_TYPE;
     }
 
     auto& stuff = it->second;
     if (!stuff.evaluator->IsExpressionPossible(expr)) {
-        return IER_INVALID_EXPR;
+        return IER_INVALID;
     }
 
     stuff.expr_ids.push_back(expr_id);
@@ -64,38 +52,75 @@ IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
 }
 
 IndexExpressionResult TokenCategorizer::IndexAllTokenDynamicExpression(
-        const Expression expr, ExpressionID expr_id) {
-    auto& it = all_token_dynamic_type2stuff_.find(expr.type());
+        const Expression& expr, ExpressionID expr_id) {
+    auto it = all_token_dynamic_type2stuff_.find(expr.type());
     if (it == all_token_dynamic_type2stuff_.end()) {
         return IER_NOT_MY_TYPE;
     }
 
     auto& stuff = it->second;
-    if (!stuff->evaluator.IsExpressionPossible(expr)) {
-        return IER_INVALID_EXPR;
+    if (!stuff.evaluator->IsExpressionPossible(expr)) {
+        return IER_INVALID;
     }
 
     stuff.expr_ids.push_back(expr_id);
     return IER_SUCCESS;
 }
 
+void TokenCategorizer::Clear() {
+    expressions_.clear();
+    raw_tokens_.clear();
+    exprstr2catid_.clear();
+    token2catids_.clear();
+
+    for (auto& it : precompute_type2stuff_) {
+        auto& stuff = it.second;
+        if (stuff.evaluator) {
+            delete stuff.evaluator;
+        }
+    }
+
+    for (auto& it : dynamic_type2stuff_) {
+        auto& stuff = it.second;
+        if (stuff.evaluator) {
+            delete stuff.evaluator;
+        }
+    }
+
+    for (auto& it : all_token_dynamic_type2stuff_) {
+        auto& stuff = it.second;
+        if (stuff.evaluator) {
+            delete stuff.evaluator;
+        }
+    }
+
+    precompute_type2stuff_.clear();
+    dynamic_type2stuff_.clear();
+    all_token_dynamic_type2stuff_.clear();
+}
+
 bool TokenCategorizer::Init(
-        const unordered_map<string, ClosedClassEvaluator*>& type2precompute,
-        const unordered_map<string, OpenClassEvaluator*>& type2dynamic,
-        const unordered_map<string, AllTokenDynamicEvaluator*>&
+        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
+        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
+        const unordered_map<string, AllTokenDynamicEvaluator<string>*>&
             type2all_token_dynamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
-    expression_.clear();
-    raw_tokens_.clear();
+    Clear();
 
-    dynamic_type2stuff_ = type2dynamic;
-    all_token_dynamic_type2stuff_ = type2all_token_dynamic;
+    // Save the precompute expressions for future reference (but they are not
+    // used in CategorizeTokens() because they are precomputed).
+    for (auto& it : type2precompute) {
+        precompute_type2stuff_[it.first].evaluator = it.second;
+    }
 
     // Save the dynamic (open class) type evaluators, because we'll need them in
     // CategorizeTokens().
     for (auto& it : type2dynamic) {
-        dymamic_type2info_[it->first].evaluator = it->second;
+        dynamic_type2stuff_[it.first].evaluator = it.second;
+    }
+    for (auto& it : type2all_token_dynamic) {
+        all_token_dynamic_type2stuff_[it.first].evaluator = it.second;
     }
 
     // For each expression,
@@ -111,7 +136,7 @@ bool TokenCategorizer::Init(
 
         // Note the new expression.
         expressions_.emplace_back(expr);
-        ExpressionID expr_id = exprstr2catid_.size();
+        ExpressionID expr_id = static_cast<ExpressionID>(exprstr2catid_.size());
         exprstr2catid_[expr_str] = expr_id;
 
         // If it was recognized as a precompute type, get the list of tokens
@@ -168,13 +193,13 @@ void TokenCategorizer::CategorizeTokens(
     cat_id_lists->resize(tokens.size());
 
     // For each input token,
-    for (auto& i = 0u; i < tokens.size(); ++i) {
+    for (auto i = 0u; i < tokens.size(); ++i) {
         auto& token = tokens[i];
         auto& cat_ids = (*cat_id_lists)[i];
 
         // First, check our precomputed string -> CategoryID lookup table.
         {
-            auto& it = token2catids_.find(token);
+            auto it = token2catids_.find(token);
             if (it != token2catids_.end()) {
                 cat_ids = it->second;
             }
@@ -182,7 +207,7 @@ void TokenCategorizer::CategorizeTokens(
 
         // Then, run the open class types (like regex) against the token.
         for (auto& it : dynamic_type2stuff_) {
-            auto& stuff = it->second;
+            auto& stuff = it.second;
 
             // Cheap check first to rule things out.
             if (!stuff.evaluator->MightMatch(token)) {
@@ -202,7 +227,7 @@ void TokenCategorizer::CategorizeTokens(
     // Finally, run the expression evaluators that require all tokens at once
     // (like tagging).
     for (auto& it : all_token_dynamic_type2stuff_) {
-        auto& stuff = it->second;
+        auto& stuff = it.second;
 
         // No Expressions that require that type?  Skip it.
         if (!stuff.expr_ids.size()) {
@@ -210,16 +235,16 @@ void TokenCategorizer::CategorizeTokens(
         }
 
         // Classify each token.
-        vector<string> clf_results;
-        stuff.evaluator->ClassifyTokens(tokens, &clf_results);
+        vector<string> descs;
+        stuff.evaluator->DescribeTokens(tokens, &descs);
 
         // Evaluate the Expressions against that.  Append the IDs of the ones
         // that match.
-        for (auto i = 0u; i < clf_results.size(); ++i) {
-            auto& clf_result = clf_results[i];
+        for (auto i = 0u; i < descs.size(); ++i) {
+            auto& description = descs[i];
             for (auto& expr_id : stuff.expr_ids) {
                 auto& expr = expressions_[expr_id];
-                if (expr.IsMatch(clf_result)) {
+                if (stuff.evaluator->IsMatch(expr, tokens[i], description)) {
                     (*cat_id_lists)[i].emplace_back(expr_id);
                 }
             }
@@ -230,7 +255,7 @@ void TokenCategorizer::CategorizeTokens(
 bool TokenCategorizer::GetExpressionID(
         const string& expr_canonical_string, ExpressionID* expr_id) const {
     string s;
-    auto& it = exprstr2catid_.find(expr_canonical_string);
+    auto it = exprstr2catid_.find(expr_canonical_string);
     if (it == exprstr2catid_.end()) {
         return false;
     }

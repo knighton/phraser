@@ -1,10 +1,10 @@
 #ifndef CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 #define CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 
+#include "cc/base/token_categorization/all_token_dynamic_evaluator.h"
 #include "cc/base/token_categorization/expression.h"
-#include "cc/base/token_categorization/open_class_type_evaluator.h"
-#include "cc/base/token_categorization/open_class_type_all_token_evaluator.h"
-#include "cc/base/token_categorization/closed_class_type_evaluator.h"
+#include "cc/base/token_categorization/dynamic_evaluator.h"
+#include "cc/base/token_categorization/precompute_evaluator.h"
 
 #include <string>
 #include <vector>
@@ -24,31 +24,53 @@ using std::unordered_map;
 typedef uint32_t CategoryID;
 typedef CategoryID ExpressionID;
 
-struct OpenClassTypeInfo {
-    OpenClassTypeEvaluator evaluator;
+struct PrecomputeStuff {
+    PrecomputeEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
-struct OpenClassTypeAllTokenInfo {
-    OpenClassTypeAllTokenEvaluator evaluator;
+struct DynamicStuff {
+    DynamicEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
+struct AllTokenDynamicStuff {
+    AllTokenDynamicEvaluator* evaluator;
+    vector<ExpressionID> expr_ids;
+};
+
+enum IndexExpressionResult {
+    IER_NOT_MY_TYPE,
+    IER_INVALID,
+    IER_SUCCESS,
+};
+
+// Holds knowledge of how to detemrine which Expressions match a token.
+//
+// Converts tokens to lists of CategoryIDs (which are the ExpressionIDs + the
+// raw token IDs).
 class TokenCategorizer {
   public:
+    TokenCategorizer();
+    ~TokenCategorizer();
+
     // Construct indexes for translating tokens to CategoryIDs.
+    //
+    // Takes ownership of the pointers.
     //
     // Returns false on failure:
     // * Invalid Expression encountered
     bool Init(
-        const unordered_map<string, ClosedClassTypeEvaluator*>& type2closed,
-        const unordered_map<string, OpenClassTypeEvaluator*>& type2open,
-        const unordered_map<
-                string, OpenClassTypeAllTokenEvaluator*>& type2openvector,
+        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
+        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
+        const unordered_map<string,
+            AllTokenDynamicEvaluator*>& type2all_token_dymamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens);
 
     // Token -> CategoryIDs, per token.
+    //
+    // If called before Init(), the caller will get empty vectors.
     void CategorizeTokens(const vector<string>& tokens,
                           vector<vector<CategoryID>>* cat_id_lists) const;
 
@@ -64,6 +86,15 @@ class TokenCategorizer {
     void GetPrettyCategory(CategoryID cat_id, string* pretty) const;
 
   private:
+    // Init() helpers.
+    IndexExpressionResult IndexPrecomputeExpression(
+        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
+        const Expression& expr, ExpressionID expr_id);
+    IndexExpressionResult IndexDynamicExpression(
+        const Expression& expr, ExpressionID expr_id);
+    IndexExpressionResult IndexAllTokenDynamicExpression(
+        const Expression& expr, ExpressionID expr_id);
+
     // All expressions in the index.
     //
     // Expression IDs correspond to these.
@@ -80,11 +111,17 @@ class TokenCategorizer {
     // Token -> precomputed Category IDs.
     unordered_map<string, vector<CategoryID>> token2catids_;
 
-    // Type -> OpenClassTypeEvaluator.
-    unordered_map<string, OpenClassTypeInfo> open_type2info_;
+    // Type -> PrecomputeEvaluator and Expression list.
+    //
+    // Not used during CategorizeTokens(), as the results of the Expressions
+    // are precomputed.
+    unordered_map<string, PrecomputeStuff> precompute_type2stuff_;
 
-    // Type -> OpenClassTypeAllTokenEvaluator.
-    unordered_map<string, OpenClassTypeAllTokenInfo> open_all_token_type2info_;
+    // Type -> DynamicEvaluator and Expression list.
+    unordered_map<string, DynamicStuff> dynamic_type2stuff_;
+
+    // Type -> AllTokenDynamicEvaluator and Expression list.
+    unordered_map<string, AllTokenDynamicStuff> all_token_dynamic_type2stuff_;
 };
 
 #endif // CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_

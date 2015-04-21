@@ -1,13 +1,9 @@
-/*
- * $Id$
- */
-
 #include "crf.h"
+
 #include <cmath>
 #include <cstdio>
 #include <cfloat>
 #include <set>
-//#include "lbfgs.h"
 
 using namespace std;
 
@@ -1429,7 +1425,3 @@ int CRF_Model::perform_StochasticGradientDescent() {
 
     return 0;
 }
-
-/*
- * $Log$
- */

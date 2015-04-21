@@ -1,12 +1,9 @@
-/*
- * $Id$
- */
-
-#include "crf.h"
 #include <vector>
 #include <cmath>
 #include <cfloat>
 #include <map>
+
+#include "cc/third_party/lapos/crf.h"
 
 using namespace std;
 

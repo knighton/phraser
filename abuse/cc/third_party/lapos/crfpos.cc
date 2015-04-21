@@ -1,7 +1,3 @@
-/*
- * $Id$
- */
-
 #include "crfpos.h"
 
 #include <sys/time.h>
@@ -13,7 +9,7 @@
 #include <sstream>
 #include <cmath>
 #include <set>
-//#include <ext/hash_map>
+
 #include "crf.h"
 #include "common.h"
 
@@ -273,7 +269,3 @@ void crf_decode_nbest(Sentence& s, CRF_Model& m,
     for (size_t k = 0; k < s.size(); k++)
         s[k].prd = cs.vs[k].label;
 }
-
-/*
- * $Log$
- */

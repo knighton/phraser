@@ -1,9 +1,5 @@
-/*
- * $Id$
- */
-
-#ifndef __POSTAGGER_COMMON_H_
-#define __POSTAGGER_COMMON_H_
+#ifndef CC_THIRD_PARTY_LAPOS_COMMON_H_
+#define CC_THIRD_PARTY_LAPOS_COMMON_H_
 
 #include <string>
 #include <vector>
@@ -56,8 +52,4 @@ class ParenConverter {
     }
 };
 
-#endif
-
-/*
- * $Log$
- */
+#endif  // CC_THIRD_PARTY_LAPOS_COMMON_H_

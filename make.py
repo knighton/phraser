@@ -38,6 +38,18 @@ DISABLE_WARN_FLAGS = """
     -Wno-weak-vtables
 """.split()
 
+WARNINGS_TO_FIX_LATER = """
+    -Wno-shorten-64-to-32
+    -Wno-sign-conversion
+    -Wno-old-style-cast
+    -Wno-sign-compare
+    -Wno-float-equal
+
+    -Wno-unused-variable
+    -Wno-unused-parameter
+    -Wno-unused-function
+""".split()
+
 
 def find_cc_files(root_dir):
     ff = []
@@ -51,7 +63,7 @@ def find_cc_files(root_dir):
 
 def main():
     print '\n' * 10
-    flags = BASE_FLAGS + WARN_FLAGS + DISABLE_WARN_FLAGS
+    flags = BASE_FLAGS + WARN_FLAGS + DISABLE_WARN_FLAGS + WARNINGS_TO_FIX_LATER
     ff = find_cc_files('.')
     os.system('mkdir -p %s' % os.path.dirname(TARGET))
     t0 = time.time()

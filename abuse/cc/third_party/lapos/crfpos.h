@@ -1,12 +1,12 @@
-#ifndef LAPOS_CRFPOS_H_
-#define LAPOS_CRFPOS_H_
+#ifndef CC_THIRD_PARTY_LAPOS_CRFPOS_H_
+#define CC_THIRD_PARTY_LAPOS_CRFPOS_H_
 
 #include <map>
 #include <string>
 #include <vector>
 
-#include "common.h"
-#include "crf.h"
+#include "cc/third_party/lapos/common.h"
+#include "cc/third_party/lapos/crf.h"
 
 using std::map;
 using std::pair;
@@ -25,4 +25,4 @@ void crf_decode_forward_backward(Sentence& s, CRF_Model& m,
 void crf_decode_nbest(Sentence& s, CRF_Model& m,
                       vector<pair<double, vector<string>>>& nbest_seqs, int n);
 
-#endif  // LAPOS_CRFPOS_H_
+#endif  // CC_THIRD_PARTY_LAPOS_CRFPOS_H_

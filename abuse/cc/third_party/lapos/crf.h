@@ -1,9 +1,5 @@
-/*
- * $Id$
- */
-
-#ifndef __CRF_H_
-#define __CRF_H_
+#ifndef CC_THIRD_PARTY_LAPOS_CRF_H_
+#define CC_THIRD_PARTY_LAPOS_CRF_H_
 
 #include <string>
 #include <vector>
@@ -477,8 +473,4 @@ class CRF_Model {
     double backward_prob(const int len);
 };
 
-#endif
-
-/*
- * $Log$
- */
+#endif  // CC_THIRD_PARTY_LAPOS_CRF_H_

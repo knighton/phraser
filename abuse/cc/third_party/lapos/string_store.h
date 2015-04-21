@@ -1,5 +1,5 @@
-#ifndef LAPOS_STRING_STORE_H_
-#define LAPOS_STRING_STORE_H_
+#ifndef CC_THIRD_PARTY_LAPOS_STRING_STORE_H_
+#define CC_THIRD_PARTY_LAPOS_STRING_STORE_H_
 
 #include <vector>
 #include <string>
@@ -78,4 +78,4 @@ class StringStore {
 bool operator!=(const StringStore::const_iterator& x,
                 const StringStore::const_iterator& y);
 
-#endif  // LAPOS_STRING_STORE_H_
+#endif  // CC_THIRD_PARTY_LAPOS_STRING_STORE_H_

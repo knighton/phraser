@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+namespace lapos {
+
 // This is an implementation of the string hashing method described
 // in the following paper.
 //
@@ -77,5 +79,7 @@ class StringStore {
 
 bool operator!=(const StringStore::const_iterator& x,
                 const StringStore::const_iterator& y);
+
+}  // namespace lapos
 
 #endif  // CC_THIRD_PARTY_LAPOS_STRING_STORE_H_

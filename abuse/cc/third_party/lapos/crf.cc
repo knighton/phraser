@@ -7,6 +7,8 @@
 
 using namespace std;
 
+namespace lapos {
+
 int LOOKAHEAD_DEPTH = 3;
 
 bool USE_EDGE_TRIGRAMS = false;
@@ -1425,3 +1427,5 @@ int CRF_Model::perform_StochasticGradientDescent() {
 
     return 0;
 }
+
+}  // namespace lapos

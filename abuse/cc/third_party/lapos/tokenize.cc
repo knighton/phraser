@@ -10,6 +10,8 @@
 
 using namespace std;
 
+namespace lapos {
+
 static void replace(string& s, const string& s1, const string& s2,
                     const char skip = 0, bool left = true);
 
@@ -212,3 +214,5 @@ void tokenize(const string& s, vector<Token>& vt,
         begin = end;
     }
 }
+
+}  // namespace lapos

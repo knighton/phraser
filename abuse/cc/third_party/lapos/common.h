@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+namespace lapos {
+
 struct Token {
     //  std::string org_str;
     std::string str;
@@ -51,5 +53,7 @@ class ParenConverter {
         return i->second;
     }
 };
+
+}  // namespace lapos
 
 #endif  // CC_THIRD_PARTY_LAPOS_COMMON_H_

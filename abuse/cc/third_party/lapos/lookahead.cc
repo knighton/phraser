@@ -5,6 +5,8 @@
 
 #include "cc/third_party/lapos/crf.h"
 
+namespace lapos {
+
 using namespace std;
 
 const static int PERCEPTRON_NITER = 7;
@@ -371,3 +373,5 @@ void CRF_Model::decode_lookahead(CRF_Sequence& s0) {
         s0.vs[i].label = _label_bag.Str(vs[i]);
     }
 }
+
+}  // namespace lapos

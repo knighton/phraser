@@ -9,9 +9,13 @@
 using std::string;
 using std::vector;
 
+namespace lapos {
+
 void tokenize(const string& s1, vector<string>& lt);
 
 void tokenize(const string& s, vector<Token>& vt,
               const bool use_upenn_tokenizer);
+
+}  // namespace lapos
 
 #endif  // CC_THIRD_PARTY_LAPOS_TOKENIZE_H_

@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+namespace lapos {
+
 StringStore::StringStore(const int n) {
     Clear(n);
 }
@@ -195,3 +197,5 @@ bool operator!=(const StringStore::const_iterator& x,
         return false;
     return true;
 }
+
+}  // namespace lapos

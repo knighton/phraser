@@ -15,6 +15,8 @@
 
 #include <tr1/unordered_map>
 
+namespace lapos {
+
 extern bool USE_EDGE_TRIGRAMS;
 
 extern int LOOKAHEAD_DEPTH;
@@ -472,5 +474,7 @@ class CRF_Model {
     double forward_prob(const int len);
     double backward_prob(const int len);
 };
+
+}  // namespace lapos
 
 #endif  // CC_THIRD_PARTY_LAPOS_CRF_H_

@@ -36,14 +36,15 @@ class Evaluator {
     // * Its args are invalid (override AreArgsPossible()).
     bool IsExpressionPossible(const Expression& expr) const;
 
+  protected:
+    string type_;
+    unordered_map<string, unordered_set<string>> dimension2values_;
+
   private:
     // Check the expression's args.
     //
     // Called internally by IsExpressionPossible().
     virtual bool AreArgsPossible(const vector<string>& args) const = 0;
-
-    string type_;
-    unordered_map<string, unordered_set<string>> dimension2values_;
 };
 
 #endif  // CC_BASE_TOKEN_CATEGORIZATION_EVALUATOR_H_

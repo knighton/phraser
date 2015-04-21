@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 
+#include "cc/base/token_categorization/evaluator.h"
 #include "cc/base/token_categorization/expression.h"
 
 using std::string;
 using std::vector;
 
-class PrecomputeEvaluator {
+class PrecomputeEvaluator : Evaluator {
   public:
     virtual ~PrecomputeEvaluator() = 0;
 

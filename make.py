@@ -16,6 +16,7 @@ BASE_FLAGS = """
     -fcolor-diagnostics
     -O3
     -ferror-limit=5
+    -lboost_regex
 """.split()
 
 

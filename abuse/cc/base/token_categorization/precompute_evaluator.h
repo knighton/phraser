@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-class PrecomputeEvaluator : Evaluator {
+class PrecomputeEvaluator : OneTokenEvaluator {
   public:
     virtual ~PrecomputeEvaluator() = 0;
 

@@ -25,6 +25,9 @@ class Expression {
               const unordered_map<string, unordered_set<string>>&
                   dimension2values);
 
+    // Do we match against these token features?
+    bool AcceptsFeatures(const unordered_map<string, string>& dim2value) const;
+
     // Dump to a string, in a canonically ordered, human-readable form.
     void ToCanonicalString(string* s) const;
 

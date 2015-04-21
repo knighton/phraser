@@ -51,7 +51,7 @@ IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
     return IER_SUCCESS;
 }
 
-IndexExpressionResult TokenCategorizer::IndexAllTokenDynamicExpression(
+IndexExpressionResult TokenCategorizer::IndexAllTokenExpression(
         const Expression& expr, ExpressionID expr_id) {
     auto it = all_token_dynamic_type2stuff_.find(expr.type());
     if (it == all_token_dynamic_type2stuff_.end()) {
@@ -101,8 +101,8 @@ void TokenCategorizer::Clear() {
 
 bool TokenCategorizer::Init(
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
-        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
-        const unordered_map<string, AllTokenDynamicEvaluator<string>*>&
+        const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
+        const unordered_map<string, AllTokenEvaluator<string>*>&
             type2all_token_dynamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
@@ -162,7 +162,7 @@ bool TokenCategorizer::Init(
         }
 
         // Dymamic expressions that require all the tokens at once.
-        r = IndexAllTokenDynamicExpression(expr, expr_id);
+        r = IndexAllTokenExpression(expr, expr_id);
         if (r == IER_INVALID) {
             return false;
         } else if (r == IER_SUCCESS) {
@@ -214,10 +214,14 @@ void TokenCategorizer::CategorizeTokens(
                 continue;
             }
 
+            // Then, get features from the token.
+            unordered_map<string, string> features;
+            stuff.evaluator->FeaturesFromToken(token, &features);
+
             // If it might match, check each expression for a match.
             for (auto& expr_id : stuff.expr_ids) {
                 auto& expr = expressions_[expr_id];
-                if (stuff.evaluator->IsMatch(expr, token)) {
+                if (expr.AcceptsFeatures(features)) {
                     cat_ids.emplace_back(expr_id);
                 }
             }
@@ -235,16 +239,16 @@ void TokenCategorizer::CategorizeTokens(
         }
 
         // Classify each token.
-        vector<string> descs;
-        stuff.evaluator->DescribeTokens(tokens, &descs);
+        vector<string> analyses;
+        stuff.evaluator->AnalyzeTokens(tokens, &analyses);
 
         // Evaluate the Expressions against that.  Append the IDs of the ones
         // that match.
-        for (auto i = 0u; i < descs.size(); ++i) {
-            auto& description = descs[i];
+        for (auto i = 0u; i < analyses.size(); ++i) {
+            auto& extra = analyses[i];
             for (auto& expr_id : stuff.expr_ids) {
                 auto& expr = expressions_[expr_id];
-                if (stuff.evaluator->IsMatch(expr, tokens[i], description)) {
+                if (stuff.evaluator->IsMatch(expr, tokens[i], extra)) {
                     (*cat_id_lists)[i].emplace_back(expr_id);
                 }
             }

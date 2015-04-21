@@ -1,9 +1,9 @@
 #ifndef CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 #define CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 
-#include "cc/base/token_categorization/all_token_dynamic_evaluator.h"
+#include "cc/base/token_categorization/all_token_evaluator.h"
 #include "cc/base/token_categorization/expression.h"
-#include "cc/base/token_categorization/dynamic_evaluator.h"
+#include "cc/base/token_categorization/one_token_evaluator.h"
 #include "cc/base/token_categorization/precompute_evaluator.h"
 
 #include <string>
@@ -24,18 +24,18 @@ using std::unordered_map;
 typedef uint32_t CategoryID;
 typedef CategoryID ExpressionID;
 
-struct PrecomputeStuff {
+struct PrecomputeOneTokenStuff {
     PrecomputeEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
-struct DynamicStuff {
-    DynamicEvaluator* evaluator;
+struct DynamicOneTokenStuff {
+    OneTokenEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
-struct AllTokenDynamicStuff {
-    AllTokenDynamicEvaluator<string>* evaluator;
+struct DynamicAllTokenStuff {
+    AllTokenEvaluator<string>* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
@@ -62,9 +62,9 @@ class TokenCategorizer {
     // * Invalid Expression encountered
     bool Init(
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
-        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
+        const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
         const unordered_map<string,
-            AllTokenDynamicEvaluator<string>*>& type2all_token_dymamic,
+            AllTokenEvaluator<string>*>& type2all_token_dymamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens);
 
@@ -98,7 +98,7 @@ class TokenCategorizer {
     IndexExpressionResult IndexDynamicExpression(
         const Expression& expr, ExpressionID expr_id);
 
-    IndexExpressionResult IndexAllTokenDynamicExpression(
+    IndexExpressionResult IndexAllTokenExpression(
         const Expression& expr, ExpressionID expr_id);
 
     // All expressions in the index.
@@ -121,13 +121,13 @@ class TokenCategorizer {
     //
     // Not used during CategorizeTokens(), as the results of the Expressions
     // are precomputed.
-    unordered_map<string, PrecomputeStuff> precompute_type2stuff_;
+    unordered_map<string, PrecomputeOneTokenStuff> precompute_type2stuff_;
 
-    // Type -> DynamicEvaluator and Expression list.
-    unordered_map<string, DynamicStuff> dynamic_type2stuff_;
+    // Type -> OneTokenEvaluator and Expression list.
+    unordered_map<string, DynamicOneTokenStuff> dynamic_type2stuff_;
 
-    // Type -> AllTokenDynamicEvaluator and Expression list.
-    unordered_map<string, AllTokenDynamicStuff> all_token_dynamic_type2stuff_;
+    // Type -> AllTokenEvaluator and Expression list.
+    unordered_map<string, DynamicAllTokenStuff> all_token_dynamic_type2stuff_;
 };
 
 #endif // CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_

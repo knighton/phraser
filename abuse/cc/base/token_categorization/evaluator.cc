@@ -1,5 +1,8 @@
 #include "evaluator.h"
 
+Evaluator::~Evaluator() {
+}
+
 bool Evaluator::IsExpressionPossible(const Expression& expr) const {
     if (expr.type() != type_) {
         return false;
@@ -14,7 +17,7 @@ bool Evaluator::IsExpressionPossible(const Expression& expr) const {
         }
 
         auto& expr_values_set = it.second;
-        auto& evaluator_values_set = jt.second;
+        auto& evaluator_values_set = jt->second;
         for (auto& filter : expr_values_set) {
             if (evaluator_values_set.find(filter) ==
                     evaluator_values_set.end()) {

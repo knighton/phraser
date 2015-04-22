@@ -1,30 +1,19 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_EVALUATOR_H_
+#ifndef CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_
+#define CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_
 
 #include <string>
-#include <vector>
 #include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 #include "cc/base/token_categorization/expression.h"
 
 using std::string;
-using std::vector;
 using std::unordered_map;
-using std::unordered_set;
+using std::vector;
 
-// Expression Evaluator.  Tells if an Expression matches a token.
-//
-// Hierarchy of base classes:
-//
-// Evaluator (abstract)
-// * OneTokenEvaluator (abstract)
-//   * DynamicEvaluator
-//   * PrecomputeEvaluator
-// * AllTokenEvaluator
-class Evaluator {
+class ExpressionEvaluator {
   public:
-    virtual ~Evaluator();
+    virtual ~ExpressionEvaluator();
 
     // Is the expression possible?
     //
@@ -37,13 +26,13 @@ class Evaluator {
     bool IsExpressionPossible(const Expression& expr) const;
 
   protected:
-    string type_;
-    unordered_map<string, unordered_set<string>> dimension2values_;
-
     // Check the expression's args.
     //
     // Called internally by IsExpressionPossible().
     virtual bool AreArgsPossible(const vector<string>& args) const = 0;
+
+    string type_;
+    unordered_map<string, unordered_set<string>> dimension2values_;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_EVALUATOR_H_
+#endif  // CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_

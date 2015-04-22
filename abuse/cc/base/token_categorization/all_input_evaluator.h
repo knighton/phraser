@@ -1,20 +1,20 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_ALL_TOKEN_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_ALL_TOKEN_EVALUATOR_H_
+#ifndef CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_
+#define CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_
 
 #include <string>
 #include <vector>
 
-#include "cc/base/token_categorization/evaluator.h"
+#include "cc/base/token_categorization/expression_evaluator.h"
 #include "cc/base/token_categorization/expression.h"
 
 using std::string;
 using std::vector;
 
 template <typename TokenDescription>
-class AllTokenEvaluator : public Evaluator {
+class AllInputEvaluator : public ExpressionEvaluator {
   public:
     // Tokens -> list of corresponding opaque objects (eg. tags, maps of
-    // features, etc.).
+    // features, etc.) to be used by every Expression of this type.
     //
     // Returns false on error.
     virtual bool AnalyzeTokens(
@@ -29,4 +29,4 @@ class AllTokenEvaluator : public Evaluator {
         const TokenDescription& desc) const = 0;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_ALL_TOKEN_EVALUATOR_H_
+#endif  // CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_

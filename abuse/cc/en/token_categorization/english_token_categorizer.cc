@@ -26,16 +26,16 @@ static TagEvaluator* MakeTagEvaluator(const string& lapos_model_f) {
 bool EnglishTokenCategorizer::InitWithData(
         const string& lapos_model_f, const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
-    unordered_map<string, PrecomputeEvaluator*> type2precompute;
-    unordered_map<string, OneTokenEvaluator*> type2dynamic;
-    unordered_map<string, AllTokenEvaluator<string>*> type2all_token_dynamic;
+    unordered_map<string, PrecomputableEvaluator*> type2precomputable;
+    unordered_map<string, DynamicEvaluator*> type2dynamic;
+    unordered_map<string, AllInputEvaluator<string>*> type2all_input;
 
-    type2all_token_dynamic = {
+    type2all_input = {
         {"tag", MakeTagEvaluator(lapos_model_f)},
     };
 
     InitWithEvaluatorsAndData(
-        type2precompute, type2dynamic, type2all_token_dynamic, expressions,
+        type2precomputable, type2dynamic, type2all_input, expressions,
         raw_tokens);
     return true;
 }

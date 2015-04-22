@@ -1,9 +1,9 @@
-#include "evaluator.h"
+#include "expression_evaluator.h"
 
-Evaluator::~Evaluator() {
+ExpressionEvaluator::~ExpressionEvaluator() {
 }
 
-bool Evaluator::IsExpressionPossible(const Expression& expr) const {
+bool ExpressionEvaluator::IsExpressionPossible(const Expression& expr) const {
     if (expr.type() != type_) {
         return false;
     }

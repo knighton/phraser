@@ -12,8 +12,8 @@ TokenCategorizer::~TokenCategorizer() {
     Clear();
 }
 
-IndexExpressionResult TokenCategorizer::IndexPrecomputeExpression(
-        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
+IndexExpressionResult TokenCategorizer::IndexPrecomputableExpression(
+        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const Expression& expr, ExpressionID expr_id) {
     auto it = type2precompute.find(expr.type());
     if (it == type2precompute.end()) {
@@ -53,8 +53,8 @@ IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
 
 IndexExpressionResult TokenCategorizer::IndexAllTokenExpression(
         const Expression& expr, ExpressionID expr_id) {
-    auto it = all_token_dynamic_type2stuff_.find(expr.type());
-    if (it == all_token_dynamic_type2stuff_.end()) {
+    auto it = all_input_type2stuff_.find(expr.type());
+    if (it == all_input_type2stuff_.end()) {
         return IER_NOT_MY_TYPE;
     }
 
@@ -87,7 +87,7 @@ void TokenCategorizer::Clear() {
         }
     }
 
-    for (auto& it : all_token_dynamic_type2stuff_) {
+    for (auto& it : all_input_type2stuff_) {
         auto& stuff = it.second;
         if (stuff.evaluator) {
             delete stuff.evaluator;
@@ -96,14 +96,13 @@ void TokenCategorizer::Clear() {
 
     precompute_type2stuff_.clear();
     dynamic_type2stuff_.clear();
-    all_token_dynamic_type2stuff_.clear();
+    all_input_type2stuff_.clear();
 }
 
 bool TokenCategorizer::InitWithEvaluatorsAndData(
-        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
-        const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
-        const unordered_map<string, AllTokenEvaluator<string>*>&
-            type2all_token_dynamic,
+        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
+        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
+        const unordered_map<string, AllInputEvaluator<string>*>& type2all_input,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
     Clear();
@@ -119,8 +118,8 @@ bool TokenCategorizer::InitWithEvaluatorsAndData(
     for (auto& it : type2dynamic) {
         dynamic_type2stuff_[it.first].evaluator = it.second;
     }
-    for (auto& it : type2all_token_dynamic) {
-        all_token_dynamic_type2stuff_[it.first].evaluator = it.second;
+    for (auto& it : type2all_input) {
+        all_input_type2stuff_[it.first].evaluator = it.second;
     }
 
     // For each expression,
@@ -143,7 +142,7 @@ bool TokenCategorizer::InitWithEvaluatorsAndData(
         // that the Expression yields when evaluated and index them.
         //
         // Expressions can only be one type, so if we got a match, we're done.
-        auto r = IndexPrecomputeExpression(type2precompute, expr, expr_id);
+        auto r = IndexPrecomputableExpression(type2precompute, expr, expr_id);
         if (r == IER_INVALID) {
             return false;
         } else if (r == IER_SUCCESS) {
@@ -230,7 +229,7 @@ bool TokenCategorizer::CategorizeTokens(
 
     // Finally, run the expression evaluators that require all tokens at once
     // (like tagging).
-    for (auto& it : all_token_dynamic_type2stuff_) {
+    for (auto& it : all_input_type2stuff_) {
         auto& stuff = it.second;
 
         // No Expressions that require that type?  Skip it.

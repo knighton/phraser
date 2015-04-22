@@ -1,10 +1,10 @@
 #ifndef CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 #define CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
 
-#include "cc/base/token_categorization/all_token_evaluator.h"
+#include "cc/base/token_categorization/all_input_evaluator.h"
+#include "cc/base/token_categorization/dynamic_evaluator.h"
 #include "cc/base/token_categorization/expression.h"
-#include "cc/base/token_categorization/one_token_evaluator.h"
-#include "cc/base/token_categorization/precompute_evaluator.h"
+#include "cc/base/token_categorization/precomputable_evaluator.h"
 
 #include <string>
 #include <vector>
@@ -24,18 +24,18 @@ using std::unordered_map;
 typedef uint32_t CategoryID;
 typedef CategoryID ExpressionID;
 
-struct PrecomputeOneTokenStuff {
-    PrecomputeEvaluator* evaluator;
+struct PrecomputableStuff {
+    PrecomputableEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
-struct DynamicOneTokenStuff {
-    OneTokenEvaluator* evaluator;
+struct DynamicStuff {
+    DynamicEvaluator* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
-struct DynamicAllTokenStuff {
-    AllTokenEvaluator<string>* evaluator;
+struct AllInputStuff {
+    AllInputEvaluator<string>* evaluator;
     vector<ExpressionID> expr_ids;
 };
 
@@ -61,10 +61,10 @@ class TokenCategorizer {
     // Returns false on failure:
     // * Invalid Expression encountered
     bool InitWithEvaluatorsAndData(
-        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
-        const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
+        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
+        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string,
-            AllTokenEvaluator<string>*>& type2all_token_dymamic,
+            AllInputEvaluator<string>*>& type2all_token_dymamic,
         const vector<Expression>& expressions,
         const vector<string>& raw_tokens);
 
@@ -93,8 +93,8 @@ class TokenCategorizer {
   private:
     // Init() helpers.
 
-    IndexExpressionResult IndexPrecomputeExpression(
-        const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
+    IndexExpressionResult IndexPrecomputableExpression(
+        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const Expression& expr, ExpressionID expr_id);
 
     IndexExpressionResult IndexDynamicExpression(
@@ -119,17 +119,17 @@ class TokenCategorizer {
     // Token -> precomputed Category IDs.
     unordered_map<string, vector<CategoryID>> token2catids_;
 
-    // Type -> PrecomputeEvaluator and Expression list.
+    // Type -> PrecomputableEvaluator and Expression list.
     //
     // Not used during CategorizeTokens(), as the results of the Expressions
     // are precomputed.
-    unordered_map<string, PrecomputeOneTokenStuff> precompute_type2stuff_;
+    unordered_map<string, PrecomputableStuff> precompute_type2stuff_;
 
-    // Type -> OneTokenEvaluator and Expression list.
-    unordered_map<string, DynamicOneTokenStuff> dynamic_type2stuff_;
+    // Type -> DynamicEvaluator and Expression list.
+    unordered_map<string, DynamicStuff> dynamic_type2stuff_;
 
-    // Type -> AllTokenEvaluator and Expression list.
-    unordered_map<string, DynamicAllTokenStuff> all_token_dynamic_type2stuff_;
+    // Type -> AllInputEvaluator and Expression list.
+    unordered_map<string, AllInputStuff> all_input_type2stuff_;
 };
 
 #endif // CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_

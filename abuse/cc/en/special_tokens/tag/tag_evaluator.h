@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "cc/base/token_categorization/all_token_evaluator.h"
+#include "cc/base/token_categorization/all_input_evaluator.h"
 #include "cc/en/tagging/tagger.h"
 
 using std::string;
 using std::vector;
 
-class TagEvaluator : public AllTokenEvaluator<string> {
+class TagEvaluator : public AllInputEvaluator<string> {
   public:
     TagEvaluator();
     ~TagEvaluator();

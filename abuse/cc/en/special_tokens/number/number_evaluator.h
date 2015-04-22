@@ -3,11 +3,11 @@
 
 #include <boost/regex.hpp>
 
-#include "cc/base/token_categorization/one_token_evaluator.h"
+#include "cc/base/token_categorization/dynamic_evaluator.h"
 
 using boost::regex;
 
-class NumberEvaluator : public OneTokenEvaluator {
+class NumberEvaluator : public DynamicEvaluator {
   public:
     void Init();
 

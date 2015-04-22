@@ -1,6 +1,6 @@
 CC = clang++
 
-SRC_ROOT_DIR = abuse/
+SRC_ROOT_DIR = phraser/
 BUILD_DIR = build/
 
 FLAGS_BASE = \
@@ -40,4 +40,4 @@ FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 		$(FLAGS_WARN_DISABLE_LAPOS)
 
 all:
-	$(CC) `find -type f -name "*.cc"` -o $(BUILD_DIR)/abuse $(FLAGS)
+	$(CC) `find -type f -name "*.cc"` -o $(BUILD_DIR)/phraser $(FLAGS)

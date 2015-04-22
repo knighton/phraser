@@ -9,7 +9,7 @@ class StringTransform {
   public:
     void Init(const string& append);
 
-    void Apply(const string& in, string* out);
+    void Apply(const string& in, string* out) const;
 
   private:
     string append_;

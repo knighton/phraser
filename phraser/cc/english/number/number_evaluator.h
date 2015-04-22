@@ -3,7 +3,7 @@
 
 #include <boost/regex.hpp>
 
-#include "cc/base/token_categorization/dynamic_evaluator.h"
+#include "cc/expression/dynamic_evaluator.h"
 
 using boost::regex;
 

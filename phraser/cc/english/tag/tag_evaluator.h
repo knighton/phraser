@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "cc/base/token_categorization/all_input_evaluator.h"
-#include "cc/en/tagging/tagger.h"
+#include "cc/expression/all_input_evaluator.h"
+#include "cc/tagging/tagger.h"
 
 using std::string;
 using std::vector;

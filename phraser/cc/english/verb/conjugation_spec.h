@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "cc/base/misc/enum_strings.h"
-#include "cc/base/token_categorization/token_with_features.h"
+#include "cc/misc/enum_strings.h"
+#include "cc/expression/token_with_features.h"
 
 using std::string;
 using std::vector;

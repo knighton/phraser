@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "cc/base/token_categorization/expression_evaluator.h"
-#include "cc/base/token_categorization/expression.h"
+#include "cc/expression/expression_evaluator.h"
+#include "cc/expression/expression.h"
 
 using std::string;
 using std::unordered_map;

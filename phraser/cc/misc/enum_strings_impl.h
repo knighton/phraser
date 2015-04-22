@@ -1,7 +1,7 @@
 #ifndef CC_MISC_ENUM_STRINGS_IMPL_H_
 #define CC_MISC_ENUM_STRINGS_IMPL_H_
 
-#include "cc/base/misc/strings.h"
+#include "cc/misc/strings.h"
 
 template <typename E>
 vector<E> EnumRange(uint64_t a, uint64_t z_excl) {

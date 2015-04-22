@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "cc/base/sequence_detection/sequence_detector.h"
+#include "cc/sequences/sequence_detector.h"
 
 using std::vector; 
 

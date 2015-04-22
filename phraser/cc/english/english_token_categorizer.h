@@ -1,8 +1,8 @@
 #ifndef CC_ENGLISH_ENGLISH_TOKEN_CATEGORIZER_H_
 #define CC_ENGLISH_ENGLISH_TOKEN_CATEGORIZER_H_
 
-#include "cc/base/token_categorization/expression.h"
-#include "cc/base/token_categorization/token_categorizer.h"
+#include "cc/expression/expression.h"
+#include "cc/expression/token_categorizer.h"
 
 #include <string>
 

@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/base/token_categorization/expression.h"
+#include "cc/expression/expression.h"
 
 using std::string;
 using std::unordered_map;

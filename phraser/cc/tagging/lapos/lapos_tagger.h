@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "cc/en/tagging/lapos_token_preprocessor.h"
-#include "cc/en/tagging/tagger.h"
+#include "cc/tagging/lapos/lapos_token_preprocessor.h"
+#include "cc/tagging/tagger.h"
 #include "cc/third_party/lapos/crf.h"
 
 using std::string;

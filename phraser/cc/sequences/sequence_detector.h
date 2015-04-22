@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "cc/base/sequence_detection/sequence_match.h"
+#include "cc/sequences/sequence_match.h"
 
 using std::unordered_map;
 using std::unordered_set;

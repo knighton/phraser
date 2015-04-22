@@ -2,9 +2,9 @@
 #include <cstdio>
 #include <unordered_map>
 
-#include "cc/base/sequence_detection/vector_membership_sequence_detector.h"
+#include "cc/sequences/vector_membership_sequence_detector.h"
 
-#include "cc/en/tagging/lapos_tagger.h"
+#include "cc/tagging/lapos/lapos_tagger.h"
 
 int main() {
     VectorMembershipSequenceDetector<int32_t> sd;

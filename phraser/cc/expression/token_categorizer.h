@@ -1,10 +1,10 @@
 #ifndef CC_EXPRESSION_TOKEN_CATEGORIZER_H_
 #define CC_EXPRESSION_TOKEN_CATEGORIZER_H_
 
-#include "cc/base/token_categorization/all_input_evaluator.h"
-#include "cc/base/token_categorization/dynamic_evaluator.h"
-#include "cc/base/token_categorization/expression.h"
-#include "cc/base/token_categorization/precomputable_evaluator.h"
+#include "cc/expression/all_input_evaluator.h"
+#include "cc/expression/dynamic_evaluator.h"
+#include "cc/expression/expression.h"
+#include "cc/expression/precomputable_evaluator.h"
 
 #include <string>
 #include <vector>

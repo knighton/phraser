@@ -4,8 +4,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "cc/base/token_categorization/token_with_features.h"
-#include "cc/en/special_tokens/verb/conjugation_spec.h"
+#include "cc/expression/token_with_features.h"
+#include "cc/english/verb/conjugation_spec.h"
 
 using std::string;
 using std::unordered_set;

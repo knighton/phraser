@@ -1,7 +1,7 @@
 #include "conjugation_spec.h"
 
-#include "cc/base/misc/combinatorics.h"
-#include "cc/en/special_tokens/common.h"
+#include "cc/misc/combinatorics.h"
+#include "cc/english/common.h"
 
 EnumStrings<ConjSpecFieldType> ConjSpecFieldTypeStrings =
     EnumStrings<ConjSpecFieldType>("lemma prespart pastpart pres past");

@@ -1,5 +1,5 @@
-#ifndef CC_EXPRESSION_TOKEN_CATEGORIZER_H_
-#define CC_EXPRESSION_TOKEN_CATEGORIZER_H_
+#ifndef CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
+#define CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
 
 #include "cc/expression/all_input_evaluator.h"
 #include "cc/expression/dynamic_evaluator.h"
@@ -49,10 +49,10 @@ enum IndexExpressionResult {
 //
 // Converts tokens to lists of CategoryIDs (which are the ExpressionIDs + the
 // raw token IDs).
-class TokenCategorizer {
+class ExpressionEvaluator {
   public:
-    TokenCategorizer();
-    ~TokenCategorizer();
+    ExpressionEvaluator();
+    ~ExpressionEvaluator();
 
     // Construct indexes for translating tokens to CategoryIDs.
     //
@@ -132,4 +132,4 @@ class TokenCategorizer {
     unordered_map<string, AllInputStuff> all_input_type2stuff_;
 };
 
-#endif // CC_EXPRESSION_TOKEN_CATEGORIZER_H_
+#endif // CC_EXPRESSION_EXPRESSION_EVALUATOR_H_

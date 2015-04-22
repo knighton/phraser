@@ -1,4 +1,4 @@
-#include "english_token_categorizer.h"
+#include "english_expression_evaluator.h"
 
 #include <string>
 #include <unordered_map>
@@ -80,7 +80,7 @@ static VerbEvaluator* MakeVerbEvaluator() {
 
 #undef T
 
-bool EnglishTokenCategorizer::InitWithData(
+bool EnglishExpressionEvaluator::InitWithData(
         const string& lapos_model_f, const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
     VerbEvaluator* v = MakeVerbEvaluator();

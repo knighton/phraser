@@ -1,18 +1,18 @@
-#include "token_categorizer.h"
+#include "expression_evaluator.h"
 
 #include <algorithm>
 #include <unordered_set>
 
 using std::unordered_set;
 
-TokenCategorizer::TokenCategorizer() {
+ExpressionEvaluator::ExpressionEvaluator() {
 }
 
-TokenCategorizer::~TokenCategorizer() {
+ExpressionEvaluator::~ExpressionEvaluator() {
     Clear();
 }
 
-IndexExpressionResult TokenCategorizer::IndexPrecomputableExpression(
+IndexExpressionResult ExpressionEvaluator::IndexPrecomputableExpression(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const Expression& expr, ExpressionID expr_id) {
     auto it = type2precompute.find(expr.type());
@@ -35,7 +35,7 @@ IndexExpressionResult TokenCategorizer::IndexPrecomputableExpression(
     return IER_SUCCESS;
 }
 
-IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
+IndexExpressionResult ExpressionEvaluator::IndexDynamicExpression(
         const Expression& expr, ExpressionID expr_id) {
     auto it = dynamic_type2stuff_.find(expr.type());
     if (it == dynamic_type2stuff_.end()) {
@@ -51,7 +51,7 @@ IndexExpressionResult TokenCategorizer::IndexDynamicExpression(
     return IER_SUCCESS;
 }
 
-IndexExpressionResult TokenCategorizer::IndexAllTokenExpression(
+IndexExpressionResult ExpressionEvaluator::IndexAllTokenExpression(
         const Expression& expr, ExpressionID expr_id) {
     auto it = all_input_type2stuff_.find(expr.type());
     if (it == all_input_type2stuff_.end()) {
@@ -67,7 +67,7 @@ IndexExpressionResult TokenCategorizer::IndexAllTokenExpression(
     return IER_SUCCESS;
 }
 
-void TokenCategorizer::Clear() {
+void ExpressionEvaluator::Clear() {
     expressions_.clear();
     raw_tokens_.clear();
     exprstr2catid_.clear();
@@ -99,7 +99,7 @@ void TokenCategorizer::Clear() {
     all_input_type2stuff_.clear();
 }
 
-bool TokenCategorizer::InitWithEvaluatorsAndData(
+bool ExpressionEvaluator::InitWithEvaluatorsAndData(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string, AllInputEvaluator<string>*>& type2all_input,
@@ -185,7 +185,7 @@ bool TokenCategorizer::InitWithEvaluatorsAndData(
     return true;
 }
 
-bool TokenCategorizer::CategorizeTokens(
+bool ExpressionEvaluator::CategorizeTokens(
         const vector<string>& tokens,
         vector<vector<CategoryID>>* cat_id_lists) const {
     cat_id_lists->clear();
@@ -259,7 +259,7 @@ bool TokenCategorizer::CategorizeTokens(
     return true;
 }
 
-bool TokenCategorizer::GetExpressionID(
+bool ExpressionEvaluator::GetExpressionID(
         const string& expr_canonical_string, ExpressionID* expr_id) const {
     string s;
     auto it = exprstr2catid_.find(expr_canonical_string);
@@ -271,7 +271,7 @@ bool TokenCategorizer::GetExpressionID(
     return true;
 }
 
-void TokenCategorizer::GetPrettyCategory(
+void ExpressionEvaluator::GetPrettyCategory(
         CategoryID cat_id, string* pretty) const {
     if (cat_id < expressions_.size()) {
         auto& expr = expressions_[cat_id];

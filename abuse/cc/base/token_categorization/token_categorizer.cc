@@ -99,7 +99,7 @@ void TokenCategorizer::Clear() {
     all_token_dynamic_type2stuff_.clear();
 }
 
-bool TokenCategorizer::Init(
+bool TokenCategorizer::InitWithEvaluatorsAndData(
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
         const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
         const unordered_map<string, AllTokenEvaluator<string>*>&
@@ -186,7 +186,7 @@ bool TokenCategorizer::Init(
     return true;
 }
 
-void TokenCategorizer::CategorizeTokens(
+bool TokenCategorizer::CategorizeTokens(
         const vector<string>& tokens,
         vector<vector<CategoryID>>* cat_id_lists) const {
     cat_id_lists->clear();
@@ -240,7 +240,9 @@ void TokenCategorizer::CategorizeTokens(
 
         // Classify each token.
         vector<string> analyses;
-        stuff.evaluator->AnalyzeTokens(tokens, &analyses);
+        if (!stuff.evaluator->AnalyzeTokens(tokens, &analyses)) {
+            return false;
+        }
 
         // Evaluate the Expressions against that.  Append the IDs of the ones
         // that match.
@@ -254,6 +256,8 @@ void TokenCategorizer::CategorizeTokens(
             }
         }
     }
+
+    return true;
 }
 
 bool TokenCategorizer::GetExpressionID(

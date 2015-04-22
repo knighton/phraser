@@ -60,7 +60,7 @@ class TokenCategorizer {
     //
     // Returns false on failure:
     // * Invalid Expression encountered
-    bool Init(
+    bool InitWithEvaluatorsAndData(
         const unordered_map<string, PrecomputeEvaluator*>& type2precompute,
         const unordered_map<string, OneTokenEvaluator*>& type2dynamic,
         const unordered_map<string,
@@ -74,7 +74,9 @@ class TokenCategorizer {
     // Token -> CategoryIDs, per token.
     //
     // If called before Init(), the caller will get empty vectors.
-    void CategorizeTokens(const vector<string>& tokens,
+    //
+    // Returns false on internal error.
+    bool CategorizeTokens(const vector<string>& tokens,
                           vector<vector<CategoryID>>* cat_id_lists) const;
 
     // Canonical string form of an Expression -> ExpressionID.

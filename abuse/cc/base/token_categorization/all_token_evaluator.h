@@ -15,11 +15,15 @@ class AllTokenEvaluator : public Evaluator {
   public:
     // Tokens -> list of corresponding opaque objects (eg. tags, maps of
     // features, etc.).
-    virtual void AnalyzeTokens(
+    //
+    // Returns false on error.
+    virtual bool AnalyzeTokens(
         const vector<string>& tokens,
         vector<TokenDescription>* descs) const = 0;
 
     // Does the expression accept the token given the additional info?
+    //
+    // Assumes args have already been checked.
     virtual bool IsMatch(
         const Expression& expr, const string& token,
         const TokenDescription& desc) const = 0;

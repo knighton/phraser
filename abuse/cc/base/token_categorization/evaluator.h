@@ -40,7 +40,6 @@ class Evaluator {
     string type_;
     unordered_map<string, unordered_set<string>> dimension2values_;
 
-  private:
     // Check the expression's args.
     //
     // Called internally by IsExpressionPossible().

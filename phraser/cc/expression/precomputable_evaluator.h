@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "cc/expression/expression_evaluator.h"
+#include "cc/expression/expression_type_evaluator.h"
 #include "cc/expression/expression.h"
 
 using std::string;
 using std::vector;
 
-class PrecomputableEvaluator : public ExpressionEvaluator {
+class PrecomputableEvaluator : public ExpressionTypeEvaluator {
   public:
     // Expression -> list of tokens that it matches.
     //

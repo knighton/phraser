@@ -4,14 +4,14 @@
 #include <string>
 #include <vector>
 
-#include "cc/expression/expression_evaluator.h"
+#include "cc/expression/expression_type_evaluator.h"
 #include "cc/expression/expression.h"
 
 using std::string;
 using std::vector;
 
 template <typename TokenDescription>
-class AllInputEvaluator : public ExpressionEvaluator {
+class AllInputEvaluator : public ExpressionTypeEvaluator {
   public:
     // Tokens -> list of corresponding opaque objects (eg. tags, maps of
     // features, etc.) to be used by every Expression of this type.

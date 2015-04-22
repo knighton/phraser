@@ -4,13 +4,13 @@
 #include <string>
 #include <unordered_map>
 
-#include "cc/expression/expression_evaluator.h"
+#include "cc/expression/expression_type_evaluator.h"
 #include "cc/expression/expression.h"
 
 using std::string;
 using std::unordered_map;
 
-class DynamicEvaluator : public ExpressionEvaluator {
+class DynamicEvaluator : public ExpressionTypeEvaluator {
   public:
     // Quick check to rule out a match by an expression of my type.
     virtual bool MightMatch(const string& token) const = 0;

@@ -11,17 +11,20 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-class ExpressionEvaluator {
+// Base class for each class that evaluates a single type of Expression.
+//
+// (Expressions have a type field like "verb", "tag", etc.)
+class ExpressionTypeEvaluator {
   public:
-    virtual ~ExpressionEvaluator();
+    virtual ~ExpressionTypeEvaluator();
 
     // Is the expression possible?
     //
-    // Reasons for false that are common to all Evaluators:
+    // Reasons for false that are common to all Expression type Evaluators:
     // * Its type does not match my type
     // * It has a filter dimension I have never heard of
     //
-    // Reasons for false that are per Evaluator:
+    // Reasons for false that are per evaluator:
     // * Its args are invalid (override AreArgsPossible()).
     bool IsExpressionPossible(const Expression& expr) const;
 

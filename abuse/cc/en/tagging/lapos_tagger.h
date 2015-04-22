@@ -5,12 +5,13 @@
 #include <vector>
 
 #include "cc/en/tagging/lapos_token_preprocessor.h"
+#include "cc/en/tagging/tagger.h"
 #include "cc/third_party/lapos/crf.h"
 
 using std::string;
 using std::vector;
 
-class LaposTagger {
+class LaposTagger : public Tagger {
   public:
     LaposTagger();
     bool Init(const string& model_f);

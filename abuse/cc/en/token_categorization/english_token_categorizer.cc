@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "cc/en/special_tokens/number/number_evaluator.h"
 #include "cc/en/special_tokens/tag/tag_evaluator.h"
 #include "cc/en/special_tokens/verb/conjugator.h"
 #include "cc/en/special_tokens/verb/conjugation_spec.h"
@@ -12,6 +13,16 @@
 
 using std::string;
 using std::unordered_map;
+
+static NumberEvaluator* MakeNumberEvaluator() {
+    NumberEvaluator* e = new NumberEvaluator();
+    if (!e) {
+        return NULL;
+    }
+
+    e->Init();
+    return e;
+}
 
 static TagEvaluator* MakeTagEvaluator(const string& lapos_model_f) {
     LaposTagger* tagger = new LaposTagger();
@@ -78,7 +89,9 @@ bool EnglishTokenCategorizer::InitWithData(
         {"verb", v},
     };
 
-    unordered_map<string, DynamicEvaluator*> type2dynamic;
+    unordered_map<string, DynamicEvaluator*> type2dynamic = {
+        {"number", MakeNumberEvaluator()},
+    };
 
     unordered_map<string, AllInputEvaluator<string>*> type2all_input = {
         {"tag", MakeTagEvaluator(lapos_model_f)},

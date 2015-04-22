@@ -14,6 +14,8 @@ using std::vector;
 class LaposTagger : public Tagger {
   public:
     LaposTagger();
+    ~LaposTagger();
+
     bool Init(const string& model_f);
     bool Tag(const vector<string>& tokens, vector<string>* tags);
 

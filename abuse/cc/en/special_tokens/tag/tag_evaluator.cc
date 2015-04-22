@@ -21,7 +21,12 @@ bool TagEvaluator::AnalyzeTokens(const vector<string>& tokens,
 
 bool TagEvaluator::IsMatch(
         const Expression& expr, const string& token,
-        const string& tag) {
+        const string& tag) const {
     auto& want_tag = expr.args()[0];
     return tag == want_tag;
+}
+
+bool TagEvaluator::AreArgsPossible(const vector<string>& args) const {
+    // TODO: check against an actual list of Penn tags.
+    return args.size() == 0;
 }

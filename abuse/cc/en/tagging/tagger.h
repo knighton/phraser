@@ -9,7 +9,7 @@ using std::vector;
 
 class Tagger {
   public:
-    virtual ~Tagger() = 0;
+    virtual ~Tagger();
 
     virtual bool Tag(const vector<string>& tokens, vector<string>* tags) = 0;
 };

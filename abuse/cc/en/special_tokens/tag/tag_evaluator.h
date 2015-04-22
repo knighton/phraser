@@ -12,8 +12,8 @@ using std::vector;
 
 class TagEvaluator : public AllTokenEvaluator<string> {
   public:
-    TextEvaluator();
-    ~TextEvaluator();
+    TagEvaluator();
+    ~TagEvaluator();
 
     // Takes ownership.
     void Init(Tagger* tagger);
@@ -25,8 +25,11 @@ class TagEvaluator : public AllTokenEvaluator<string> {
         const Expression& expr, const string& token,
         const string& tag) const;
 
+
   private:
-    Tagger* tagger;
+    bool AreArgsPossible(const vector<string>& args) const;
+
+    Tagger* tagger_;
 };
 
 #endif  // CC_EN_SPECIAL_TOKENS_TAG_TAG_EVALUATOR_H_

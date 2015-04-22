@@ -1,5 +1,5 @@
-#ifndef CC_EN_TAGGING_LAPOS_TOKEN_PREPROCESSOR_H_
-#define CC_EN_TAGGING_LAPOS_TOKEN_PREPROCESSOR_H_
+#ifndef CC_TAGGING_LAPOS_LAPOS_TOKEN_PREPROCESSOR_H_
+#define CC_TAGGING_LAPOS_LAPOS_TOKEN_PREPROCESSOR_H_
 
 #include <string>
 #include <unordered_map>
@@ -19,4 +19,4 @@ class LaposTokenPreprocessor {
     unordered_map<string, string> unconv_;
 };
 
-#endif  // CC_EN_TAGGING_LAPOS_TOKEN_PREPROCESSOR_H_
+#endif  // CC_TAGGING_LAPOS_LAPOS_TOKEN_PREPROCESSOR_H_

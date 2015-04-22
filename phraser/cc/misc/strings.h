@@ -1,5 +1,5 @@
-#ifndef CC_BASE_MISC_STRINGS_H_
-#define CC_BASE_MISC_STRINGS_H_
+#ifndef CC_MISC_STRINGS_H_
+#define CC_MISC_STRINGS_H_
 
 #include <string>
 #include <vector>
@@ -23,4 +23,4 @@ void SplitByWhitespace(const string& s, vector<string>* v);
 
 }  // namespace string
 
-#endif  // CC_BASE_MISC_STRINGS_H_
+#endif  // CC_MISC_STRINGS_H_

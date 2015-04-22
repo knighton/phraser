@@ -1,5 +1,5 @@
-#ifndef CC_EN_TAGGING_LAPOS_TAGGER_H_
-#define CC_EN_TAGGING_LAPOS_TAGGER_H_
+#ifndef CC_TAGGING_LAPOS_LAPOS_TAGGER_H_
+#define CC_TAGGING_LAPOS_LAPOS_TAGGER_H_
 
 #include <string>
 #include <vector>
@@ -25,4 +25,4 @@ class LaposTagger : public Tagger {
     lapos::CRF_Model crfm_;
 };
 
-#endif  // CC_EN_TAGGING_LAPOS_TAGGER_H_
+#endif  // CC_TAGGING_LAPOS_LAPOS_TAGGER_H_

@@ -1,5 +1,5 @@
-#ifndef CC_BASE_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
-#define CC_BASE_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#ifndef CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#define CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
 
 template <typename Atom>
 Atom* EqualityAtomTokenComparer<Atom>::FirstAtom(const Atom& token) {
@@ -17,4 +17,4 @@ bool EqualityAtomTokenComparer<Atom>::IsMatch(
     return token_have == atom_need;
 }
 
-#endif  // CC_BASE_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#endif  // CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_

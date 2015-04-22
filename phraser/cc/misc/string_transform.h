@@ -1,5 +1,5 @@
-#ifndef CC_BASE_MISC_STRING_TRANSFORM_H_
-#define CC_BASE_MISC_STRING_TRANSFORM_H_
+#ifndef CC_MISC_STRING_TRANSFORM_H_
+#define CC_MISC_STRING_TRANSFORM_H_
 
 #include <string>
 
@@ -17,5 +17,5 @@ class StringTransform {
     string append_;
 };
 
-#endif  // CC_BASE_MISC_STRING_TRANSFORM_H_
+#endif  // CC_MISC_STRING_TRANSFORM_H_
 

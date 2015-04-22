@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_TOKEN_WITH_FEATURES_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_TOKEN_WITH_FEATURES_H_
+#ifndef CC_EXPRESSION_TOKEN_WITH_FEATURES_H_
+#define CC_EXPRESSION_TOKEN_WITH_FEATURES_H_
 
 #include <string>
 #include <unordered_map>
@@ -12,4 +12,4 @@ struct TokenWithFeatures {
     unordered_map<string, string> dimension2value;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_TOKEN_WITH_FEATURES_H_
+#endif  // CC_EXPRESSION_TOKEN_WITH_FEATURES_H_

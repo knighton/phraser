@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_DYNAMIC_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_DYNAMIC_EVALUATOR_H_
+#ifndef CC_EXPRESSION_DYNAMIC_EVALUATOR_H_
+#define CC_EXPRESSION_DYNAMIC_EVALUATOR_H_
 
 #include <string>
 #include <unordered_map>
@@ -21,4 +21,4 @@ class DynamicEvaluator : public ExpressionEvaluator {
         unordered_map<string, string>* dimension2value) const = 0;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_DYNAMIC_EVALUATOR_H_
+#endif  // CC_EXPRESSION_DYNAMIC_EVALUATOR_H_

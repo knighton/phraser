@@ -1,5 +1,5 @@
-#ifndef CC_BASE_MISC_ENUM_STRINGS_H_
-#define CC_BASE_MISC_ENUM_STRINGS_H_
+#ifndef CC_MISC_ENUM_STRINGS_H_
+#define CC_MISC_ENUM_STRINGS_H_
 
 // Usage:
 //
@@ -83,4 +83,4 @@ class EnumStrings {
 
 #include "enum_strings_impl.h"
 
-#endif  // CC_BASE_MISC_ENUM_STRINGS_H_
+#endif  // CC_MISC_ENUM_STRINGS_H_

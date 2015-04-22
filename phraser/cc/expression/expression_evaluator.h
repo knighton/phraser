@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_
+#ifndef CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
+#define CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
 
 #include <string>
 #include <unordered_map>
@@ -35,4 +35,4 @@ class ExpressionEvaluator {
     unordered_map<string, unordered_set<string>> dimension2possible_values_;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_EXPRESSION_EVALUATOR_H_
+#endif  // CC_EXPRESSION_EXPRESSION_EVALUATOR_H_

@@ -1,5 +1,5 @@
-#ifndef CC_EN_SPECIAL_TOKENS_NUMBER_EVALUATOR_H_
-#define CC_EN_SPECIAL_TOKENS_NUMBER_EVALUATOR_H_
+#ifndef CC_ENGLISH_NUMBER_NUMBER_EVALUATOR_H_
+#define CC_ENGLISH_NUMBER_NUMBER_EVALUATOR_H_
 
 #include <boost/regex.hpp>
 
@@ -23,4 +23,4 @@ class NumberEvaluator : public DynamicEvaluator {
     regex might_match_re_;
 };
 
-#endif  // CC_EN_SPECIAL_TOKENS_NUMBER_EVALUATOR_H_
+#endif  // CC_ENGLISH_NUMBER_NUMBER_EVALUATOR_H_

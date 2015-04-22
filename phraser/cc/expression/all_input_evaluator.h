@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_
+#ifndef CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_
+#define CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_
 
 #include <string>
 #include <vector>
@@ -29,4 +29,4 @@ class AllInputEvaluator : public ExpressionEvaluator {
         const TokenDescription& desc) const = 0;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_ALL_INPUT_EVALUATOR_H_
+#endif  // CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_

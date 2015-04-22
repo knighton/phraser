@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_PRECOMPUTABLE_EVALUATOR_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_PRECOMPUTABLE_EVALUATOR_H_
+#ifndef CC_EXPRESSION_PRECOMPUTABLE_EVALUATOR_H_
+#define CC_EXPRESSION_PRECOMPUTABLE_EVALUATOR_H_
 
 #include <string>
 #include <vector>
@@ -19,4 +19,4 @@ class PrecomputableEvaluator : public ExpressionEvaluator {
         const Expression& expr, vector<string>* tokens) const = 0;
 };
 
-#endif  // CC_BASE_TOKEN_CATEGORIZATION_PRECOMPUTABLE_EVALUATOR_H_
+#endif  // CC_EXPRESSION_PRECOMPUTABLE_EVALUATOR_H_

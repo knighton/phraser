@@ -1,5 +1,5 @@
-#ifndef CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
-#define CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
+#ifndef CC_EXPRESSION_TOKEN_CATEGORIZER_H_
+#define CC_EXPRESSION_TOKEN_CATEGORIZER_H_
 
 #include "cc/base/token_categorization/all_input_evaluator.h"
 #include "cc/base/token_categorization/dynamic_evaluator.h"
@@ -132,4 +132,4 @@ class TokenCategorizer {
     unordered_map<string, AllInputStuff> all_input_type2stuff_;
 };
 
-#endif // CC_BASE_TOKEN_CATEGORIZATION_TOKEN_CATEGORIZER_H_
+#endif // CC_EXPRESSION_TOKEN_CATEGORIZER_H_

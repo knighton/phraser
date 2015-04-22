@@ -1,5 +1,5 @@
-#ifndef CC_BASE_MISC_ENUM_STRINGS_IMPL_H_
-#define CC_BASE_MISC_ENUM_STRINGS_IMPL_H_
+#ifndef CC_MISC_ENUM_STRINGS_IMPL_H_
+#define CC_MISC_ENUM_STRINGS_IMPL_H_
 
 #include "cc/base/misc/strings.h"
 
@@ -67,4 +67,4 @@ bool EnumStrings<E>::MaybeGetEnumValue(const string& s, E* e) const {
     return true;
 }
 
-#endif  // CC_BASE_MISC_ENUM_STRINGS_IMPL_H_
+#endif  // CC_MISC_ENUM_STRINGS_IMPL_H_

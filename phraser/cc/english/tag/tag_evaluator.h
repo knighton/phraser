@@ -1,5 +1,5 @@
-#ifndef CC_EN_SPECIAL_TOKENS_TAG_TAG_EVALUATOR_H_
-#define CC_EN_SPECIAL_TOKENS_TAG_TAG_EVALUATOR_H_
+#ifndef CC_ENGLISH_TAG_TAG_EVALUATOR_H_
+#define CC_ENGLISH_TAG_TAG_EVALUATOR_H_
 
 #include <string>
 #include <vector>
@@ -32,4 +32,4 @@ class TagEvaluator : public AllInputEvaluator<string> {
     Tagger* tagger_;
 };
 
-#endif  // CC_EN_SPECIAL_TOKENS_TAG_TAG_EVALUATOR_H_
+#endif  // CC_ENGLISH_TAG_TAG_EVALUATOR_H_

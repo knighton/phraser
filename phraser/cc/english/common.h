@@ -1,5 +1,5 @@
-#ifndef CC_EN_SPECIAL_TOKENS_COMMON_H_
-#define CC_EN_SPECIAL_TOKENS_COMMON_H_
+#ifndef CC_ENGLISH_COMMON_H_
+#define CC_ENGLISH_COMMON_H_
 
 #include "cc/base/misc/enum_strings.h"
 
@@ -20,4 +20,4 @@ enum Person {
 
 extern EnumStrings<Person> PersonStrings;
 
-#endif  // CC_EN_SPECIAL_TOKENS_COMMON_H_
+#endif  // CC_ENGLISH_COMMON_H_

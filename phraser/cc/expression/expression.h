@@ -1,5 +1,5 @@
-#ifndef CC_EN_TOKEN_CATEGORIZATION_EXPRESSION_H_
-#define CC_EN_TOKEN_CATEGORIZATION_EXPRESSION_H_
+#ifndef CC_EXPRESSION_EXPRESSION_H_
+#define CC_EXPRESSION_EXPRESSION_H_
 
 #include <string>
 #include <vector>
@@ -44,4 +44,4 @@ class Expression {
     unordered_map<string, unordered_set<string>> dimension2values_;
 };
 
-#endif  // CC_EN_TOKEN_CATEGORIZATION_EXPRESSION_H_
+#endif  // CC_EXPRESSION_EXPRESSION_H_

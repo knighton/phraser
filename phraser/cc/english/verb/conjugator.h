@@ -1,5 +1,5 @@
-#ifndef CC_EN_SPECIAL_TOKENS_VERB_CONJUGATOR_H_
-#define CC_EN_SPECIAL_TOKENS_VERB_CONJUGATOR_H_
+#ifndef CC_ENGLISH_VERB_CONJUGATOR_H_
+#define CC_ENGLISH_VERB_CONJUGATOR_H_
 
 #include <string>
 #include <unordered_map>
@@ -23,4 +23,4 @@ class Conjugator {
     ConjugationSpecDerivation regular_deriv_;
 };
 
-#endif  // CC_EN_SPECIAL_TOKENS_VERB_CONJUGATOR_H_
+#endif  // CC_ENGLISH_VERB_CONJUGATOR_H_

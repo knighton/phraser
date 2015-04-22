@@ -17,10 +17,10 @@ class ConjugationSpecDerivation {
     const vector<StringTransform>& presents() const { return presents_; }
     const vector<StringTransform>& pasts() const { return pasts_; }
 
-    void Init(const StringTransform& pres_part,
-              const StringTransform& past_part,
-              const vector<StringTransform>& presents,
-              const vector<StringTransform>& pasts);
+    void InitFromTransforms(
+        const StringTransform& pres_part, const StringTransform& past_part,
+        const vector<StringTransform>& presents,
+        const vector<StringTransform>& pasts);
 
     void Derive(const string& lemma, ConjugationSpec* spec) const;
 

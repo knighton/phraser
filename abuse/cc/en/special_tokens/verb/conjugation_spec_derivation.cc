@@ -1,6 +1,6 @@
 #include "conjugation_spec_derivation.h"
 
-void ConjugationSpecDerivation::Init(
+void ConjugationSpecDerivation::InitFromTransforms(
         const StringTransform& pres_part, const StringTransform& past_part,
         const vector<StringTransform>& presents,
         const vector<StringTransform>& pasts) {

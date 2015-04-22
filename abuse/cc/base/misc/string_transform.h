@@ -7,6 +7,8 @@ using std::string;
 
 class StringTransform {
   public:
+    static StringTransform Create(const string& append);
+
     void Init(const string& append);
 
     void Apply(const string& in, string* out) const;

@@ -10,7 +10,7 @@
 using std::string;
 using std::vector;
 
-class PrecomputableEvaluator : ExpressionEvaluator {
+class PrecomputableEvaluator : public ExpressionEvaluator {
   public:
     // Expression -> list of tokens that it matches.
     //

@@ -4,7 +4,7 @@ using boost::cmatch;
 
 void NumberEvaluator::Init() {
     type_ = "number";
-    dimension2values_ = {
+    dimension2possible_values_ = {
         {
             "class",
             {
@@ -20,7 +20,6 @@ void NumberEvaluator::Init() {
             }
         },
     };
-
     might_match_re_ = regex("(-|+)?[0-9]+(\\.[0-9]+)?");
 }
 

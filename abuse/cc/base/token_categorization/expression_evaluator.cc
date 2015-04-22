@@ -11,8 +11,8 @@ bool ExpressionEvaluator::IsExpressionPossible(const Expression& expr) const {
     for (auto& it : expr.dimension2values()) {
         auto& expr_dimension = it.first;
 
-        auto jt = dimension2values_.find(expr_dimension);
-        if (jt == dimension2values_.end()) {
+        auto jt = dimension2possible_values_.find(expr_dimension);
+        if (jt == dimension2possible_values_.end()) {
             return false;
         }
 

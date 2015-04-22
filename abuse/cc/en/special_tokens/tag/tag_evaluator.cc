@@ -11,6 +11,8 @@ TagEvaluator::~TagEvaluator() {
 }
 
 void TagEvaluator::Init(Tagger* tagger) {
+    type_ = "tag";
+    dimension2possible_values_.clear();
     tagger_ = tagger;
 }
 

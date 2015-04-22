@@ -22,6 +22,8 @@ VerbEvaluator::~VerbEvaluator() {
 }
 
 void VerbEvaluator::Init(Conjugator* conj) {
+    type_ = "verb";
+    dimension2possible_values_.clear();
     conj_ = conj;
 }
 

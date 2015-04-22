@@ -62,7 +62,7 @@ def find_cc_files(root_dir):
 
 
 def main():
-    print '\n' * 10
+    print '\n' * 20
     flags = BASE_FLAGS + WARN_FLAGS + DISABLE_WARN_FLAGS + WARNINGS_TO_FIX_LATER
     ff = find_cc_files('.')
     os.system('mkdir -p %s' % os.path.dirname(TARGET))

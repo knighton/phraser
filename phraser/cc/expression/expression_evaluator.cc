@@ -260,7 +260,7 @@ bool ExpressionEvaluator::LookUpTokens(
     return true;
 }
 
-bool ExpressionEvaluator::GetExpressionID(
+bool ExpressionEvaluator::GetExpressionTokenGroupID(
         const string& expr_canonical_string, TokenGroupID* group_id) const {
     string s;
     auto it = exprstr2groupid_.find(expr_canonical_string);
@@ -274,11 +274,11 @@ bool ExpressionEvaluator::GetExpressionID(
 
 void ExpressionEvaluator::GetPrettyTokenGroup(
         TokenGroupID group_id, string* pretty) const {
-    if (group_id < expressions_.size()) {
+    if (group_id < 0) {
+        size_t index = static_cast<size_t>(-(group_id + 1));
+        *pretty = raw_tokens_[index];
+    } else {
         auto& expr = expressions_[group_id];
         expr.ToCanonicalString(pretty);
-        return;
     }
-
-    *pretty = raw_tokens_[group_id - expressions_.size()];
 }

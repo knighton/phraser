@@ -14,20 +14,19 @@ using std::string;
 using std::vector;
 using std::unordered_map;
 
-// We map tokens to lists of integers (TokenGroupIDs).  The integers are:
-// (a) IDs of unique Expressions present in the input
-// (b) IDs of unique raw tokens present in the input (starting after the
-//     Expression IDs).
+// We map input tokens to lists of integers (TokenGroupIDs).
+//
+// Negative TokenGroupIDs are the "negative minus one" of the index of a token
+// that was seen in the input to Init().
+//
+// Nonnegative TokenGroupIDs are the index of an Expression that was seen in
+// Init().
 //
 // If the Expression was not in the input, it will not be recognized.  In
 // LookUpTokens(), words that have not been seen before are not assigned a token
 // ID, as they will not be matching anything by token (although they may match
 // an Expression).
-//
-//     [0                                        UINT32_MAX]
-//     [           TokenGroupIDs             ] [unused-----]
-//     [Expression IDs] [Raw Lookup Token IDs] [unused-----]
-typedef uint32_t TokenGroupID;
+typedef int32_t TokenGroupID;
 
 struct PrecomputableHandler {
     PrecomputableEvaluator* evaluator;
@@ -88,8 +87,8 @@ class ExpressionEvaluator {
     // Canonical string form of an Expression -> TokenGroupID.
     //
     // Returns false on unknown Expression.
-    bool GetExpressionID(const string& expr_canonical_string,
-                         TokenGroupID* group_id) const;
+    bool GetExpressionTokenGroupID(
+        const string& expr_canonical_string, TokenGroupID* group_id) const;
 
     // TokenGroupID -> human-friendly string.
     //

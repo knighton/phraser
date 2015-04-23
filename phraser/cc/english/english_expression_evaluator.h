@@ -2,7 +2,6 @@
 #define CC_ENGLISH_ENGLISH_EXPRESSION_EVALUATOR_H_
 
 #include "cc/english/english_config.h"
-#include "cc/expression/expression.h"
 #include "cc/expression/expression_evaluator.h"
 
 #include <string>

@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "cc/sequences/sequence_match.h"
+#include "cc/sequence/sequence_match.h"
 
 using std::unordered_map;
 using std::unordered_set;
@@ -66,7 +66,8 @@ class SequenceDetector {
     //
     // One option list must match from each block, in order, contiguously,
     // against the input for there to be a match.  An option is matched if each
-    // token in the option is present in the corresponding index in the input.
+    // atom in the option matches the token at the corresponding index in the
+    // input.
     void GetMatches(const vector<Token>& tokens,
                     vector<SequenceMatch>* matches) const;
 

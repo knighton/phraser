@@ -12,6 +12,14 @@ ExpressionEvaluator::~ExpressionEvaluator() {
     Clear();
 }
 
+static TokenGroupID TokenGroupIDFromExpressionIndex(size_t index) {
+    return static_cast<TokenGroupID>(index * 2);
+}
+
+static TokenGroupID TokenGroupIDFromRawTokenIndex(size_t index) {
+    return static_cast<TokenGroupID>(index * 2 + 1);
+}
+
 IndexExpressionResult ExpressionEvaluator::IndexPrecomputableExpression(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const Expression& expr, TokenGroupID group_id) {
@@ -70,7 +78,6 @@ IndexExpressionResult ExpressionEvaluator::IndexAllTokenExpression(
 void ExpressionEvaluator::Clear() {
     expressions_.clear();
     raw_tokens_.clear();
-    exprstr2groupid_.clear();
     token2groupids_.clear();
 
     for (auto& it : precompute_type2handler_) {
@@ -103,9 +110,19 @@ bool ExpressionEvaluator::InitWithEvaluatorsAndData(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string, AllInputEvaluator<string>*>& type2all_input,
-        const vector<Expression>& expressions,
-        const vector<string>& raw_tokens) {
+        const vector<Expression>& all_unique_expressions,
+        const vector<string>& all_unique_raw_tokens) {
     Clear();
+
+    // Verify uniqueness of the raw tokens list.
+    unordered_set<string> raw_tokens_set;
+    for (auto& raw_token : all_unique_raw_tokens) {
+        if (raw_tokens_set.find(raw_token) != raw_tokens_set.end()) {
+            return false;
+        }
+        raw_tokens_set.insert(raw_token);
+    }
+    raw_tokens_ = all_unique_raw_tokens;
 
     // Save the precompute expressions for future reference (but they are not
     // used in LookUpTokens() because they are precomputed).
@@ -123,21 +140,22 @@ bool ExpressionEvaluator::InitWithEvaluatorsAndData(
     }
 
     // For each expression,
-    for (auto i = 0u; i < expressions.size(); ++i) {
+    unordered_set<string> expr_strings_set;  // Set of Expression canonical str.
+    for (auto i = 0u; i < all_unique_expressions.size(); ++i) {
         auto& expr = expressions[i];
 
-        // Skip if we have seen the expression before.
+        // Bail if we have seen the expression before.
         string expr_str;
         expr.ToCanonicalString(&expr_str);
-        if (exprstr2groupid_.find(expr_str) != exprstr2groupid_.end()) {
-            continue;
+        if (expr_strings_set.find(expr_str) != expr_strings_set.end()) {
+            return false;
         }
 
         // Note the new expression.
         expressions_.emplace_back(expr);
-        TokenGroupID group_id = static_cast<TokenGroupID>(
-                exprstr2groupid_.size());
-        exprstr2groupid_[expr_str] = group_id;
+        TokenGroupID group_id =
+            TokenGroupIDFromExpressionIndex(exprstr2groupid.size());
+        expr_strings_set.insert(expr_str);
 
         // If it was recognized as a precompute type, get the list of tokens
         // that the Expression yields when evaluated and index them.
@@ -171,16 +189,6 @@ bool ExpressionEvaluator::InitWithEvaluatorsAndData(
 
         // Unknown type.
         return false;
-    }
-
-    // Extract the unique raw tokens.
-    unordered_set<string> raw_token_set;
-    for (auto& raw_token : raw_tokens) {
-        raw_token_set.insert(raw_token);
-    }
-    raw_tokens_.reserve(raw_token_set.size());
-    for (auto& raw_token : raw_token_set) {
-        raw_tokens_.emplace_back(raw_token);
     }
 
     return true;
@@ -260,25 +268,12 @@ bool ExpressionEvaluator::LookUpTokens(
     return true;
 }
 
-bool ExpressionEvaluator::GetExpressionTokenGroupID(
-        const string& expr_canonical_string, TokenGroupID* group_id) const {
-    string s;
-    auto it = exprstr2groupid_.find(expr_canonical_string);
-    if (it == exprstr2groupid_.end()) {
-        return false;
-    }
-
-    *group_id = it->second;
-    return true;
-}
-
 void ExpressionEvaluator::GetPrettyTokenGroup(
         TokenGroupID group_id, string* pretty) const {
-    if (group_id < 0) {
-        size_t index = static_cast<size_t>(-(group_id + 1));
-        *pretty = raw_tokens_[index];
+    if (group_id % 2) {
+        *pretty = raw_tokens_[group_id / 2];
     } else {
-        auto& expr = expressions_[group_id];
+        auto& expr = expressions_[group_id / 2];
         expr.ToCanonicalString(pretty);
     }
 }

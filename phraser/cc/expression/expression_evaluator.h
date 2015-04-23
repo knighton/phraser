@@ -16,11 +16,12 @@ using std::unordered_map;
 
 // We map input tokens to lists of integers (TokenGroupIDs).
 //
-// Negative TokenGroupIDs are the "negative minus one" of the index of a token
-// that was seen in the input to Init().
+// TokenGroupIDs refer to either (a) an Expression that matched the token, or
+// (b) a raw token present in the lookup index that matched.
 //
-// Nonnegative TokenGroupIDs are the index of an Expression that was seen in
-// Init().
+// If even: divide by two, and that is the index in the expressions_ vector.
+//
+// If odd: divide by two, and that is the index in the raw_tokens_ vector.
 //
 // If the Expression was not in the input, it will not be recognized.  In
 // LookUpTokens(), words that have not been seen before are not assigned a token
@@ -58,42 +59,40 @@ class ExpressionEvaluator {
     ExpressionEvaluator();
     ~ExpressionEvaluator();
 
-    // Construct indexes for translating tokens to TokenGroupIDs.
+    // Construct indexes for translating tokens to TokenGroupIDs.  The input
+    // 'expressions' and 'raw_tokens' must be unique.
     //
     // Takes ownership of the pointers.
     //
     // Returns false on failure:
     // * Invalid Expression encountered
+    // * Non-unique Expression list
+    // * Non-unique raw token list
     bool InitWithEvaluatorsAndData(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string,
             AllInputEvaluator<string>*>& type2all_token_dymamic,
-        const vector<Expression>& expressions,
-        const vector<string>& raw_tokens);
+        const vector<Expression>& all_unique_expressions,
+        const vector<string>& all_unique_raw_tokens);
 
     // Nuke everything.  Deletes all objects (ie, the Evaluators).
     void Clear();
 
-    // Token -> TokenGroupIDs (Expression IDs + RawLookupTokenIDs), per token.
+    // Token -> list of TokenGroupIDs per token.
     //
-    // If called before Init(), the caller will get empty vectors.
+    // Returned lists will usually be empty (depending on how promiscuous your
+    // config is).  If called before Init(), the caller will get empty lists.
     //
     // Returns false on internal error.
-    bool LookUpTokens(
+    bool Evaluate(
         const vector<string>& tokens,
         vector<vector<TokenGroupID>>* group_id_lists) const;
 
-    // Canonical string form of an Expression -> TokenGroupID.
-    //
-    // Returns false on unknown Expression.
-    bool GetExpressionTokenGroupID(
-        const string& expr_canonical_string, TokenGroupID* group_id) const;
-
     // TokenGroupID -> human-friendly string.
     //
-    // TokenGroupID must be valid.
-    void GetPrettyTokenGroup(TokenGroupID group_id, string* pretty) const;
+    // Returns false on invalid TokenGroupID.
+    bool GetPrettyTokenGroup(TokenGroupID group_id, string* pretty) const;
 
   private:
     // Init() helpers.
@@ -108,18 +107,15 @@ class ExpressionEvaluator {
     IndexExpressionResult IndexAllInputExpression(
         const Expression& expr, TokenGroupID group_id);
 
-    // All expressions in the index.
+    // All expressions in the index built in Init().
     //
-    // Expression IDs correspond to these.
+    // Index * 2 = TokenGroupID of Expression.
     vector<Expression> expressions_;
 
-    // Each unique raw token in the Init() input.
+    // Each unique raw token in the index built in Init().
     //
-    // TokenGroupIDs offset by expressions_.size() corresdpong to these.
+    // Index * 2 + 1 = TokenGroupID of raw token.
     vector<string> raw_tokens_;
-
-    // Expression canonical string -> TokenGroupID.
-    unordered_map<string, TokenGroupID> exprstr2groupid_;
 
     // Token -> precomputed TokenGroupIDs.
     unordered_map<string, vector<TokenGroupID>> token2groupids_;

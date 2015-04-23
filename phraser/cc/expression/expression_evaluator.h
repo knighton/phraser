@@ -14,29 +14,34 @@ using std::string;
 using std::vector;
 using std::unordered_map;
 
-// We map tokens to lists of integers (CategoryIDs).
+// We map tokens to lists of integers (TokenGroupIDs).  The integers are:
+// (a) IDs of unique Expressions present in the input
+// (b) IDs of unique raw tokens present in the input (starting after the
+//     Expression IDs).
 //
-//     0                                UINT32_MAX
-//     [        CategoryIDs        ] [unused-----]
-//     [ExpressionIDs] [RawTokenIDs] [unused-----]
-//            |              +--unique 'raw_tokens' passed to Init()
-//            +-----------------unique 'expressions' pased to Init()
-typedef uint32_t CategoryID;
-typedef CategoryID ExpressionID;
+// If the Expression was not in the input, it will not be recognized.  In
+// LookUpTokens(), words that have not been seen before are not assigned a token
+// ID, as they will not be matching anything by token (although they may match
+// an Expression).
+//
+//     [0                                        UINT32_MAX]
+//     [           TokenGroupIDs             ] [unused-----]
+//     [Expression IDs] [Raw Lookup Token IDs] [unused-----]
+typedef uint32_t TokenGroupID;
 
-struct PrecomputableStuff {
+struct PrecomputableHandler {
     PrecomputableEvaluator* evaluator;
-    vector<ExpressionID> expr_ids;
+    vector<TokenGroupID> token_group_ids;
 };
 
-struct DynamicStuff {
+struct DynamicHandler {
     DynamicEvaluator* evaluator;
-    vector<ExpressionID> expr_ids;
+    vector<TokenGroupID> token_group_ids;
 };
 
-struct AllInputStuff {
+struct AllInputHandler {
     AllInputEvaluator<string>* evaluator;
-    vector<ExpressionID> expr_ids;
+    vector<TokenGroupID> token_group_ids;
 };
 
 enum IndexExpressionResult {
@@ -47,14 +52,14 @@ enum IndexExpressionResult {
 
 // Holds knowledge of how to detemrine which Expressions match a token.
 //
-// Converts tokens to lists of CategoryIDs (which are the ExpressionIDs + the
-// raw token IDs).
+// Converts tokens to lists of TokenGroupIDs (which are the Expression IDs + the
+// raw token IDs which are each groups of size one).
 class ExpressionEvaluator {
   public:
     ExpressionEvaluator();
     ~ExpressionEvaluator();
 
-    // Construct indexes for translating tokens to CategoryIDs.
+    // Construct indexes for translating tokens to TokenGroupIDs.
     //
     // Takes ownership of the pointers.
     //
@@ -71,37 +76,38 @@ class ExpressionEvaluator {
     // Nuke everything.  Deletes all objects (ie, the Evaluators).
     void Clear();
 
-    // Token -> CategoryIDs, per token.
+    // Token -> TokenGroupIDs (Expression IDs + RawLookupTokenIDs), per token.
     //
     // If called before Init(), the caller will get empty vectors.
     //
     // Returns false on internal error.
-    bool CategorizeTokens(const vector<string>& tokens,
-                          vector<vector<CategoryID>>* cat_id_lists) const;
+    bool LookUpTokens(
+        const vector<string>& tokens,
+        vector<vector<TokenGroupID>>* group_id_lists) const;
 
-    // Canonical string form of an Expression -> ExpressionID.
+    // Canonical string form of an Expression -> TokenGroupID.
     //
     // Returns false on unknown Expression.
     bool GetExpressionID(const string& expr_canonical_string,
-                         ExpressionID* expr_id) const;
+                         TokenGroupID* group_id) const;
 
-    // CategoryID -> human-friendly string.
+    // TokenGroupID -> human-friendly string.
     //
-    // CategoryID must be valid.
-    void GetPrettyCategory(CategoryID cat_id, string* pretty) const;
+    // TokenGroupID must be valid.
+    void GetPrettyTokenGroup(TokenGroupID group_id, string* pretty) const;
 
   private:
     // Init() helpers.
 
     IndexExpressionResult IndexPrecomputableExpression(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
-        const Expression& expr, ExpressionID expr_id);
+        const Expression& expr, TokenGroupID group_id);
 
     IndexExpressionResult IndexDynamicExpression(
-        const Expression& expr, ExpressionID expr_id);
+        const Expression& expr, TokenGroupID group_id);
 
-    IndexExpressionResult IndexAllTokenExpression(
-        const Expression& expr, ExpressionID expr_id);
+    IndexExpressionResult IndexAllInputExpression(
+        const Expression& expr, TokenGroupID group_id);
 
     // All expressions in the index.
     //
@@ -110,26 +116,26 @@ class ExpressionEvaluator {
 
     // Each unique raw token in the Init() input.
     //
-    // CategoryIDs offset by expressions_.size() corresdpong to these.
+    // TokenGroupIDs offset by expressions_.size() corresdpong to these.
     vector<string> raw_tokens_;
 
-    // Expression canonical string -> Category ID.
-    unordered_map<string, CategoryID> exprstr2catid_;
+    // Expression canonical string -> TokenGroupID.
+    unordered_map<string, TokenGroupID> exprstr2groupid_;
 
-    // Token -> precomputed Category IDs.
-    unordered_map<string, vector<CategoryID>> token2catids_;
+    // Token -> precomputed TokenGroupIDs.
+    unordered_map<string, vector<TokenGroupID>> token2groupids_;
 
-    // Type -> PrecomputableEvaluator and Expression list.
+    // Type -> PrecomputableEvaluator and Expression indexes.
     //
-    // Not used during CategorizeTokens(), as the results of the Expressions
+    // Not used during LookUpTokens(), as the results of the Expressions
     // are precomputed.
-    unordered_map<string, PrecomputableStuff> precompute_type2stuff_;
+    unordered_map<string, PrecomputableHandler> precompute_type2stuff_;
 
-    // Type -> DynamicEvaluator and Expression list.
-    unordered_map<string, DynamicStuff> dynamic_type2stuff_;
+    // Type -> DynamicEvaluator and Expression indexes.
+    unordered_map<string, DynamicHandler> dynamic_type2stuff_;
 
-    // Type -> AllInputEvaluator and Expression list.
-    unordered_map<string, AllInputStuff> all_input_type2stuff_;
+    // Type -> AllInputEvaluator and Expression indexes.
+    unordered_map<string, AllInputHandler> all_input_type2stuff_;
 };
 
 #endif // CC_EXPRESSION_EXPRESSION_EVALUATOR_H_

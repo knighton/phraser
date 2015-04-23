@@ -9,6 +9,7 @@
 #include "cc/english/verb/conjugation_spec.h"
 #include "cc/english/verb/conjugation_spec_derivation.h"
 #include "cc/english/verb/verb_evaluator.h"
+#include "cc/english/english_config.h"
 #include "cc/tagging/lapos/lapos_tagger.h"
 
 using std::string;
@@ -81,7 +82,7 @@ static VerbEvaluator* MakeVerbEvaluator() {
 #undef T
 
 bool EnglishExpressionEvaluator::InitWithData(
-        const string& lapos_model_f, const vector<Expression>& expressions,
+        const EnglishConfig& config, const vector<Expression>& expressions,
         const vector<string>& raw_tokens) {
     VerbEvaluator* v = MakeVerbEvaluator();
     unordered_map<string, PrecomputableEvaluator*> type2precomputable = {
@@ -94,7 +95,7 @@ bool EnglishExpressionEvaluator::InitWithData(
     };
 
     unordered_map<string, AllInputEvaluator<string>*> type2all_input = {
-        {"tag", MakeTagEvaluator(lapos_model_f)},
+        {"tag", MakeTagEvaluator(config.lapos_model_f)},
     };
 
     InitWithEvaluatorsAndData(

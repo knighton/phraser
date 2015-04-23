@@ -49,6 +49,7 @@ template <typename Atom, typename Token, typename AtomTokenComparer>
 class SequenceDetector {
   public:
     SequenceDetector();
+    SequenceDetector(const SequenceDetector& other);
     ~SequenceDetector();
 
     // Constructs an index given some blocks.

@@ -10,6 +10,19 @@ SequenceDetector<Atom, Token, AtomTokenComparer>::SequenceDetector() :
 }
 
 template <typename Atom, typename Token, typename AtomTokenComparer>
+SequenceDetector<Atom, Token, AtomTokenComparer>::SequenceDetector(
+        const SequenceDetector<Atom, Token, AtomTokenComparer>& other) {
+    blocks_ = other.blocks_;
+
+    if (other.block_infos_) {
+        block_infos_ = new BlockInfo<Atom>[other.blocks_.size()];
+        for (auto i = 0u; i < other.blocks_.size(); ++i) {
+            block_infos_[i] = other.block_infos_[i];
+        }
+    }
+}
+
+template <typename Atom, typename Token, typename AtomTokenComparer>
 SequenceDetector<Atom, Token, AtomTokenComparer>::~SequenceDetector() {
     if (block_infos_) {
         delete block_infos_;

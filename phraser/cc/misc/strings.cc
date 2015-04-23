@@ -40,4 +40,35 @@ void SplitByWhitespace(const string& s, vector<string>* v) {
 
 #undef INDEX_DNE
 
+void Trim(string* s) {
+    if (s->empty()) {
+        return;
+    }
+
+    auto begin = ~0u;
+    for (auto i = 0u; i < s->size(); ++i) {
+        auto& c = (*s)[i];
+        if (!isspace(c)) {
+            begin = i;
+            break;
+        }
+    }
+
+    if (begin == ~0u) {
+        s->clear();
+        return;
+    }
+
+    auto end = ~0u;
+    for (auto i = s->size() - 1; i != ~0u; --i) {
+        auto& c = (*s)[i];
+        if (isspace(c)) {
+            end = i;
+            break;
+        }
+    }
+
+    *s = s->substr(begin, end - begin);
+}
+
 }  // namespace string

@@ -21,6 +21,9 @@ void Split(const string& s, char c, vector<string>* v);
 // Split by whitespace.  Ignore whitespace on either end.
 void SplitByWhitespace(const string& s, vector<string>* v);
 
+// Trim both sides.
+void Trim(string* s);
+
 }  // namespace string
 
 #endif  // CC_MISC_STRINGS_H_

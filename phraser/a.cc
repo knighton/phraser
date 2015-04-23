@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <unordered_map>
 
-#include "cc/sequences/vector_membership_sequence_detector.h"
+#include "cc/sequence/vector_membership_sequence_detector.h"
 
 #include "cc/tagging/lapos/lapos_tagger.h"
 

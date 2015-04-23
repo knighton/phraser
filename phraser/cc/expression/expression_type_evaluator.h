@@ -18,6 +18,8 @@ class ExpressionTypeEvaluator {
   public:
     virtual ~ExpressionTypeEvaluator();
 
+    const string& type() const { return type_; }
+
     // Is the expression possible?
     //
     // Reasons for false that are common to all Expression type Evaluators:
@@ -28,6 +30,14 @@ class ExpressionTypeEvaluator {
     // * Its args are invalid (override AreArgsPossible()).
     bool IsExpressionPossible(const Expression& expr) const;
 
+    // Given a list of dimension values, arrange them according to which
+    // dimension they belong to (which are not given).
+    //
+    // Returns false if unkonwn value.
+    bool OrganizeExpressionDimensionValues(
+        const vector<string>& filters,
+        unordered_map<string, unordered_set<string>>* values) const;
+
   protected:
     // Check the expression's args.
     //
@@ -36,6 +46,7 @@ class ExpressionTypeEvaluator {
 
     string type_;
     unordered_map<string, unordered_set<string>> dimension2possible_values_;
+    unordered_map<string, string> value2dimension_;
 };
 
 #endif  // CC_EXPRESSION_EXPRESSION_TYPE_EVALUATOR_H_

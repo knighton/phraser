@@ -1,200 +1,314 @@
 #include "expression_evaluator.h"
 
-#include <algorithm>
-#include <unordered_set>
+#include "cc/misc/strings.h"
 
-using std::unordered_set;
+bool ExprEvalVocabulary::IdentifyToken(const string& token, size_t* index) {
+    auto it = token2index_.find(token);
+    if (it != token2index_.end()) {
+        *index = it->second;
+        return true;
+    }
 
-ExpressionEvaluator::ExpressionEvaluator() {
+    *index = tokens_.size();
+    token2index_[token] = *index;
+    tokens_.emplace_back(token);
+    return false;
 }
 
-ExpressionEvaluator::~ExpressionEvaluator() {
-    Clear();
+const string& ExprEvalVocabulary::GetToken(size_t index) const {
+    return tokens_[index];
+}
+
+bool ExprEvalVocabulary::IdentifyExpression(
+        const string& canon_expr_str, const Expression& expr, size_t* index) {
+    auto it = exprstr2index_.find(canon_expr_str);
+    if (it != exprstr2index_.end()) {
+        *index = it->second;
+        return true;
+    }
+
+    *index = expressions_.size();
+    exprstr2index_[canon_expr_str] = *index;
+    expressions_.emplace_back(expr);
+    return false;
+}
+
+const Expression& ExprEvalVocabulary::GetExpression(size_t index) const {
+    return expressions_[index];
+}
+
+void ExprEvalVocabulary::Clear() {
+    tokens_.clear();
+    token2index_.clear();
+    expressions_.clear();
+    exprstr2index_.clear();
+}
+
+static TokenGroupID TokenGroupIDFromTokenIndex(size_t index) {
+    return static_cast<TokenGroupID>(index * 2 + 1);
+}
+
+static size_t TokenIndexFromTokenGroupID(TokenGroupID group_id) {
+    return static_cast<size_t>(group_id / 2);
 }
 
 static TokenGroupID TokenGroupIDFromExpressionIndex(size_t index) {
     return static_cast<TokenGroupID>(index * 2);
 }
 
-static TokenGroupID TokenGroupIDFromRawTokenIndex(size_t index) {
-    return static_cast<TokenGroupID>(index * 2 + 1);
-}
-
-IndexExpressionResult ExpressionEvaluator::IndexPrecomputableExpression(
-        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
-        const Expression& expr, TokenGroupID group_id) {
-    auto it = type2precompute.find(expr.type());
-    if (it == type2precompute.end()) {
-        return IER_NOT_MY_TYPE;
-    }
-
-    auto* evaluator = it->second;
-    vector<string> tokens;
-    if (!evaluator->GetExpressionMatches(expr, &tokens)) {
-        return IER_INVALID;
-    }
-
-    sort(tokens.begin(), tokens.end());
-    for (auto& token : tokens) {
-        token2groupids_[token].push_back(group_id);
-    }
-
-    precompute_type2handler_[expr.type()].group_ids.emplace_back(group_id);
-    return IER_SUCCESS;
-}
-
-IndexExpressionResult ExpressionEvaluator::IndexDynamicExpression(
-        const Expression& expr, GroupID group_id) {
-    auto it = dynamic_type2handler_.find(expr.type());
-    if (it == dynamic_type2handler_.end()) {
-        return IER_NOT_MY_TYPE;
-    }
-
-    auto& handler = it->second;
-    if (!handler.evaluator->IsExpressionPossible(expr)) {
-        return IER_INVALID;
-    }
-
-    handler.token_group_ids.push_back(group_id);
-    return IER_SUCCESS;
-}
-
-IndexExpressionResult ExpressionEvaluator::IndexAllTokenExpression(
-        const Expression& expr, TokenGroupID group_id) {
-    auto it = all_input_type2handler_.find(expr.type());
-    if (it == all_input_type2handler_.end()) {
-        return IER_NOT_MY_TYPE;
-    }
-
-    auto& handler = it->second;
-    if (!handler.evaluator->IsExpressionPossible(expr)) {
-        return IER_INVALID;
-    }
-
-    handler.token_group_ids.push_back(group_id);
-    return IER_SUCCESS;
+static size_t ExpressionIndexFromTokenGroupID(TokenGroupID group_id) {
+    return static_cast<size_t>(group_id / 2);
 }
 
 void ExpressionEvaluator::Clear() {
-    expressions_.clear();
-    raw_tokens_.clear();
-    token2groupids_.clear();
-
-    for (auto& it : precompute_type2handler_) {
-        auto& handler = it.second;
-        if (handler.evaluator) {
-            delete handler.evaluator;
+    for (auto& it : precomputable_type2handler_) {
+        auto& e = it.second.evaluator;
+        if (e) {
+            delete e;
+            e = NULL;
         }
     }
-
     for (auto& it : dynamic_type2handler_) {
-        auto& handler = it.second;
-        if (handler.evaluator) {
-            delete handler.evaluator;
+        auto& e = it.second.evaluator;
+        if (e) {
+            delete e;
+            e = NULL;
+        }
+    }
+    for (auto& it : all_at_once_type2handler_) {
+        auto& e = it.second.evaluator;
+        if (e) {
+            delete e;
+            e = NULL;
         }
     }
 
-    for (auto& it : all_input_type2handler_) {
-        auto& handler = it.second;
-        if (handler.evaluator) {
-            delete handler.evaluator;
-        }
-    }
+    vocab_.Clear();
 
-    precompute_type2handler_.clear();
-    dynamic_type2handler_.clear();
-    all_input_type2handler_.clear();
+    token2precomputed_.clear();
 }
 
-bool ExpressionEvaluator::InitWithEvaluatorsAndData(
+bool ExpressionEvaluator::InitWithEvaluators(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
-        const unordered_map<string, AllInputEvaluator<string>*>& type2all_input,
-        const vector<Expression>& all_unique_expressions,
-        const vector<string>& all_unique_raw_tokens) {
+        const unordered_map<string, AllAtOnceEvaluator<string>*>&
+            type2allatonce) {
     Clear();
 
-    // Verify uniqueness of the raw tokens list.
-    unordered_set<string> raw_tokens_set;
-    for (auto& raw_token : all_unique_raw_tokens) {
-        if (raw_tokens_set.find(raw_token) != raw_tokens_set.end()) {
-            return false;
-        }
-        raw_tokens_set.insert(raw_token);
-    }
-    raw_tokens_ = all_unique_raw_tokens;
-
-    // Save the precompute expressions for future reference (but they are not
-    // used in LookUpTokens() because they are precomputed).
     for (auto& it : type2precompute) {
-        precompute_type2handler_[it.first].evaluator = it.second;
+        auto& eval = it.second;
+        if (!eval) {
+            return false;
+        }
+
+        precomputable_type2handler_[it.first].evaluator = eval;
     }
 
-    // Save the dynamic (open class) type evaluators, because we'll need them in
-    // LookUpTokens().
     for (auto& it : type2dynamic) {
-        dynamic_type2handler_[it.first].evaluator = it.second;
+        auto& eval = it.second;
+        if (!eval) {
+            return false;
+        }
+
+        dynamic_type2handler_[it.first].evaluator = eval;
     }
-    for (auto& it : type2all_input) {
-        all_input_type2handler_[it.first].evaluator = it.second;
-    }
 
-    // For each expression,
-    unordered_set<string> expr_strings_set;  // Set of Expression canonical str.
-    for (auto i = 0u; i < all_unique_expressions.size(); ++i) {
-        auto& expr = expressions[i];
-
-        // Bail if we have seen the expression before.
-        string expr_str;
-        expr.ToCanonicalString(&expr_str);
-        if (expr_strings_set.find(expr_str) != expr_strings_set.end()) {
+    for (auto& it : type2allatonce) {
+        auto& eval = it.second;
+        if (!eval) {
             return false;
         }
 
-        // Note the new expression.
-        expressions_.emplace_back(expr);
-        TokenGroupID group_id =
-            TokenGroupIDFromExpressionIndex(exprstr2groupid.size());
-        expr_strings_set.insert(expr_str);
-
-        // If it was recognized as a precompute type, get the list of tokens
-        // that the Expression yields when evaluated and index them.
-        //
-        // Expressions can only be one type, so if we got a match, we're done.
-        auto r = IndexPrecomputableExpression(type2precompute, expr, group_id);
-        if (r == IER_INVALID) {
-            return false;
-        } else if (r == IER_SUCCESS) {
-            continue;
-        }
-
-        // For dynamic types, we can only verify that the generating expression
-        // is valid (has dimensions we know about and is the right type).
-
-        // Single-token dynamic expressions.
-        r = IndexDynamicExpression(expr, group_id);
-        if (r == IER_INVALID) {
-            return false;
-        } else if (r == IER_SUCCESS) {
-            continue;
-        }
-
-        // Dymamic expressions that require all the tokens at once.
-        r = IndexAllTokenExpression(expr, group_id);
-        if (r == IER_INVALID) {
-            return false;
-        } else if (r == IER_SUCCESS) {
-            continue;
-        }
-
-        // Unknown type.
-        return false;
+        all_at_once_type2handler_[it.first].evaluator = eval;
     }
 
     return true;
 }
 
-bool ExpressionEvaluator::LookUpTokens(
+bool ExpressionEvaluator::AddToken(
+        const string& token, TokenGroupID* group_id) {
+    // Get/create the token's TokenGroupID.
+    size_t index;
+    bool found = vocab_.IdentifyToken(token, &index);
+    *group_id = TokenGroupIDFromTokenIndex(index);
+
+    // If we've never seen it before, add it to the precomputed table.
+    if (!found) {
+        token2precomputed_[token].emplace_back(*group_id);
+    }
+
+    return true;
+}
+
+bool ExpressionEvaluator::IndexAnExpression(
+        const Expression& expr, TokenGroupID group_id) {
+    // Get the handler for the Expression.  There can be only one, since each
+    // Expression Evaluator implements a different Expression type.
+    //
+    // We split the mappings by Evaluator type because they have to be treated
+    // differently in EvaluteTokens().
+
+    // PrecomputableEvaluator: precompute.
+    auto it = precomputable_type2handler_.find(expr.type());
+    if (it != precomputable_type2handler_.end()) {
+        auto& handler = it->second;
+        vector<string> tokens;
+        if (!handler.evaluator->GetExpressionMatches(expr, &tokens)) {
+            return false;
+        }
+
+        for (auto& token : tokens) {
+            token2precomputed_[token].emplace_back(group_id);
+        }
+
+        handler.token_group_ids.emplace_back(group_id);
+        return true;
+    }
+
+    // DynamicEvaluator: check validity.
+    auto jt = dynamic_type2handler_.find(expr.type());
+    if (jt != dynamic_type2handler_.end()) {
+        auto& handler = jt->second;
+        if (!handler.evaluator->IsExpressionPossible(expr)) {
+            return false;
+        }
+
+        handler.token_group_ids.emplace_back(group_id);
+        return true;
+    }
+
+    // AllAtOnceEvaluator: check validity.
+    auto kt = all_at_once_type2handler_.find(expr.type());
+    if (kt != all_at_once_type2handler_.end()) {
+        auto& handler = kt->second;
+        if (!handler.evaluator->IsExpressionPossible(expr)) {
+            return false;
+        }
+
+        handler.token_group_ids.emplace_back(group_id);
+        return true;
+    }
+
+    return false;
+}
+
+static bool ParseRawExpression(
+        const string& raw_expr_str, string* type, vector<string>* args,
+        vector<string>* flags) {
+    type->clear();
+    args->clear();
+    flags->clear();
+
+    vector<string> v;
+    strings::SplitByWhitespace(raw_expr_str, &v);
+
+    if (v.empty()) {
+        return false;
+    }
+
+    if (v[0].empty()) {
+        return false;
+    }
+
+    if (v[0][0] == '+') {
+        return false;
+    }
+
+    *type = v[0];
+
+    auto i = 1u;
+    for (; i < v.size(); ++i) {
+        if (v[i].empty()) {
+            return false;
+        }
+        if (v[i][0] == '+') {
+            break;
+        }
+        args->emplace_back(v[i]);
+    }
+
+    for (; i < v.size(); ++i) {
+        if (v[i].empty()) {
+            return false;
+        }
+        if (v[i][0] != '+') {
+            return false;
+        }
+        flags->emplace_back(v[i].substr(1));
+    }
+
+    return true;
+}
+
+ExpressionTypeEvaluator* ExpressionEvaluator::FindExpressionEvaluator(
+        const string& expr_type) const {
+    auto it = precomputable_type2handler_.find(expr_type);
+    if (it != precomputable_type2handler_.end()) {
+        return it->second.evaluator;
+    }
+
+    auto jt = dynamic_type2handler_.find(expr_type);
+    if (jt != dynamic_type2handler_.end()) {
+        return jt->second.evaluator;
+    }
+
+    auto kt = all_at_once_type2handler_.find(expr_type);
+    if (kt != all_at_once_type2handler_.end()) {
+        return kt->second.evaluator;
+    }
+
+    return NULL;
+}
+
+bool ExpressionEvaluator::ParseExpression(
+        const string& raw_expr_str, Expression* expr) const {
+    string type;
+    vector<string> args;
+    vector<string> flags;
+    if (!ParseRawExpression(raw_expr_str, &type, &args, &flags)) {
+        return false;
+    }
+
+    ExpressionTypeEvaluator* evaluator = FindExpressionEvaluator(type);
+    if (!evaluator) {
+        return false;
+    }
+
+    unordered_map<string, unordered_set<string>> dim2values;
+    if (!evaluator->OrganizeExpressionDimensionValues(flags, &dim2values)) {
+        return false;
+    }
+
+    expr->Init(type, args, dim2values);
+    return true;
+}
+
+bool ExpressionEvaluator::AddExpression(
+        const string& raw_expr_str, TokenGroupID* group_id) {
+    // Try to parse an Expression out of the string.
+    Expression expr;
+    if (!ParseExpression(raw_expr_str, &expr)) {
+        return false;
+    }
+
+    // Dump the Expression to a new string in canonical form.
+    string canon_expr_str;
+    expr.ToCanonicalString(&canon_expr_str);
+
+    // Get/create the Expression's TokenGroupID.
+    size_t index;
+    bool found = vocab_.IdentifyExpression(canon_expr_str, expr, &index);
+    *group_id = TokenGroupIDFromExpressionIndex(index);
+
+    // If it's already been processed, we're done.
+    if (found) {
+        return true;
+    }
+
+    return IndexAnExpression(expr, *group_id);
+}
+
+bool ExpressionEvaluator::EvaluateTokens(
         const vector<string>& tokens,
         vector<vector<TokenGroupID>>* group_id_lists) const {
     group_id_lists->clear();
@@ -205,30 +319,37 @@ bool ExpressionEvaluator::LookUpTokens(
         auto& token = tokens[i];
         auto& group_ids = (*group_id_lists)[i];
 
-        // First, check our precomputed string -> TokenGroupID lookup table.
+        // First, check our precomputed string -> TokenGroupID lookup table.  It
+        // will have the results from all the precomputable Expressions.
         {
-            auto it = token2groupids_.find(token);
-            if (it != token2groupids_.end()) {
+            auto it = token2precomputed_.find(token);
+            if (it != token2precomputed_.end()) {
                 group_ids = it->second;
             }
         }
 
-        // Then, run the open class types (like regex) against the token.
+        // Then, run the open class one token types (like regex) against it.
         for (auto& it : dynamic_type2handler_) {
             auto& handler = it.second;
 
-            // Cheap check first to rule things out.
+            // If we have no Expressions to match of that type, skip it.
+            if (handler.token_group_ids.empty()) {
+                continue;
+            }
+
+            // Do a cheap check first to rule things out.
             if (!handler.evaluator->MightMatch(token)) {
                 continue;
             }
 
-            // Then, get features from the token.
+            // If we couldn't rule it out, get features from the token.
             unordered_map<string, string> features;
             handler.evaluator->FeaturesFromToken(token, &features);
 
-            // If it might match, check each expression for a match.
+            // Check each expression for a match.
             for (auto& group_id : handler.token_group_ids) {
-                auto& expr = expressions_[group_id];
+                size_t index = ExpressionIndexFromTokenGroupID(group_id);
+                auto& expr = vocab_.GetExpression(index);
                 if (expr.AcceptsFeatures(features)) {
                     group_ids.emplace_back(group_id);
                 }
@@ -236,29 +357,30 @@ bool ExpressionEvaluator::LookUpTokens(
         }
     }
 
-    // Finally, run the expression evaluators that require all tokens at once
-    // (like tagging).
-    for (auto& it : all_input_type2handler_) {
+    // For each all-at-once Expression evaluator,
+    for (auto& it : all_at_once_type2handler_) {
         auto& handler = it.second;
 
-        // No Expressions that require that type?  Skip it.
-        if (!handler.token_group_ids.size()) {
+        // If we have no Expressions to match of that type, skip it.
+        if (handler.token_group_ids.empty()) {
             continue;
         }
 
         // Classify each token.
-        vector<string> analyses;
-        if (!handler.evaluator->AnalyzeTokens(tokens, &analyses)) {
+        vector<string> tags;  // Call it "tags", but it could be any kind of
+                              // annotation.
+        if (!handler.evaluator->AnalyzeTokens(tokens, &tags)) {
             return false;
         }
 
-        // Evaluate the Expressions against that.  Append the IDs of the ones
-        // that match.
-        for (auto i = 0u; i < analyses.size(); ++i) {
-            auto& extra = analyses[i];
+        // Evaluate the Expressions against that result.  Append the
+        // TokenGroupIDs of the ones that match.
+        for (auto i = 0u; i < tags.size(); ++i) {
+            auto& tag = tags[i];
             for (auto& group_id : handler.token_group_ids) {
-                auto& expr = expressions_[group_id];
-                if (handler.evaluator->IsMatch(expr, tokens[i], extra)) {
+                size_t index = ExpressionIndexFromTokenGroupID(group_id);
+                auto& expr = vocab_.GetExpression(index);
+                if (handler.evaluator->IsMatch(expr, tokens[i], tag)) {
                     (*group_id_lists)[i].emplace_back(group_id);
                 }
             }
@@ -268,12 +390,15 @@ bool ExpressionEvaluator::LookUpTokens(
     return true;
 }
 
-void ExpressionEvaluator::GetPrettyTokenGroup(
+bool ExpressionEvaluator::GetPrettyTokenGroup(
         TokenGroupID group_id, string* pretty) const {
     if (group_id % 2) {
-        *pretty = raw_tokens_[group_id / 2];
+        size_t index = TokenIndexFromTokenGroupID(group_id);
+        *pretty = vocab_.GetToken(index);
     } else {
-        auto& expr = expressions_[group_id / 2];
+        size_t index = ExpressionIndexFromTokenGroupID(group_id);
+        auto& expr = vocab_.GetExpression(index);
         expr.ToCanonicalString(pretty);
     }
+    return true;
 }

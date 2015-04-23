@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "cc/expression/all_input_evaluator.h"
+#include "cc/expression/all_at_once_evaluator.h"
 #include "cc/tagging/tagger.h"
 
 using std::string;
 using std::vector;
 
-class TagEvaluator : public AllInputEvaluator<string> {
+class TagEvaluator : public AllAtOnceEvaluator<string> {
   public:
     TagEvaluator();
     ~TagEvaluator();

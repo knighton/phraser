@@ -81,9 +81,7 @@ static VerbEvaluator* MakeVerbEvaluator() {
 
 #undef T
 
-bool EnglishExpressionEvaluator::InitWithData(
-        const EnglishConfig& config, const vector<Expression>& expressions,
-        const vector<string>& raw_tokens) {
+bool EnglishExpressionEvaluator::InitWithConfig(const EnglishConfig& config) {
     VerbEvaluator* v = MakeVerbEvaluator();
     unordered_map<string, PrecomputableEvaluator*> type2precomputable = {
         {"to",   v},
@@ -94,12 +92,10 @@ bool EnglishExpressionEvaluator::InitWithData(
         {"number", MakeNumberEvaluator()},
     };
 
-    unordered_map<string, AllInputEvaluator<string>*> type2all_input = {
+    unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once = {
         {"tag", MakeTagEvaluator(config.lapos_model_f)},
     };
 
-    InitWithEvaluatorsAndData(
-        type2precomputable, type2dynamic, type2all_input, expressions,
-        raw_tokens);
-    return true;
+    return InitWithEvaluators(type2precomputable, type2dynamic,
+                              type2all_at_once);
 }

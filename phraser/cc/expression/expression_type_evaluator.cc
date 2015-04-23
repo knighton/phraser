@@ -29,3 +29,19 @@ bool ExpressionTypeEvaluator::IsExpressionPossible(
 
     return AreArgsPossible(expr.args());
 }
+
+bool ExpressionTypeEvaluator::OrganizeExpressionDimensionValues(
+        const vector<string>& values,
+        unordered_map<string, unordered_set<string>>* dim2values) const {
+    for (auto& value : values) {
+        auto it = value2dimension_.find(value);
+        if (it == value2dimension_.end()) {
+            return false;
+        }
+
+        auto& dim = it->second;
+        (*dim2values)[dim].insert(value);
+    }
+
+    return true;
+}

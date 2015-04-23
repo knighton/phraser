@@ -1,93 +1,99 @@
 #ifndef CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
 #define CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
 
-#include "cc/expression/all_input_evaluator.h"
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+#include "cc/expression/all_at_once_evaluator.h"
 #include "cc/expression/dynamic_evaluator.h"
-#include "cc/expression/expression.h"
+#include "cc/expression/expression_evaluator.h"
 #include "cc/expression/precomputable_evaluator.h"
 
-#include <string>
-#include <vector>
-#include <unordered_map>
-
 using std::string;
-using std::vector;
 using std::unordered_map;
+using std::vector;
 
 // We map input tokens to lists of integers (TokenGroupIDs).
 //
-// TokenGroupIDs refer to either (a) an Expression that matched the token, or
-// (b) a raw token present in the lookup index that matched.
+// TokenGroupIDs are not necessarily consecutive.  TokenGroupIDs refer to
+// either (a) an Expression that matched the token, or (b) a verbatim token
+// present in the lookup index that matched.
 //
-// If even: divide by two, and that is the index in the expressions_ vector.
+// If even: divide by two, and that is the index in the expression_ vector.
 //
-// If odd: divide by two, and that is the index in the raw_tokens_ vector.
-//
-// If the Expression was not in the input, it will not be recognized.  In
-// LookUpTokens(), words that have not been seen before are not assigned a token
-// ID, as they will not be matching anything by token (although they may match
-// an Expression).
-typedef int32_t TokenGroupID;
+// If odd: divide by two, and that is the index in the tokens_ vector.
+typedef uint32_t TokenGroupID;
 
-struct PrecomputableHandler {
-    PrecomputableEvaluator* evaluator;
+template <typename EE>
+struct TypeHandler {
+    // ExpressionEvaluator* evaluator;
+    EE* evaluator;
     vector<TokenGroupID> token_group_ids;
 };
 
-struct DynamicHandler {
-    DynamicEvaluator* evaluator;
-    vector<TokenGroupID> token_group_ids;
-};
-
-struct AllInputHandler {
-    AllInputEvaluator<string>* evaluator;
-    vector<TokenGroupID> token_group_ids;
-};
-
-enum IndexExpressionResult {
-    IER_NOT_MY_TYPE,
-    IER_INVALID,
-    IER_SUCCESS,
-};
-
-// Holds knowledge of how to detemrine which Expressions match a token.
-//
-// Converts tokens to lists of TokenGroupIDs (which are the Expression IDs + the
-// raw token IDs which are each groups of size one).
-class ExpressionEvaluator {
+// A dictionary of Expressions and tokens.
+class ExprEvalVocabulary {
   public:
-    ExpressionEvaluator();
-    ~ExpressionEvaluator();
+    // Returns whether it already existed.
+    bool IdentifyToken(const string& token, size_t* index);
 
-    // Construct indexes for translating tokens to TokenGroupIDs.  The input
-    // 'expressions' and 'raw_tokens' must be unique.
-    //
-    // Takes ownership of the pointers.
-    //
-    // Returns false on failure:
-    // * Invalid Expression encountered
-    // * Non-unique Expression list
-    // * Non-unique raw token list
-    bool InitWithEvaluatorsAndData(
-        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
-        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
-        const unordered_map<string,
-            AllInputEvaluator<string>*>& type2all_token_dymamic,
-        const vector<Expression>& all_unique_expressions,
-        const vector<string>& all_unique_raw_tokens);
+    const string& GetToken(size_t index) const;
 
-    // Nuke everything.  Deletes all objects (ie, the Evaluators).
+    // Returns whether it already existed.
+    bool IdentifyExpression(
+        const string& canon_expr_str, const Expression& expr, size_t* index);
+
+    const Expression& GetExpression(size_t index) const;
+
     void Clear();
 
-    // Token -> list of TokenGroupIDs per token.
+  private:
+    vector<string> tokens_;
+    unordered_map<string, size_t> token2index_;
+
+    vector<Expression> expressions_;
+    unordered_map<string, size_t> exprstr2index_;
+};
+
+class ExpressionEvaluator {
+  public:
+    // Nuke everything.  You can't just do wipe out Evaluators or just the
+    // vocabulary due to the precomputing.
+    void Clear();
+
+    // Set the evaluators to use.  Calls Clear() first.
+    //
+    // Takes ownership of pointers.
+    bool InitWithEvaluators(
+        const unordered_map<string, PrecomputableEvaluator*>& type2precompoute,
+        const unordered_map<string, DynamicEvaluator*>& type2dynamic,
+        const unordered_map<string, AllAtOnceEvaluator<string>*>&
+            type2allatonce);
+
+    // Add the token to my internal dictionary.
+    //
+    // Returns false on error.
+    bool AddToken(const string& token, TokenGroupID* group_id);
+
+    // Returns whether it succeeded.
+    bool ParseExpression(const string& raw_expr_str, Expression* expr) const;
+
+    // Parse an Expression and add it to my internal dictionary (if it's
+    // precomputable, add all the tokens it results in, else just keep it
+    // around to call during EvaluateTokens() dynamically).
+    //
+    // Returns false on error (such as invalid Expression string).
+    bool AddExpression(const string& raw_expr_str, TokenGroupID* group_id);
+
+    // Map token -> list of TokenGroupIDs.
     //
     // Returned lists will usually be empty (depending on how promiscuous your
     // config is).  If called before Init(), the caller will get empty lists.
     //
-    // Returns false on internal error.
-    bool Evaluate(
-        const vector<string>& tokens,
-        vector<vector<TokenGroupID>>* group_id_lists) const;
+    // Returns false on error.
+    bool EvaluateTokens(const vector<string>& tokens,
+                        vector<vector<TokenGroupID>>* group_id_lists) const;
 
     // TokenGroupID -> human-friendly string.
     //
@@ -95,42 +101,35 @@ class ExpressionEvaluator {
     bool GetPrettyTokenGroup(TokenGroupID group_id, string* pretty) const;
 
   private:
-    // Init() helpers.
 
-    IndexExpressionResult IndexPrecomputableExpression(
-        const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
-        const Expression& expr, TokenGroupID group_id);
+    // Find the ExpressionTypeEvaluator subclass for a Expression type (checking
+    // the three *_type2handler_ lookup tables).
+    ExpressionTypeEvaluator* FindExpressionEvaluator(
+            const string& expr_type) const;
 
-    IndexExpressionResult IndexDynamicExpression(
-        const Expression& expr, TokenGroupID group_id);
+    // Precompute what we can.  Add an entry to the appropriate handler.
+    bool IndexAnExpression(const Expression& expr, TokenGroupID group_id);
 
-    IndexExpressionResult IndexAllInputExpression(
-        const Expression& expr, TokenGroupID group_id);
+    // Expression type -> ExpressionEvaluator and indexes of all the Expressions
+    // of that type.  Split by which type of ExpressionEvaluator it is because
+    // they behave differently.
+    unordered_map<string, TypeHandler<PrecomputableEvaluator>>
+        precomputable_type2handler_;
+    unordered_map<string, TypeHandler<DynamicEvaluator>> dynamic_type2handler_;
+    unordered_map<string, TypeHandler<AllAtOnceEvaluator<string>>>
+        all_at_once_type2handler_;
 
-    // All expressions in the index built in Init().
+    // All the Expressions and tokens that this object knows.
+    ExprEvalVocabulary vocab_;
+
+    // Token -> list of TokenGroupIDs.
     //
-    // Index * 2 = TokenGroupID of Expression.
-    vector<Expression> expressions_;
-
-    // Each unique raw token in the index built in Init().
+    // We get them from:
+    // * AddToken()
+    // * AddExpression() of a PrecomputableExpressions
     //
-    // Index * 2 + 1 = TokenGroupID of raw token.
-    vector<string> raw_tokens_;
-
-    // Token -> precomputed TokenGroupIDs.
-    unordered_map<string, vector<TokenGroupID>> token2groupids_;
-
-    // Type -> PrecomputableEvaluator and Expression indexes.
-    //
-    // Not used during LookUpTokens(), as the results of the Expressions
-    // are precomputed.
-    unordered_map<string, PrecomputableHandler> precompute_type2stuff_;
-
-    // Type -> DynamicEvaluator and Expression indexes.
-    unordered_map<string, DynamicHandler> dynamic_type2stuff_;
-
-    // Type -> AllInputEvaluator and Expression indexes.
-    unordered_map<string, AllInputHandler> all_input_type2stuff_;
+    // Get the rest dynamically during EvaluateTokens()..
+    unordered_map<string, vector<TokenGroupID>> token2precomputed_;
 };
 
-#endif // CC_EXPRESSION_EXPRESSION_EVALUATOR_H_
+#endif  // CC_EXPRESSION_EXPRESSION_EVALUATOR_H_

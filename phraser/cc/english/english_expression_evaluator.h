@@ -12,9 +12,7 @@ using std::string;
 class EnglishExpressionEvaluator : public ExpressionEvaluator {
   public:
     // Returns false on error.
-    bool InitWithData(const EnglishConfig& config,
-                      const vector<Expression>& expressions,
-                      const vector<string>& raw_tokens);
+    bool InitWithConfig(const EnglishConfig& config);
 };
 
 #endif  // CC_ENGLISH_ENGLISH_EXPRESSION_EVALUATOR_H_

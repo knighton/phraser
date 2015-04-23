@@ -1,5 +1,5 @@
-#ifndef CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_
-#define CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_
+#ifndef CC_EXPRESSION_ALL_AT_ONCE_EVALUATOR_H_
+#define CC_EXPRESSION_ALL_AT_ONCE_EVALUATOR_H_
 
 #include <string>
 #include <vector>
@@ -11,7 +11,7 @@ using std::string;
 using std::vector;
 
 template <typename TokenDescription>
-class AllInputEvaluator : public ExpressionTypeEvaluator {
+class AllAtOnceEvaluator : public ExpressionTypeEvaluator {
   public:
     // Tokens -> list of corresponding opaque objects (eg. tags, maps of
     // features, etc.) to be used by every Expression of this type.
@@ -29,4 +29,4 @@ class AllInputEvaluator : public ExpressionTypeEvaluator {
         const TokenDescription& desc) const = 0;
 };
 
-#endif  // CC_EXPRESSION_ALL_INPUT_EVALUATOR_H_
+#endif  // CC_EXPRESSION_ALL_AT_ONCE_EVALUATOR_H_

@@ -11,9 +11,9 @@ Expressions consist of a type, arguments, and attribute filters.  Types include:
 
 Contents:
 * [Demo](#demo)
-* [Phrase file syntax](#Phrase-file-syntax)
-* [Expression syntax](#Expression-syntax)
-* [Available expressions](#Available-expressions)
+* [Expressions](#expressions)
+* [Expression syntax](#expression-syntax)
+* [Phrase file syntax](#phrase-file-syntax)
 * [Architecture](#Architecture)
 
 iamknighton@gmail.com
@@ -45,6 +45,28 @@ Results in:
 
     TODO
 
+#### Expressions
+
+TODO
+
+#### Expression syntax
+
+    (<type> <list of 0+ args separated by whitespace> <list of 0+ filters separated by whitespace>)
+    
+or
+
+    (<upper case Penn POS tag>)
+
+or
+
+    (<list of args separated by '|'>)
+
+where
+* `(<upper case Penn POS tag>)` will be normalized to `(tag <upper case Penn POS tag>)`
+* `(<list of args separated by '|'>)` will be normalized to `(oneof <list of tokens separated by whitespace>)`
+* an arg is arbitrary text not containing whitespace with `+`, `(`, and `)` escaped with `\`
+* a filter is `^\+[a-z0-9]+$` (note the `+` prefix)
+
 #### Phrase file syntax
 
     <phrase name> = <list of 1+ comma-separated subsequence names>
@@ -66,22 +88,6 @@ where
 * a token is a string separable by whitespace
 * an expression is a string containing arbitrary text separated by `(` and `)`
 * occurences of `(` and `)` inside an expression must be escaped by `\`
-
-#### Expression syntax
-
-    (<type> <list of 0+ args separated by whitespace> <list of 0+ filters separated by whitespace>)
-    (<upper case string>)
-    (<list of args separated by '|'>)
-
-where
-* `(<upper case string>)` will be normalized to `(tag <upper case string>)`
-* `(<list of args separated by '|'>)` will be normalized to `(oneof <list of tokens separated by whitespace>)`
-* an arg is arbitrary text not containing whitespace with `+`, `(`, and `)` escaped with `\`
-* a filter is `^\+[a-z0-9]+$` (note the `+` prefix)
-
-#### Available expressions
-
-TODO
 
 #### Architecture
 

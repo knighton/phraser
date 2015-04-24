@@ -66,7 +66,7 @@ where
 a subsequence is
 
     <dash divider>
-    <1+ item lists>
+    <1+ newline-separated item lists>
 
 where
 * a phrase name is `^[a-z ]+$`

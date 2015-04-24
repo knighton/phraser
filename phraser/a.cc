@@ -26,7 +26,7 @@ static void RunTagger() {
 #define RESET "\033[0m"
 
 static void OutputError(const string& error) {
-    printf(RED "%s\n" RESET, error.c_str());
+    printf(RED "Failed: %s\n" RESET, error.c_str());
 }
 
 #undef RESET
@@ -60,6 +60,11 @@ int main() {
         return 2;
     }
 
+    printf("Results:\n");
+    for (auto i = 0u; i < results.size(); ++i) {
+        printf("#%u: \n", i);
+        results[i].Dump(indent_level + 1, spaces_per_indent);
+    }
 
     printf("Done.\n");
 }

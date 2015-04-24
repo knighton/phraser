@@ -10,11 +10,11 @@ Expressions consist of a type, arguments, and attribute filters.  Types include:
 * etc.
 
 Contents:
-* Demo
-* Phrase file syntax
-* Expression syntax
-* Available expressions
-* Architecture
+* [Demo](#demo)
+* [Phrase file syntax](#Phrase-file-syntax)
+* [Expression syntax](#Expression-syntax)
+* [Available expressions](#Available-expressions)
+* [Architecture](#Architecture)
 
 iamknighton@gmail.com
 

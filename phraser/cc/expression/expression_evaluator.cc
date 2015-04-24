@@ -310,7 +310,7 @@ bool ExpressionEvaluator::AddExpression(
 
 bool ExpressionEvaluator::EvaluateTokens(
         const vector<string>& tokens,
-        vector<vector<TokenGroupID>>* group_id_lists) const {
+        vector<vector<TokenGroupID>>* group_id_lists, string* error) const {
     group_id_lists->clear();
     group_id_lists->resize(tokens.size());
 
@@ -369,7 +369,7 @@ bool ExpressionEvaluator::EvaluateTokens(
         // Classify each token.
         vector<string> tags;  // Call it "tags", but it could be any kind of
                               // annotation.
-        if (!handler.evaluator->AnalyzeTokens(tokens, &tags)) {
+        if (!handler.evaluator->AnalyzeTokens(tokens, &tags, error)) {
             return false;
         }
 

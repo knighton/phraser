@@ -30,8 +30,9 @@ bool LaposTagger::Init(const string& model_f) {
 }
 
 bool LaposTagger::Tag(const vector<string>& orig_ss,
-                      vector<string>* tags) {
+                      vector<string>* tags, string* error) {
     if (!is_ok_) {
+        *error = "[LaposTagger] Tagger was not intialized.";
         return false;
     }
 
@@ -62,6 +63,7 @@ bool LaposTagger::Tag(const vector<string>& orig_ss,
         }
         auto it = f2s.rbegin();
         if (it == f2s.rend()) {
+            *error = "[LaposTagger] No tag probabilites for token.";
             return false;
         }
         (*tags)[i] = it->second;

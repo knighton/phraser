@@ -108,15 +108,20 @@ void SequenceDetector<Atom, Token, AtomTokenComparer>::GetPossibleOptions(
         size_t block_index, const Token& token,
         unordered_set<size_t>* option_indexes) const {
     option_indexes->clear();
-    Atom* a = AtomTokenComparer::FirstAtom(token);
-    Atom* z_encl = AtomTokenComparer::LastAtom(token);
-    for (Atom* atom = a; atom <= z_encl; ++atom) {
+
+    if (!AtomTokenComparer::NumAtoms(token)) {
+        return;
+    }
+
+    const Atom* a = AtomTokenComparer::FirstAtom(token);
+    const Atom* z_encl = AtomTokenComparer::LastAtom(token);
+    for (const Atom* atom = a; atom <= z_encl; ++atom) {
         auto& first2optionxx = block_infos_[block_index].firstatom2optionxx;
-        auto& it = first2optionxx.find(*atom);
+        auto it = first2optionxx.find(*atom);
         if (it == first2optionxx.end()) {
             continue;
         }
-        for (auto option_index : *it) {
+        for (auto& option_index : it->second) {
             option_indexes->insert(option_index);
         }
     }

@@ -11,7 +11,8 @@ class Tagger {
   public:
     virtual ~Tagger();
 
-    virtual bool Tag(const vector<string>& tokens, vector<string>* tags) = 0;
+    virtual bool Tag(const vector<string>& tokens, vector<string>* tags,
+                     string* error) = 0;
 };
 
 #endif  // CC_TAGGING_TAGGER_H_

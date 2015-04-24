@@ -40,3 +40,51 @@ bool PhraseDetector::InitFromFiles(
 
     return true;
 }
+
+bool PhraseDetector::Detect(
+        const vector<string>& tokens, vector<PhraseDetectionResult>* results,
+        string* error) const {
+    results->clear();
+
+    // Convert token strings -> lists of integers using all the evaluators.
+    vector<vector<TokenGroupID>> group_id_lists;
+    if (!vocab_.EvaluateTokens(tokens, &group_id_lists, error)) {
+        return false;
+    }
+
+    // For each phrase (config and detector),
+    for (auto i = 0u; i < detectors_.size(); ++i) {
+        auto& detector = detectors_[i];
+        auto& phrase = phrases_[i];
+
+        // Get the list of sequence matches, if any.
+        vector<SequenceMatch> sequence_matches;
+        detector.GetMatches(group_id_lists, &sequence_matches);
+        if (sequence_matches.empty()) {
+            continue;
+        }
+
+        // Create the PhraseDetectionResult.
+        results->resize(results->size() + 1);
+        auto& result = (*results)[results->size() - 1];
+        result.phrase_name = phrase.name();
+        result.piece_names = phrase.block_names();
+        result.matches.reserve(sequence_matches.size());
+
+        // For each sequence match,
+        for (auto& sequence_match : sequence_matches) {
+            PhraseMatch m;
+            size_t cur_index = sequence_match.begin();
+            for (auto j = 0u; j < sequence_match.option_choices().size(); ++j) {
+                auto& piece_index = j;
+                auto& choice = sequence_match.option_choices()[j];
+                m.piece_begin_indexes.emplace_back(cur_index);
+                cur_index += phrase.blocks()[piece_index][choice].size();
+            }
+            m.end_excl = cur_index;
+            result.matches.emplace_back(m);
+        }
+    }
+
+    return true;
+}

@@ -18,8 +18,8 @@ class AllAtOnceEvaluator : public ExpressionTypeEvaluator {
     //
     // Returns false on error.
     virtual bool AnalyzeTokens(
-        const vector<string>& tokens,
-        vector<TokenDescription>* descs) const = 0;
+        const vector<string>& tokens, vector<TokenDescription>* descs,
+        string* error) const = 0;
 
     // Does the expression accept the token given the additional info?
     //

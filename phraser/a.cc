@@ -13,7 +13,8 @@ static void RunTagger() {
     vector<string> tags;
     LaposTagger tagger;
     assert(tagger.Init("phraser/cc/third_party/lapos/model_wsj02-21/model.la"));
-    assert(tagger.Tag(sen, &tags));
+    string error;
+    assert(tagger.Tag(sen, &tags, &error));
     assert(tags.size() == sen.size());
     for (auto i = 0; i < tags.size(); ++i) {
         printf("%s/%s ", sen[i].c_str(), tags[i].c_str());
@@ -37,12 +38,19 @@ int main() {
 
     PhraseDetector pd;
     vector<string> phrase_config_ff = {
-        "phraser/config/threat.txt",
+        "phraser/config/simple.txt",
     };
 
     string error;
     if (!pd.InitFromFiles(en_config, phrase_config_ff, &error)) {
         OutputError(error);
         return 1;
+    }
+
+    vector<string> tokens = {"i", "will", "kill", "you"};
+    vector<PhraseDetectionResult> results;
+    if (!pd.Detect(tokens, &results, &error)) {
+        OutputError(error);
+        return 2;
     }
 }

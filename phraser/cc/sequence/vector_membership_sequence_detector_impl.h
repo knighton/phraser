@@ -1,16 +1,26 @@
 #ifndef CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_IMPL_H_
 #define CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_IMPL_H_
 
+#include <cassert>
+
 template <typename Atom>
-Atom* VectorMembershipAtomTokenComparer<Atom>::FirstAtom(
+size_t VectorMembershipAtomTokenComparer<Atom>::NumAtoms(
         const vector<Atom>& token) {
-    return &token[0];
+    return token.size();
 }
 
 template <typename Atom>
-Atom* VectorMembershipAtomTokenComparer<Atom>::LastAtom(
+const Atom* VectorMembershipAtomTokenComparer<Atom>::FirstAtom(
         const vector<Atom>& token) {
-    return &token[token.size() - 1];
+    assert(token.size());
+    return &(token[0]);
+}
+
+template <typename Atom>
+const Atom* VectorMembershipAtomTokenComparer<Atom>::LastAtom(
+        const vector<Atom>& token) {
+    assert(token.size());
+    return &(token[token.size() - 1]);
 }
 
 template <typename Atom>

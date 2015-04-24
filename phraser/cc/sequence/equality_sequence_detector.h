@@ -10,14 +10,15 @@ using std::vector;
 template <typename Atom>
 class EqualityAtomTokenComparer {
   public:
-    static Atom* FirstAtom(const vector<Atom>& token);
-    static Atom* LastAtom(const vector<Atom>& token);
-    static bool IsMatch(const vector<Atom>& token_have, const Atom& atom_need);
+    static size_t NumAtoms();
+    static const Atom* FirstAtom(const Atom& token);
+    static const Atom* LastAtom(const Atom& token);
+    static bool IsMatch(const Atom& token_have, const Atom& atom_need);
 };
 
 template <typename Atom>
 using EqualitySequenceDetector =
-    SequenceDetector<Atom, vector<Atom>, EqualityAtomTokenComparer<Atom>>
+    SequenceDetector<Atom, Atom, EqualityAtomTokenComparer<Atom>>
 
 #include "equality_sequence_detector_impl.h"
 

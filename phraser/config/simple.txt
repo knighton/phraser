@@ -1,0 +1,10 @@
+threat = subject, aux, verb, object
+--------
+i
+tom
+--------
+will
+--------
+kill
+--------
+you

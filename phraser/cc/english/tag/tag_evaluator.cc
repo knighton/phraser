@@ -17,8 +17,8 @@ void TagEvaluator::Init(Tagger* tagger) {
 }
 
 bool TagEvaluator::AnalyzeTokens(const vector<string>& tokens,
-                                 vector<string>* tags) const {
-    return tagger_->Tag(tokens, tags);
+                                 vector<string>* tags, string* error) const {
+    return tagger_->Tag(tokens, tags, error);
 }
 
 bool TagEvaluator::IsMatch(

@@ -21,7 +21,7 @@ class PhraseDetector {
                        string* error);
 
     bool Detect(const vector<string>& tokens,
-                PhraseDetectionResult* result) const;
+                vector<PhraseDetectionResult>* results, string* error) const;
 
   private:
     bool LoadPhraseConfig(const string& phrase_f, string* error);

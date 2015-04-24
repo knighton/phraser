@@ -93,7 +93,8 @@ class ExpressionEvaluator {
     //
     // Returns false on error.
     bool EvaluateTokens(const vector<string>& tokens,
-                        vector<vector<TokenGroupID>>* group_id_lists) const;
+                        vector<vector<TokenGroupID>>* group_id_lists,
+                        string* error) const;
 
     // TokenGroupID -> human-friendly string.
     //

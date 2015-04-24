@@ -19,7 +19,8 @@ class TagEvaluator : public AllAtOnceEvaluator<string> {
     void Init(Tagger* tagger);
 
     bool AnalyzeTokens(
-        const vector<string>& tokens, vector<string>* tags) const;
+        const vector<string>& tokens, vector<string>* tags,
+        string* error) const;
 
     bool IsMatch(
         const Expression& expr, const string& token,

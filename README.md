@@ -1,13 +1,4 @@
-## phraser
-
-Phraser is a DSL for recognizing English phrases.  It finds consecutive lists of subsequences using an expression language that matches tokens.
-
-Expressions consist of a type, arguments, and attribute filters.  Types include:
-* part-of-speech tag
-* special categories of English words
-* user-defined groups of words
-* regex
-* etc.
+Phraser is a DSL for recognizing English phrases.  It finds consecutive lists of subsequences that are defined by lists of tokens with embedded token-matching expressions.  Expressions consist of a type, arguments, and attribute filters.
 
 Contents:
 * [Demo](#demo)

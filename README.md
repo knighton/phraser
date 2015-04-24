@@ -51,7 +51,7 @@ TODO
 
 #### Expression syntax
 
-    (<type> <list of 0+ args separated by whitespace> <list of 0+ filters separated by whitespace>)
+    (<type> <0+ whitespace-separated args> <0+ whitespace-separated filters>)
     
 or
 
@@ -59,11 +59,11 @@ or
 
 or
 
-    (<list of args separated by '|'>)
+    (<2+ args separated by '|'>)
 
 where
 * `(<upper case Penn POS tag>)` will be normalized to `(tag <upper case Penn POS tag>)`
-* `(<list of args separated by '|'>)` will be normalized to `(oneof <list of tokens separated by whitespace>)`
+* `(<2+ args separated by '|'>)` will be normalized to `(oneof <2+ args separated by '|'>)`
 * an arg is arbitrary text not containing whitespace with `+`, `(`, and `)` escaped with `\`
 * a filter is `^\+[a-z0-9]+$` (note the `+` prefix)
 

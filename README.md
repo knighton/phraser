@@ -72,7 +72,7 @@ where
     <phrase name> = <list of 1+ comma-separated subsequence names>
     <list of 1+ newline-separated sequences>
 
-a sequence is
+a subsequence is
 
     <dash divider>
     <list of 1+ item lists>
@@ -81,7 +81,6 @@ where
 * a phrase name is `^[a-z ]+$`
 * a subsequence name is `^[a-z ]+$`
 * the number of subsequence names must match the number of sequences
-* a sequence is `<dash divider>\n<list of 1+ item lists>`
 * a dash divider is `^\\-+$`
 * an item list is a list of 0+ space-separated items (ie, lines can be blank)
 * an item is either a token or an expression

@@ -46,6 +46,8 @@ class ExprEvalVocabulary {
 
     const Expression& GetExpression(size_t index) const;
 
+    void Dump(size_t indent_level, size_t spaces_per_indent) const;
+
     void Clear();
 
   private:
@@ -70,6 +72,8 @@ class ExpressionEvaluator {
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,
         const unordered_map<string, AllAtOnceEvaluator<string>*>&
             type2allatonce);
+
+    void Dump(size_t indent_level, size_t spaces_per_indent) const;
 
     // Add the token to my internal dictionary.
     //

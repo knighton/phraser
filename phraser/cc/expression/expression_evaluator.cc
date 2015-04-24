@@ -1,6 +1,21 @@
 #include "expression_evaluator.h"
 
+#include <algorithm>
+
 #include "cc/misc/strings.h"
+
+static void DumpList(vector<string>* v) {
+    printf("[");
+    sort(v->begin(), v->end());
+    if (v->size()) {
+        printf("%s", (*v)[0].c_str());
+    }
+    for (auto i = 1u; i < v->size(); ++i) {
+        printf(", %s", (*v)[i].c_str());
+    }
+    printf("]");
+    v->clear();
+}
 
 bool ExprEvalVocabulary::IdentifyToken(const string& token, size_t* index) {
     auto it = token2index_.find(token);
@@ -35,6 +50,36 @@ bool ExprEvalVocabulary::IdentifyExpression(
 
 const Expression& ExprEvalVocabulary::GetExpression(size_t index) const {
     return expressions_[index];
+}
+
+void ExprEvalVocabulary::Dump(
+        size_t indent_level, size_t spaces_per_indent) const {
+    string indent1(indent_level * spaces_per_indent, ' ');
+    string indent2((indent_level + 1) * spaces_per_indent, ' ');
+    string indent3((indent_level + 2) * spaces_per_indent, ' ');
+
+    printf("%sExprEvalVocabulary {\n", indent1.c_str());
+
+    // List tokens.
+    printf("%s%zu tokens (%zu indexed): [\n", indent2.c_str(), tokens_.size(),
+            token2index_.size());
+    for (auto i = 0u; i < tokens_.size(); ++i) {
+        printf("%s%u: %s\n", indent3.c_str(), i, tokens_[i].c_str());
+    }
+    printf("%s]\n", indent2.c_str());
+
+    // List Expressions.
+    printf("%s%zu expressions (%zu indexed): [\n", indent2.c_str(),
+            expressions_.size(), exprstr2index_.size());
+    for (auto i = 0u; i < expressions_.size(); ++i) {
+        auto& e = expressions_[i];
+        string s;
+        e.ToCanonicalString(&s);
+        printf("%s%u: %s\n", indent3.c_str(), i, s.c_str());
+    }
+    printf("%s]\n", indent2.c_str());
+
+    printf("%s}\n", indent1.c_str());
 }
 
 void ExprEvalVocabulary::Clear() {
@@ -123,6 +168,40 @@ bool ExpressionEvaluator::InitWithEvaluators(
     }
 
     return true;
+}
+
+void ExpressionEvaluator::Dump(
+        size_t indent_level, size_t spaces_per_indent) const {
+    string indent1 = string(indent_level * spaces_per_indent, ' ');
+    string indent2 = string((indent_level + 1) * spaces_per_indent, ' ');
+    vector<string> v;
+
+    printf("%sExpressionEvaluator {\n", indent1.c_str());
+
+    printf("%sprecomputable types: ", indent2.c_str());
+    for (auto& it : precomputable_type2handler_) {
+        v.emplace_back(it.first);
+    }
+    DumpList(&v);
+    printf("\n");
+
+    printf("%sdynamic types: ", indent2.c_str());
+    for (auto& it : dynamic_type2handler_) {
+        v.emplace_back(it.first);
+    }
+    DumpList(&v);
+    printf("\n");
+
+    printf("%sall-at-once types: ", indent2.c_str());
+    for (auto& it : dynamic_type2handler_) {
+        v.emplace_back(it.first);
+    }
+    DumpList(&v);
+    printf("\n");
+
+    vocab_.Dump(indent_level + 1, spaces_per_indent);
+
+    printf("}\n");
 }
 
 bool ExpressionEvaluator::AddToken(

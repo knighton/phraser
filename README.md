@@ -80,6 +80,7 @@ a subsequence is
 where
 * a phrase name is `^[a-z ]+$`
 * a subsequence name is `^[a-z ]+$`
+* subsequence names will be trimmed on both sides
 * the number of subsequence names must match the number of sequences
 * a dash divider is `^\\-+$`
 * an item list is 0+ space-separated items (ie, lines can be blank)

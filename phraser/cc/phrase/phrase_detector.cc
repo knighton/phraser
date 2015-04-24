@@ -58,6 +58,7 @@ void PhraseDetector::Dump(size_t indent_level, size_t spaces_per_indent) const {
     for (auto i = 0u; i < detectors_.size(); ++i) {
         printf("%s{\n", indent2.c_str());
         printf("%sPhrase #%u:\n", indent3.c_str(), i);
+        phrases_[i].Dump(indent_level + 3, spaces_per_indent);
         detectors_[i].Dump(
                 &DumpTokenGroupID, indent_level + 3, spaces_per_indent);
         printf("%s}\n", indent2.c_str());

@@ -178,21 +178,21 @@ void ExpressionEvaluator::Dump(
 
     printf("%sExpressionEvaluator {\n", indent1.c_str());
 
-    printf("%sprecomputable types: ", indent2.c_str());
+    printf("%sprecomputable expression types: ", indent2.c_str());
     for (auto& it : precomputable_type2handler_) {
         v.emplace_back(it.first);
     }
     DumpList(&v);
     printf("\n");
 
-    printf("%sdynamic types: ", indent2.c_str());
+    printf("%sdynamic expression types: ", indent2.c_str());
     for (auto& it : dynamic_type2handler_) {
         v.emplace_back(it.first);
     }
     DumpList(&v);
     printf("\n");
 
-    printf("%sall-at-once types: ", indent2.c_str());
+    printf("%sall-at-once expression types: ", indent2.c_str());
     for (auto& it : dynamic_type2handler_) {
         v.emplace_back(it.first);
     }

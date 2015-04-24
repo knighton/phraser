@@ -47,10 +47,19 @@ int main() {
         return 1;
     }
 
+    printf("---\n");
+    size_t indent_level = 0;
+    size_t spaces_per_indent = 4;
+    pd.Dump(indent_level, spaces_per_indent);
+    printf("---\n");
+
     vector<string> tokens = {"i", "will", "kill", "you"};
     vector<PhraseDetectionResult> results;
     if (!pd.Detect(tokens, &results, &error)) {
         OutputError(error);
         return 2;
     }
+
+
+    printf("Done.\n");
 }

@@ -17,7 +17,7 @@ bool PhraseDetector::LoadPhraseConfig(const string& phrase_f, string* error) {
 
     detectors_.resize(detectors_.size() + 1);
     auto& detector = detectors_[detectors_.size() - 1];
-    if (!detector.Init(phrase.blocks(), error)) {
+    if (!detector.Init(phrase.blocks, error)) {
         return false;
     }
 
@@ -28,7 +28,6 @@ bool PhraseDetector::InitFromFiles(
         const EnglishConfig& config, const vector<string>& phrase_ff,
         string* error) {
     if (!vocab_.InitWithConfig(config)) {
-        printf("adsfadfasfd\n");
         return false;
     }
 
@@ -39,6 +38,26 @@ bool PhraseDetector::InitFromFiles(
     }
 
     return true;
+}
+
+static void DumpTokenGroupID(const TokenGroupID& group_id) {
+    printf("%u", group_id);
+}
+
+void PhraseDetector::Dump() const {
+    size_t indent_level = 1;
+    size_t spaces_per_indent = 4;
+
+    printf("PhraseDetector {\n");
+
+    vocab_.Dump(indent_level, spaces_per_indent);
+
+    for (auto i = 0u; i < detectors_.size(); ++i) {
+        printf("<<%u>>\n", i);
+        detectors_[i].Dump(&DumpTokenGroupID, indent_level, spaces_per_indent);
+    }
+
+    printf("}\n");
 }
 
 bool PhraseDetector::Detect(
@@ -67,8 +86,8 @@ bool PhraseDetector::Detect(
         // Create the PhraseDetectionResult.
         results->resize(results->size() + 1);
         auto& result = (*results)[results->size() - 1];
-        result.phrase_name = phrase.name();
-        result.piece_names = phrase.block_names();
+        result.phrase_name = phrase.name;
+        result.piece_names = phrase.block_names;
         result.matches.reserve(sequence_matches.size());
 
         // For each sequence match,
@@ -79,7 +98,7 @@ bool PhraseDetector::Detect(
                 auto& piece_index = j;
                 auto& choice = sequence_match.option_choices()[j];
                 m.piece_begin_indexes.emplace_back(cur_index);
-                cur_index += phrase.blocks()[piece_index][choice].size();
+                cur_index += phrase.blocks[piece_index][choice].size();
             }
             m.end_excl = cur_index;
             result.matches.emplace_back(m);

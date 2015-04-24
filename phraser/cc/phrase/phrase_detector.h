@@ -20,6 +20,8 @@ class PhraseDetector {
                        const vector<string>& phrase_config_ff,
                        string* error);
 
+    void Dump() const;
+
     bool Detect(const vector<string>& tokens,
                 vector<PhraseDetectionResult>* results, string* error) const;
 

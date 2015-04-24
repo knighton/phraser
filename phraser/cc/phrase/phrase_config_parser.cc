@@ -104,6 +104,22 @@ static bool ParseLine(
             }
         }
     }
+
+    if (tmp.size()) {
+        if (is_inside_expr) {
+            *error = "[PhraseConfigParser] Unterminated expression.";
+            return false;
+        }
+
+        TokenGroupID group_id;
+        if (!vocab->AddToken(tmp, &group_id)) {
+            *error =
+                "[PhraseConfigParser] Adding the Token failed.";
+            return false;
+        }
+        group_ids->emplace_back(group_id);
+    }
+
     return true;
 }
 
@@ -139,19 +155,18 @@ bool PhraseConfigParser::Parse(
         return false;
     }
 
-    string name;
-    vector<string> block_names;
-    if (!ParseHeaderLine(lines[0], &name, &block_names, error)) {
+    if (!ParseHeaderLine(lines[0], &phrase->name, &phrase->block_names,
+                         error)) {
         return false;
     }
 
-    vector<vector<vector<TokenGroupID>>> blocks;
-    for (auto i = 1u; i < lines.size(); ++i) {
+    for (auto i = 1u; i < lines.size() - 1; ++i) {
         auto& line = lines[i];
         if (IsLineADivider(line)) {
-            blocks.resize(blocks.size() + 1);
+            phrase->blocks.resize(phrase->blocks.size() + 1);
         } else {
-            if (!ParseAndAppendContentLine(line, english, &blocks, error)) {
+            if (!ParseAndAppendContentLine(
+                    line, english, &phrase->blocks, error)) {
                 return false;
             }
         }

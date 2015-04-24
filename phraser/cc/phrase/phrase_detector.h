@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "cc/english/english_config.h"
 #include "cc/english/english_expression_evaluator.h"
 #include "cc/phrase/phrase_config.h"
 #include "cc/phrase/phrase_detection_result.h"

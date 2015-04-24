@@ -20,7 +20,7 @@ void NumberEvaluator::Init() {
             }
         },
     };
-    might_match_re_ = regex("(-|+)?[0-9]+(\\.[0-9]+)?");
+    might_match_re_ = regex("[-+]?\\d+(\\.\\d+)?");
 }
 
 bool NumberEvaluator::MightMatch(const string& token) const {

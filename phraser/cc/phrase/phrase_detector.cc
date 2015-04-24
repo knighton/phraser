@@ -8,7 +8,7 @@ bool PhraseDetector::LoadPhraseConfig(const string& phrase_f) {
         return false;
     }
 
-    phrases_.resize(phrases_.size() - 1);
+    phrases_.resize(phrases_.size() + 1);
     auto& phrase = phrases_[phrases_.size() - 1];
     if (!phrase_parser_.Parse(text, &vocab_, &phrase)) {
         return false;

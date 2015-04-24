@@ -52,6 +52,8 @@ class SequenceDetector {
   public:
     SequenceDetector();
     SequenceDetector(const SequenceDetector& other);
+    SequenceDetector<Atom, Token, AtomTokenComparer>&
+        operator=(const SequenceDetector& other);
     ~SequenceDetector();
 
     // Constructs an index given some blocks.

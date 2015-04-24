@@ -31,13 +31,13 @@ bool FileToString(const string& file_name, string* text) {
     }
 
     if (fread(buf, sizeof(*buf), size, f) != size) {
-        delete buf;
+        delete [] buf;
         fclose(f);
         return false;
     }
 
     text->assign(buf, size);
-    delete buf;
+    delete [] buf;
     fclose(f);
     return true;
 }

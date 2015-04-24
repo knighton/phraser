@@ -14,7 +14,7 @@ Contents:
 * [Expressions](#expressions)
 * [Expression syntax](#expression-syntax)
 * [Phrase file syntax](#phrase-file-syntax)
-* [Architecture](#Architecture)
+* [Architecture](#architecture)
 
 iamknighton@gmail.com
 

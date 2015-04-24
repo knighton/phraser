@@ -84,23 +84,32 @@ bool SequenceDetector<Atom, Token, AtomTokenComparer>::Init(
 
 template <typename Atom, typename Token, typename AtomTokenComparer>
 void SequenceDetector<Atom, Token, AtomTokenComparer>::Dump(
-        void (*DumpAtom)(const Atom& atom)) const {
-    printf("ListMembershipSequenceDetector {\n");
+        void (*DumpAtom)(const Atom& atom), size_t indent_level,
+        size_t spaces_per_indent) const {
+    string indent1 = string(indent_level * spaces_per_indent, ' ');
+    string indent2 = string((indent_level + 1) * spaces_per_indent, ' ');
+    string indent3 = string((indent_level + 2) * spaces_per_indent, ' ');
+    printf("%sSequenceDetector {\n", indent1.c_str());
     for (auto i = 0u; i < blocks_.size(); ++i) {
         auto& options = blocks_[i];
-        printf("\tOption list %d: {\n", i);
-        for (auto j = 0u; i < options.size(); ++j) {
+        printf("%sSubsequence #%u (%zu %s):\n", indent2.c_str(), i,
+               options.size(), options.size() == 1 ? "option" : "options");
+        for (auto j = 0u; j < options.size(); ++j) {
             auto& atoms = options[j];
-            printf("\t\tOption %d:", j);
-            for (auto& atom : atoms) {
-                puts(" ");
-                DumpAtom(atom);
+            printf("%sOption #%u (%zu %s): [", indent3.c_str(), j,
+                   atoms.size(), atoms.size() == 1 ? "atom" : "atoms");
+            if (atoms.size()) {
+                DumpAtom(atoms[0]);
             }
-            puts("\n");
+            for (auto k = 1u; k < atoms.size(); ++k) {
+                printf(", ");
+                DumpAtom(atoms[k]);
+            }
+            printf("]\n");
         }
-        printf("\t}\n");
+        printf("%s}\n", indent2.c_str());
     }
-    printf("}\n");
+    printf("%s}\n", indent1.c_str());
 }
 
 template <typename Atom, typename Token, typename AtomTokenComparer>

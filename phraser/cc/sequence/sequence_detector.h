@@ -65,7 +65,8 @@ class SequenceDetector {
     bool Init(const vector<vector<vector<Atom>>>& blocks, string* error);
 
     // Dump my contents to stdout.
-    void Dump(void (*DumpAtom)(const Atom& atom)) const;
+    void Dump(void (*DumpAtom)(const Atom& atom), size_t indent,
+              size_t spaces_per_indent) const;
 
     // Get every possible match.
     //

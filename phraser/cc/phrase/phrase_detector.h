@@ -17,13 +17,14 @@ using std::vector;
 class PhraseDetector {
   public:
     bool InitFromFiles(const EnglishConfig& english_config,
-                       const vector<string>& phrase_config_ff);
+                       const vector<string>& phrase_config_ff,
+                       string* error);
 
     bool Detect(const vector<string>& tokens,
                 PhraseDetectionResult* result) const;
 
   private:
-    bool LoadPhraseConfig(const string& phrase_f);
+    bool LoadPhraseConfig(const string& phrase_f, string* error);
 
     // Thing that parses PhraseConfigs.
     PhraseConfigParser phrase_parser_;

@@ -8,11 +8,14 @@
 //
 // Example: "threat = subject, aux verb, main verb"
 static bool ParseHeaderLine(
-        const string& line, string* name, vector<string>* block_names) {
+        const string& line, string* name, vector<string>* block_names,
+        string* error) {
     vector<string> pair;
     strings::Split(line, '=', &pair);
 
     if (pair.size() != 2) {
+        *error = "[PhraseConfigParser] Invalid phrase config header line "
+                 "(should look like 'name = block1, block2, block3').";
         return false;
     }
 
@@ -23,11 +26,15 @@ static bool ParseHeaderLine(
     for (auto& s : *block_names) {
         strings::Trim(&s);
         if (s.empty()) {
+            *error = "[PhraseConfigParser] Empty block name in phrase config "
+                     "header.";
             return false;
         }
     }
 
     if (block_names->empty()) {
+        *error =
+            "[PhraseConfigParser] Phrase config header has no block names.";
         return false;
     }
 
@@ -51,7 +58,7 @@ static bool IsLineADivider(const string& line) {
 // Parse "These (to be +pres +3rd +plur) (regex s(ome space-separated tokens
 static bool ParseLine(
         const string& line, EnglishExpressionEvaluator* vocab,
-        vector<TokenGroupID>* group_ids) {
+        vector<TokenGroupID>* group_ids, string* error) {
     bool is_inside_expr = false;
     string tmp;
     for (auto& c : line) {
@@ -59,6 +66,8 @@ static bool ParseLine(
             if (c == ')') {
                 TokenGroupID group_id;
                 if (!vocab->AddExpression(tmp, &group_id)) {
+                    *error =
+                        "[PhraseConfigParser] Adding the Expression failed.";
                     return false;
                 }
                 group_ids->emplace_back(group_id);
@@ -72,6 +81,8 @@ static bool ParseLine(
                 if (tmp.size()) {
                     TokenGroupID group_id;
                     if (!vocab->AddToken(tmp, &group_id)) {
+                        *error =
+                            "[PhraseConfigParser] Adding the token failed.";
                         return false;
                     }
                     group_ids->emplace_back(group_id);
@@ -79,10 +90,14 @@ static bool ParseLine(
                 }
             } else if (c == '(') {
                 if (tmp.size()) {
+                    *error = "[PhraseConfigParser] Put a space between tokens "
+                             "and Expressions.";
                     return false;
                 }
                 is_inside_expr = true;
             } else if (c == ')') {
+                *error = "[PhraseConfigParser] Encountered closing "
+                         "parenthesis, but not inside an Expression.";
                 return false;
             } else {
                 tmp += c;
@@ -94,8 +109,10 @@ static bool ParseLine(
 
 static bool ParseAndAppendContentLine(
         const string& line, EnglishExpressionEvaluator* english,
-        vector<vector<vector<TokenGroupID>>>* blocks) {
+        vector<vector<vector<TokenGroupID>>>* blocks, string* error) {
     if (blocks->empty()) {
+        *error = "[PhraseConfigParser] Blocks start with a divider line "
+                 "('----------').";
         return false;
     }
 
@@ -104,7 +121,7 @@ static bool ParseAndAppendContentLine(
     cur_block.resize(cur_block.size() + 1);
     auto& cur_option = cur_block[cur_block.size() - 1];
 
-    if (!ParseLine(line, english, &cur_option)) {
+    if (!ParseLine(line, english, &cur_option, error)) {
         return false;
     }
 
@@ -113,17 +130,18 @@ static bool ParseAndAppendContentLine(
 
 bool PhraseConfigParser::Parse(
         const string& text, EnglishExpressionEvaluator* english,
-        PhraseConfig* phrase) const {
+        PhraseConfig* phrase, string* error) const {
     vector<string> lines;
     strings::Split(text, '\n', &lines);
 
     if (lines.empty()) {
+        *error = "[PhraseConfigParser] No lines present in text.";
         return false;
     }
 
     string name;
     vector<string> block_names;
-    if (!ParseHeaderLine(lines[0], &name, &block_names)) {
+    if (!ParseHeaderLine(lines[0], &name, &block_names, error)) {
         return false;
     }
 
@@ -133,7 +151,7 @@ bool PhraseConfigParser::Parse(
         if (IsLineADivider(line)) {
             blocks.resize(blocks.size() + 1);
         } else {
-            if (!ParseAndAppendContentLine(line, english, &blocks)) {
+            if (!ParseAndAppendContentLine(line, english, &blocks, error)) {
                 return false;
             }
         }

@@ -1,12 +1,14 @@
 #ifndef CC_SEQUENCES_SEQUENCE_DETECTOR_H_
 #define CC_SEQUENCES_SEQUENCE_DETECTOR_H_
 
+#include <string>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
 #include "cc/sequence/sequence_match.h"
 
+using std::string;
 using std::unordered_map;
 using std::unordered_set;
 using std::vector;
@@ -58,7 +60,7 @@ class SequenceDetector {
     //
     // Reasons it will fail:
     // * You can't have identical options within the same option list.
-    bool Init(const vector<vector<vector<Atom>>>& blocks);
+    bool Init(const vector<vector<vector<Atom>>>& blocks, string* error);
 
     // Dump my contents to stdout.
     void Dump(void (*DumpAtom)(const Atom& atom)) const;

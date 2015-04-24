@@ -32,7 +32,7 @@ using std::string;
 class PhraseConfigParser {
   public:
     bool Parse(const string& text, EnglishExpressionEvaluator* eval,
-               PhraseConfig* phrase) const;
+               PhraseConfig* phrase, string* error) const;
 };
 
 #endif  // CC_PHRASING_PHRASE_CONFIG_PARSER_H_

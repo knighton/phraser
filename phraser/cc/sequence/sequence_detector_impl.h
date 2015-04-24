@@ -32,7 +32,7 @@ SequenceDetector<Atom, Token, AtomTokenComparer>::~SequenceDetector() {
 
 template <typename Atom, typename Token, typename AtomTokenComparer>
 bool SequenceDetector<Atom, Token, AtomTokenComparer>::Init(
-        const vector<vector<vector<Atom>>>& blocks) {
+        const vector<vector<vector<Atom>>>& blocks, string* error) {
     blocks_ = blocks;
 
     // For each list of options,
@@ -46,6 +46,8 @@ bool SequenceDetector<Atom, Token, AtomTokenComparer>::Init(
         // Verify that there are no duplicate options.
         for (auto j = 1u; j < options.size(); ++j) {
             if (options[j - 1] == options[j]) {
+                *error = "[SequenceDetector] Duplicate options detected during "
+                         "Init.";
                 return false;
             }
         }

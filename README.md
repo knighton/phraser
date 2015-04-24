@@ -69,20 +69,20 @@ where
 
 #### Phrase file syntax
 
-    <phrase name> = <list of 1+ comma-separated subsequence names>
-    <list of 1+ newline-separated sequences>
+    <phrase name> = <1+ comma-separated subsequence names>
+    <1+ newline-separated sequences>
 
 a subsequence is
 
     <dash divider>
-    <list of 1+ item lists>
+    <1+ item lists>
 
 where
 * a phrase name is `^[a-z ]+$`
 * a subsequence name is `^[a-z ]+$`
 * the number of subsequence names must match the number of sequences
 * a dash divider is `^\\-+$`
-* an item list is a list of 0+ space-separated items (ie, lines can be blank)
+* an item list is 0+ space-separated items (ie, lines can be blank)
 * an item is either a token or an expression
 * a token is a string separable by whitespace
 * an expression is a string containing arbitrary text separated by `(` and `)`

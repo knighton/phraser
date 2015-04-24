@@ -30,5 +30,5 @@ bool TagEvaluator::IsMatch(
 
 bool TagEvaluator::AreArgsPossible(const vector<string>& args) const {
     // TODO: check against an actual list of Penn tags.
-    return args.size() == 0;
+    return args.size() == 1;
 }

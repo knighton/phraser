@@ -20,7 +20,7 @@ class PhraseDetector {
                        const vector<string>& phrase_config_ff,
                        string* error);
 
-    void Dump() const;
+    void Dump(size_t indent_level, size_t spaces_per_indent) const;
 
     bool Detect(const vector<string>& tokens,
                 vector<PhraseDetectionResult>* results, string* error) const;

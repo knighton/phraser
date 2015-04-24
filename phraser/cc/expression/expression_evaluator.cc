@@ -201,7 +201,7 @@ void ExpressionEvaluator::Dump(
 
     vocab_.Dump(indent_level + 1, spaces_per_indent);
 
-    printf("}\n");
+    printf("%s}\n", indent1.c_str());
 }
 
 bool ExpressionEvaluator::AddToken(

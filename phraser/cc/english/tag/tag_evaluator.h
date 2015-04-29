@@ -28,7 +28,7 @@ class TagEvaluator : public AllAtOnceEvaluator<string> {
 
 
   private:
-    bool AreArgsPossible(const vector<string>& args) const;
+    bool AreArgsPossible(const vector<string>& args, string* error) const;
 
     Tagger* tagger_;
 };

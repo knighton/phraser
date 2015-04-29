@@ -28,7 +28,7 @@ class ExpressionTypeEvaluator {
     //
     // Reasons for false that are per evaluator:
     // * Its args are invalid (override AreArgsPossible()).
-    bool IsExpressionPossible(const Expression& expr) const;
+    bool IsExpressionPossible(const Expression& expr, string* error) const;
 
     // Given a list of dimension values, arrange them according to which
     // dimension they belong to (which are not given).
@@ -36,13 +36,15 @@ class ExpressionTypeEvaluator {
     // Returns false if unkonwn value.
     bool OrganizeExpressionDimensionValues(
         const vector<string>& filters,
-        unordered_map<string, unordered_set<string>>* values) const;
+        unordered_map<string, unordered_set<string>>* values,
+        string* error) const;
 
   protected:
     // Check the expression's args.
     //
     // Called internally by IsExpressionPossible().
-    virtual bool AreArgsPossible(const vector<string>& args) const = 0;
+    virtual bool AreArgsPossible(
+        const vector<string>& args, string* error) const = 0;
 
     string type_;
     unordered_map<string, unordered_set<string>> dimension2possible_values_;

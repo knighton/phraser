@@ -65,9 +65,7 @@ static bool ParseLine(
         if (is_inside_expr) {
             if (c == ')') {
                 TokenGroupID group_id;
-                if (!vocab->AddExpression(tmp, &group_id)) {
-                    *error =
-                        "[PhraseConfigParser] Adding the Expression failed.";
+                if (!vocab->AddExpression(tmp, &group_id, error)) {
                     return false;
                 }
                 group_ids->emplace_back(group_id);

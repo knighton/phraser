@@ -16,6 +16,12 @@ bool PosDetEvaluator::GetExpressionMatches(
     return personal_mgr_->GetExpressionMatches(expr, tokens);
 }
 
-bool PosDetEvaluator::AreArgsPossible(const vector<string>& args) const {
-    return args.empty();
+bool PosDetEvaluator::AreArgsPossible(
+        const vector<string>& args, string* error) const {
+    if (args.size()) {
+        *error = "[PosDetEvaluator] Must have 0 args.";
+        return false;
+    }
+
+    return true;
 }

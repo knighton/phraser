@@ -57,6 +57,12 @@ bool VerbEvaluator::GetExpressionMatches(
     return true;
 }
 
-bool VerbEvaluator::AreArgsPossible(const vector<string>& args) const {
-    return args.size() == 1;
+bool VerbEvaluator::AreArgsPossible(
+        const vector<string>& args, string* error) const {
+    if (args.size() != 1) {
+        *error = "[VerbEvaluator] Must have 1 arg: the lemma.";
+        return false;
+    }
+
+    return true;
 }

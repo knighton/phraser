@@ -1,4 +1,4 @@
-threat = subject, aux, verb, object
+simple_threat = subject, aux, verb, object
 --------
 i
 tom

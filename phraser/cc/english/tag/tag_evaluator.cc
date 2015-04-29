@@ -28,7 +28,13 @@ bool TagEvaluator::IsMatch(
     return tag == want_tag;
 }
 
-bool TagEvaluator::AreArgsPossible(const vector<string>& args) const {
+bool TagEvaluator::AreArgsPossible(
+        const vector<string>& args, string* error) const {
     // TODO: check against an actual list of Penn tags.
-    return args.size() == 1;
+    if (args.size() != 1) {
+        *error = "[TagEvaluator] Must have 1 arg: the Penn tag to filter by.";
+        return false;
+    }
+
+    return true;
 }

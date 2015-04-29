@@ -220,7 +220,7 @@ bool ExpressionEvaluator::AddToken(
 }
 
 bool ExpressionEvaluator::IndexAnExpression(
-        const Expression& expr, TokenGroupID group_id) {
+        const Expression& expr, TokenGroupID group_id, string* error) {
     // Get the handler for the Expression.  There can be only one, since each
     // Expression Evaluator implements a different Expression type.
     //
@@ -233,6 +233,8 @@ bool ExpressionEvaluator::IndexAnExpression(
         auto& handler = it->second;
         vector<string> tokens;
         if (!handler.evaluator->GetExpressionMatches(expr, &tokens)) {
+            *error = "[ExpressionEvaluator] PrecomputableEvaluator "
+                     "GetExpressionMatches() failed.";
             return false;
         }
 
@@ -248,7 +250,7 @@ bool ExpressionEvaluator::IndexAnExpression(
     auto jt = dynamic_type2handler_.find(expr.type());
     if (jt != dynamic_type2handler_.end()) {
         auto& handler = jt->second;
-        if (!handler.evaluator->IsExpressionPossible(expr)) {
+        if (!handler.evaluator->IsExpressionPossible(expr, error)) {
             return false;
         }
 
@@ -260,7 +262,7 @@ bool ExpressionEvaluator::IndexAnExpression(
     auto kt = all_at_once_type2handler_.find(expr.type());
     if (kt != all_at_once_type2handler_.end()) {
         auto& handler = kt->second;
-        if (!handler.evaluator->IsExpressionPossible(expr)) {
+        if (!handler.evaluator->IsExpressionPossible(expr, error)) {
             return false;
         }
 
@@ -273,10 +275,10 @@ bool ExpressionEvaluator::IndexAnExpression(
 
 static bool ParseRawExpression(
         const string& raw_expr_str, string* type, vector<string>* args,
-        vector<string>* flags) {
+        vector<string>* filters, string* error) {
     type->clear();
     args->clear();
-    flags->clear();
+    filters->clear();
 
     vector<string> v;
     strings::SplitByWhitespace(raw_expr_str, &v);
@@ -298,6 +300,7 @@ static bool ParseRawExpression(
     auto i = 1u;
     for (; i < v.size(); ++i) {
         if (v[i].empty()) {
+            *error = "[ExpressionEvaluator] Empty arg.";
             return false;
         }
         if (v[i][0] == '+') {
@@ -308,12 +311,15 @@ static bool ParseRawExpression(
 
     for (; i < v.size(); ++i) {
         if (v[i].empty()) {
+            *error = "[ExpressionEvaluator] Empty filter.";
             return false;
         }
         if (v[i][0] != '+') {
+            *error = "[ExpressionEvaluator] Filters must start with '+'.  "
+                     "Input: [" + v[i] + "].";
             return false;
         }
-        flags->emplace_back(v[i].substr(1));
+        filters->emplace_back(v[i].substr(1));
     }
 
     return true;
@@ -321,6 +327,7 @@ static bool ParseRawExpression(
 
 ExpressionTypeEvaluator* ExpressionEvaluator::FindExpressionEvaluator(
         const string& expr_type) const {
+    // TODO: replace this with a type -> handler lookup table.
     auto it = precomputable_type2handler_.find(expr_type);
     if (it != precomputable_type2handler_.end()) {
         return it->second.evaluator;
@@ -340,21 +347,24 @@ ExpressionTypeEvaluator* ExpressionEvaluator::FindExpressionEvaluator(
 }
 
 bool ExpressionEvaluator::ParseExpression(
-        const string& raw_expr_str, Expression* expr) const {
+        const string& raw_expr_str, Expression* expr, string* error) const {
     string type;
     vector<string> args;
-    vector<string> flags;
-    if (!ParseRawExpression(raw_expr_str, &type, &args, &flags)) {
+    vector<string> filters;
+    if (!ParseRawExpression(raw_expr_str, &type, &args, &filters, error)) {
         return false;
     }
 
     ExpressionTypeEvaluator* evaluator = FindExpressionEvaluator(type);
     if (!evaluator) {
+        *error = "[ExpressionEvaluator] No expression evaluator exists for "
+                 "this type of expression: [" + type + "]";
         return false;
     }
 
     unordered_map<string, unordered_set<string>> dim2values;
-    if (!evaluator->OrganizeExpressionDimensionValues(flags, &dim2values)) {
+    if (!evaluator->OrganizeExpressionDimensionValues(
+            filters, &dim2values, error)) {
         return false;
     }
 
@@ -363,10 +373,10 @@ bool ExpressionEvaluator::ParseExpression(
 }
 
 bool ExpressionEvaluator::AddExpression(
-        const string& raw_expr_str, TokenGroupID* group_id) {
+        const string& raw_expr_str, TokenGroupID* group_id, string* error) {
     // Try to parse an Expression out of the string.
     Expression expr;
-    if (!ParseExpression(raw_expr_str, &expr)) {
+    if (!ParseExpression(raw_expr_str, &expr, error)) {
         return false;
     }
 
@@ -384,7 +394,7 @@ bool ExpressionEvaluator::AddExpression(
         return true;
     }
 
-    return IndexAnExpression(expr, *group_id);
+    return IndexAnExpression(expr, *group_id, error);
 }
 
 bool ExpressionEvaluator::EvaluateTokens(

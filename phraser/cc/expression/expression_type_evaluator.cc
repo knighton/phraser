@@ -4,8 +4,10 @@ ExpressionTypeEvaluator::~ExpressionTypeEvaluator() {
 }
 
 bool ExpressionTypeEvaluator::IsExpressionPossible(
-        const Expression& expr) const {
+        const Expression& expr, string* error) const {
     if (expr.type() != type_) {
+        *error = "[ExpressionTypeEvaluator] Type mismatch: [" + expr.type() +
+                 "]";
         return false;
     }
 
@@ -14,6 +16,8 @@ bool ExpressionTypeEvaluator::IsExpressionPossible(
 
         auto jt = dimension2possible_values_.find(expr_dimension);
         if (jt == dimension2possible_values_.end()) {
+            *error = "[ExpressionTypeEvaluator] Unknown filter dimension: [" +
+                     expr_dimension + "]";
             return false;
         }
 
@@ -22,20 +26,29 @@ bool ExpressionTypeEvaluator::IsExpressionPossible(
         for (auto& filter : expr_values_set) {
             if (evaluator_values_set.find(filter) ==
                     evaluator_values_set.end()) {
+                *error = "[ExpressionTypeEvaluator] Unknown filter value: [" +
+                         filter + "]";
                 return false;
             }
         }
     }
 
-    return AreArgsPossible(expr.args());
+    if (!AreArgsPossible(expr.args(), error)) {
+        return false;
+    }
+
+    return true;
 }
 
 bool ExpressionTypeEvaluator::OrganizeExpressionDimensionValues(
         const vector<string>& values,
-        unordered_map<string, unordered_set<string>>* dim2values) const {
+        unordered_map<string, unordered_set<string>>* dim2values,
+        string* error) const {
     for (auto& value : values) {
         auto it = value2dimension_.find(value);
         if (it == value2dimension_.end()) {
+            *error = "[ExpressionTypeEvaluator] Unknown filter value: [" +
+                     value + "].";
             return false;
         }
 

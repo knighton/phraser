@@ -13,7 +13,7 @@ class PersProEvaluator : public PrecomputableEvaluator {
             const Expression& expr, vector<string>* tokens) const;
 
   private:
-    bool AreArgsPossible(const vector<string>& args) const;
+    bool AreArgsPossible(const vector<string>& args, string* error) const;
 
     PersonalManager* personal_mgr_;
 };

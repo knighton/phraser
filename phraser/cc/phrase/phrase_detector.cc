@@ -33,7 +33,6 @@ bool PhraseDetector::InitFromFiles(
 
     for (auto& phrase_f : phrase_ff) {
         if (!LoadPhraseConfig(phrase_f, error)) {
-            *error = "[PhraseDetector] Loading a phrase config failed.";
             return false;
         }
     }

@@ -44,6 +44,11 @@ void NumberEvaluator::FeaturesFromToken(
     (*dim2value)["polarity"] = has_dash ? "neg" : "nonneg";
 }
 
-bool NumberEvaluator::AreArgsPossible(const vector<string>& args) const {
-    return args.size() == 0;
+bool NumberEvaluator::AreArgsPossible(const vector<string>& args, string* error) const {
+    if (args.size() != 0) {
+        *error = "[NumberEvaluator] Must have 0 args.";
+        return false;
+    }
+
+    return true;
 }

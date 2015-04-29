@@ -18,7 +18,7 @@ class NumberEvaluator : public DynamicEvaluator {
         unordered_map<string, string>* dimension2value) const;
 
   private:
-    bool AreArgsPossible(const vector<string>& args) const;
+    bool AreArgsPossible(const vector<string>& args, string* error) const;
 
     regex might_match_re_;
 };

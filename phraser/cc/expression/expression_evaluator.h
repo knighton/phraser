@@ -81,14 +81,16 @@ class ExpressionEvaluator {
     bool AddToken(const string& token, TokenGroupID* group_id);
 
     // Returns whether it succeeded.
-    bool ParseExpression(const string& raw_expr_str, Expression* expr) const;
+    bool ParseExpression(const string& raw_expr_str, Expression* expr,
+                         string* error) const;
 
     // Parse an Expression and add it to my internal dictionary (if it's
     // precomputable, add all the tokens it results in, else just keep it
     // around to call during EvaluateTokens() dynamically).
     //
     // Returns false on error (such as invalid Expression string).
-    bool AddExpression(const string& raw_expr_str, TokenGroupID* group_id);
+    bool AddExpression(const string& raw_expr_str, TokenGroupID* group_id,
+                       string* error);
 
     // Map token -> list of TokenGroupIDs.
     //
@@ -113,7 +115,8 @@ class ExpressionEvaluator {
             const string& expr_type) const;
 
     // Precompute what we can.  Add an entry to the appropriate handler.
-    bool IndexAnExpression(const Expression& expr, TokenGroupID group_id);
+    bool IndexAnExpression(const Expression& expr, TokenGroupID group_id,
+                           string* error);
 
     // Expression type -> ExpressionEvaluator and indexes of all the Expressions
     // of that type.  Split by which type of ExpressionEvaluator it is because

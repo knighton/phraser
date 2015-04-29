@@ -25,10 +25,10 @@ class Tokenizer {
     bool Init(const unordered_map<string, UChar>& html2unicode,
               const string& ascii_data,
               const unordered_map<UChar, uint16_t>& unicode2ascii,
-              const unordered_map<string, string>& token2token);
+              const unordered_map<string, string>& token2token, string* error);
 
     // Initialize from definitions in tokenizer_data.h.
-    bool InitDefault();
+    bool InitDefault(string* error);
 
     // Text -> tokens.
     //

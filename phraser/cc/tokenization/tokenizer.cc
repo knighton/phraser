@@ -7,7 +7,7 @@ bool Tokenizer::Init(
         const unordered_map<string, UChar>& html2unicode,
         const string& ascii_data,
         const unordered_map<UChar, uint16_t>& unicode2ascii,
-        const unordered_map<string, string>& token2token) {
+        const unordered_map<string, string>& token2token, string* error) {
     html2unicode_ = html2unicode;
     ascii_data_ = ascii_data;
     unicode2ascii_ = unicode2ascii;
@@ -25,17 +25,14 @@ bool Tokenizer::Init(
 }
 
 static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
-                            unordered_map<string, string>* token2token) {
+                            unordered_map<string, string>* token2token,
+                            string* error) {
     token2token->clear();
 
     vector<string> v;
 
     strings::SplitByWhitespace(s2z_s, &v);
     for (auto& s : v) {
-        if (s.empty()) {
-            return false;
-        }
-
         auto z = s;
         for (auto i = 0u; i < z.size(); ++i) {
             if (z[i] == 's') {
@@ -45,6 +42,7 @@ static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
 
         auto it = token2token->find(s);
         if (it != token2token->end()) {
+            *error = "[Tokenizer] Duplicate key encountered: [" + s + "].";
             return false;
         }
 
@@ -62,6 +60,7 @@ static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
 
         auto it = token2token->find(from_s);
         if (it != token2token->end()) {
+            *error = "[Tokenizer] Duplicate key encountered: [" + from_s + "].";
             return false;
         }
 
@@ -71,18 +70,19 @@ static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
     return true;
 }
 
-bool Tokenizer::InitDefault() {
+bool Tokenizer::InitDefault(string* error) {
     auto& html2unicode = tokenizer_data::HTML2UNICODE;
     auto& ascii_data = tokenizer_data::ASCII_DATA;
     auto& unicode2ascii = tokenizer_data::UNICODE2ASCII;
 
     unordered_map<string, string> token2token;
-    if (!MakeToken2Token(tokenizer_data::NRM_TOKEN_S2Z,
-                         tokenizer_data::NRM_TOKEN_PAIRS, &token2token)) {
+    if (!MakeToken2Token(
+            tokenizer_data::NRM_TOKEN_S2Z, tokenizer_data::NRM_TOKEN_PAIRS,
+            &token2token, error)) {
         return false;
     }
 
-    return Init(html2unicode, ascii_data, unicode2ascii, token2token);
+    return Init(html2unicode, ascii_data, unicode2ascii, token2token, error);
 }
 
 bool Tokenizer::ParseHTMLEntity(

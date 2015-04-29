@@ -15,9 +15,28 @@ enum Person {
     P_FIRST,
     P_SECOND,
     P_THIRD,
+    P_INTR,
+    P_INTR_EMPH,
     NUM_PERSONS,
 };
 
 extern EnumStrings<Person> PersonStrings;
+
+enum Personhood {
+    PH_NO,
+    PH_YES,
+    NUM_PERSONHOODS,
+};
+
+extern EnumStrings<Personhood> PersonhoodStrings;
+
+enum Gender {
+    G_MALE,
+    G_FEMALE,
+    G_NEUTER,
+    NUM_GENDERS,
+};
+
+extern EnumStrings<Gender> GenderStrings;
 
 #endif  // CC_ENGLISH_COMMON_H_

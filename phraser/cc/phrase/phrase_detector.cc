@@ -27,12 +27,13 @@ bool PhraseDetector::LoadPhraseConfig(const string& phrase_f, string* error) {
 bool PhraseDetector::InitFromFiles(
         const EnglishConfig& config, const vector<string>& phrase_ff,
         string* error) {
-    if (!vocab_.InitWithConfig(config)) {
+    if (!vocab_.InitWithConfig(config, error)) {
         return false;
     }
 
     for (auto& phrase_f : phrase_ff) {
         if (!LoadPhraseConfig(phrase_f, error)) {
+            *error = "[PhraseDetector] Loading a phrase config failed.";
             return false;
         }
     }

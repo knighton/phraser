@@ -29,7 +29,7 @@ extern string ASCII_DATA;
 // 4. Convert smart quotes to PTB tokens.
 // 5. Decompose the code points according to NFKD.
 // 6. De-confuse the resulting code points according to the "SA" confusables
-//    table, excluding the " character.
+//    table, excluding ones that are already ASCII.
 // 7. Drop non-ASCII.
 // 8. Condense results that are all spaces to a single space.
 // 9. Drop parenthesized characters that don't map to Latin.

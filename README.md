@@ -129,7 +129,7 @@ You call a script [generate_tokenizer_data.py](https://github.com/knighton/phras
 * Unicode code point -> index into that block
 * ASCII token -> normalized ASCII token
 
-##### Unicode to PTB ASCII normalization:
+##### Unicode to PTB ASCII normalization (preprocessing)
 
 Essentially, we want to strip accents, map symbols to ASCII equivalents, and use LaTeX quotes.
 
@@ -152,7 +152,7 @@ The following steps occur for all Unicode code points in any index below in orde
 9. Condense spaces.
 10. Drop parenthesized non-Latin characters that don't map to ASCII (eg, U+3208 `㈈`).
 
-##### Token normalization
+##### Token normalization (postprocessing)
 
 We make some changes in order to match the tagger's training data.
 

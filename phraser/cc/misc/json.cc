@@ -19,6 +19,36 @@ Object::Object(const string& s) {
     data_ = reinterpret_cast<void*>(data);
 }
 
+Object::Object(const vector<uint64_t>& vec) {
+    vector<int64_t> v;
+    v.reserve(vec.size());
+    for (auto& it : vec) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
+}
+
+Object::Object(const set<uint64_t>& set) {
+    vector<int64_t> v;
+    v.reserve(set.size());
+    for (auto& it : set) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
+}
+
+Object::Object(const unordered_set<uint64_t>& set) {
+    vector<int64_t> v;
+    v.reserve(set.size());
+    for (auto& it : set) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
+}
+
 Object::Object(const vector<uint32_t>& vec) {
     vector<int64_t> v;
     v.reserve(vec.size());

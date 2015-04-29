@@ -36,6 +36,10 @@ class Object {
     Object(const set<uint32_t>& set);
     Object(const unordered_set<uint32_t>& set);
 
+    Object(const vector<uint64_t>& v);
+    Object(const set<uint64_t>& set);
+    Object(const unordered_set<uint64_t>& set);
+
     Object(const vector<string>& v);
     Object(const set<string>& set);
     Object(const unordered_set<string>& set);

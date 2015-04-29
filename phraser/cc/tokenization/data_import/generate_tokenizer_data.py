@@ -313,7 +313,7 @@ class TokenizerData(object):
         # De-confuse the characters except " quotes.
         new_codes = []
         for code in codes:
-            if code == ord('"'):
+            if code < 128:
                 new_codes.append(code)
                 continue
 

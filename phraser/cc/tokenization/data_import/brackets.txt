@@ -1,0 +1,8 @@
+# From https://www.cis.upenn.edu/~treebank/tokenizer.sed
+
+( -LRB-
+) -RRB-
+[ -LSB-
+] -RSB-
+{ -LCB-
+} -RCB-

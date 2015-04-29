@@ -1,0 +1,10 @@
+# From https://www.cis.upenn.edu/~treebank/tokenization.html:
+#
+# All double quotes are changed to (`` '').  Earlier we mapped various types of
+# quote characters to smart quotes.  Now we convert smart quotes to ASCII.
+
+U+201C ``
+U+201D ''
+
+U+2018 `
+U+2019 '

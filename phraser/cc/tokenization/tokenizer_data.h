@@ -39,7 +39,8 @@ extern unordered_map<uint32_t, uint16_t> UNICODE2ASCII;
 //
 // Used for tokenization postprocessing (escaping and spelling canonicalization
 // to match PTB training data).
-extern unordered_map<string, string> TOKEN2TOKEN;
+extern string NRM_TOKEN_S2Z;
+extern string NRM_TOKEN_PAIRS;
 
 }  // namespace tokenizer_data
 

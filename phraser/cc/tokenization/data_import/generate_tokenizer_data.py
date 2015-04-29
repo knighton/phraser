@@ -249,7 +249,8 @@ extern unordered_map<uint32_t, uint16_t> UNICODE2ASCII;
 //
 // Used for tokenization postprocessing (escaping and spelling canonicalization
 // to match PTB training data).
-extern unordered_map<string, string> TOKEN2TOKEN;
+extern string NRM_TOKEN_S2Z;
+extern string NRM_TOKEN_PAIRS;
 
 }  // namespace tokenizer_data
 
@@ -428,15 +429,30 @@ class TokenizerData(object):
             assert from_s not in token2token
             token2token[from_s] = to_s
 
-        cc_lines.append('unordered_map<string, string> TOKEN2TOKEN = {')
-        for from_s in sorted(token2token):
-            to_s = token2token[from_s]
-            line = '    {"%s", "%s"},' % (
-                from_s.replace('"', '\\"'), to_s.replace('"', '\\"'))
-            cc_lines.append(line)
-        cc_lines.append('};')
+        s2z = set()
+        pairs = []
+        for from_s, to_s in token2token.iteritems():
+            assert ' ' not in from_s
+            assert ' ' not in to_s
+            if from_s.replace('s', 'z') == to_s:
+                s2z.add(from_s)
+            else:
+                pairs.append((from_s, to_s))
 
+        cc_lines.append('string NRM_TOKEN_S2Z =')
+        for s in sorted(s2z):
+            cc_lines.append('    "%s "' % s.replace('"', '\"'))
+        cc_lines.append(';')
         cc_lines.append('')
+
+        cc_lines.append('string NRM_TOKEN_PAIRS =')
+        for from_s, to_s in sorted(pairs):
+            cc_lines.append(
+                '    "%s %s "' %
+                    (from_s.replace('"', '\"'), to_s.replace('"', '\"')))
+        cc_lines.append(';')
+        cc_lines.append('')
+
         cc_lines.append('}  // namespace tokenizer_data')
 
         cc_lines.append('')

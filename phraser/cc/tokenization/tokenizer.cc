@@ -1,6 +1,7 @@
 #include "tokenizer.h"
 
-#include "tokenizer_data.h"
+#include "cc/misc/strings.h"
+#include "cc/tokenization/tokenizer_data.h"
 
 bool Tokenizer::Init(
         const unordered_map<string, UChar>& html2unicode,
@@ -23,11 +24,64 @@ bool Tokenizer::Init(
     return true;
 }
 
+static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
+                            unordered_map<string, string>* token2token) {
+    token2token->clear();
+
+    vector<string> v;
+
+    strings::SplitByWhitespace(s2z_s, &v);
+    for (auto& s : v) {
+        if (s.empty()) {
+            return false;
+        }
+
+        auto z = s;
+        for (auto i = 0u; i < z.size(); ++i) {
+            if (z[i] == 's') {
+                z[i] = 'z';
+            }
+        }
+
+        auto it = token2token->find(s);
+        if (it != token2token->end()) {
+            return false;
+        }
+
+        (*token2token)[s] = z;
+    }
+
+    strings::SplitByWhitespace(pairs_s, &v);
+    if (v.size() % 2) {
+        return false;
+    }
+
+    for (auto i = 0u; i < v.size(); i += 2) {
+        auto& from_s = v[i];
+        auto& to_s = v[i + 1];
+
+        auto it = token2token->find(from_s);
+        if (it != token2token->end()) {
+            return false;
+        }
+
+        (*token2token)[from_s] = to_s;
+    }
+
+    return true;
+}
+
 bool Tokenizer::InitDefault() {
     auto& html2unicode = tokenizer_data::HTML2UNICODE;
     auto& ascii_data = tokenizer_data::ASCII_DATA;
     auto& unicode2ascii = tokenizer_data::UNICODE2ASCII;
-    auto& token2token = tokenizer_data::TOKEN2TOKEN;
+
+    unordered_map<string, string> token2token;
+    if (!MakeToken2Token(tokenizer_data::NRM_TOKEN_S2Z,
+                         tokenizer_data::NRM_TOKEN_PAIRS, &token2token)) {
+        return false;
+    }
+
     return Init(html2unicode, ascii_data, unicode2ascii, token2token);
 }
 

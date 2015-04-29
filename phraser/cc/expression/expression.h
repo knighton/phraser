@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "cc/misc/json.h"
+
 using std::string;
 using std::vector;
 using std::unordered_map;
@@ -24,6 +26,9 @@ class Expression {
     void Init(const string& type, const vector<string>& args,
               const unordered_map<string, unordered_set<string>>&
                   dimension2values);
+
+    // Dump to JSON.
+    json::Object* ToJSON() const;
 
     // Do we match against these token features?
     bool AcceptsFeatures(const unordered_map<string, string>& dim2value) const;

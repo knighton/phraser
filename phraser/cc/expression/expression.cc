@@ -10,6 +10,19 @@ void Expression::Init(
     dimension2values_ = dimension2values;
 }
 
+json::Object* Expression::ToJSON() const {
+    map<string, json::Object*> dim2values;
+    for (auto& it : dimension2values_) {
+        dim2values[it.first] = new json::Object(it.second);
+    }
+
+    return new json::Object({
+        {"type", new json::Object(type_)},
+        {"args", new json::Object(args_)},
+        {"dimension2values", new json::Object(dim2values)},
+    });
+}
+
 bool Expression::AcceptsFeatures(
         const unordered_map<string, string>& dim2value) const {
     for (auto& it : dim2value) {

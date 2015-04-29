@@ -120,7 +120,7 @@ where
 3. The LAPOS tokenizer converts the ASCII text to ASCII tokens.
 4. Tokens are normalized like the Stanford parser.
 
-##### Lookup table generation:
+##### Lookup table generation
 
 You call a script [generate_tokenizer_data.py](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/generate_tokenizer_data.py) that generates [tokenizer_data.h](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.h), [tokenizer_data.cc](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.cc) containing these tables:
 

@@ -6,6 +6,7 @@
 
 #include "cc/english/english_config.h"
 #include "cc/english/english_expression_evaluator.h"
+#include "cc/misc/json.h"
 #include "cc/phrase/phrase_config.h"
 #include "cc/phrase/phrase_detection_result.h"
 #include "cc/phrase/phrase_config_parser.h"
@@ -20,7 +21,8 @@ class PhraseDetector {
                        const vector<string>& phrase_config_ff,
                        string* error);
 
-    void Dump(size_t indent_level, size_t spaces_per_indent) const;
+    // Dump to JSON.
+    json::Object* ToJSON() const;
 
     bool Detect(const vector<string>& tokens,
                 vector<PhraseDetectionResult>* results, string* error) const;

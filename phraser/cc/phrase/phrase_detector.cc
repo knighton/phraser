@@ -40,8 +40,24 @@ bool PhraseDetector::InitFromFiles(
     return true;
 }
 
-void PhraseDetector::Dump(size_t indent_level, size_t spaces_per_indent) const {
-    // TODO
+json::Object* PhraseDetector::ToJSON() const {
+    vector<json::Object*> phrases;
+    phrases.reserve(phrases_.size());
+    for (auto& phrase : phrases_) {
+        phrases.emplace_back(phrase.ToJSON());
+    }
+
+    vector<json::Object*> detectors;
+    detectors.reserve(detectors_.size());
+    for (auto& detector : detectors_) {
+        detectors.emplace_back(detector.ToJSON());
+    }
+
+    return new json::Object({
+        {"vocab", vocab_.ToJSON()},
+        {"phrases", new json::Object(phrases)},
+        {"detectors", new json::Object(detectors)},
+    });
 }
 
 bool PhraseDetector::Detect(

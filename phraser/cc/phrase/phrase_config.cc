@@ -11,16 +11,30 @@ static void DumpList(const vector<string>& v) {
     printf("]");
 }
 
-void PhraseConfig::Dump(size_t indent_level, size_t spaces_per_indent) const {
-    string indent0 = string(indent_level * spaces_per_indent, ' ');
-    string indent1 = string((indent_level + 1) * spaces_per_indent, ' ');
+json::Object* PhraseConfig::ToJSON() const {
+    vector<json::Object*> block_objects;
+    block_objects.reserve(blocks.size());
+    for (auto i = 0u; i < blocks.size(); ++i) {
+        auto& options = blocks[i];
+        vector<json::Object*> option_objects;
+        option_objects.reserve(options.size());
+        for (auto j = 0u; j < options.size(); ++j) {
+            auto& atoms = options[j];
+            vector<json::Object*> atom_objects;
+            atom_objects.reserve(atoms.size());
+            for (auto k = 0u; k < atoms.size(); ++k) {
+                auto& atom = atoms[k];
+                auto* obj = new json::Object(atom);
+                atom_objects.emplace_back(obj);
+            }
+            option_objects.emplace_back(new json::Object(atom_objects));
+        }
+        block_objects.emplace_back(new json::Object(option_objects));
+    }
 
-    printf("%sPhraseConfig {\n", indent0.c_str());
-    printf("%sName: %s\n", indent1.c_str(), name.c_str());
-    printf("%sSubsequence names: ", indent1.c_str());
-    DumpList(block_names);
-    printf("\n");
-    printf("%sBlocks: (see its corresponding SequenceDetector)\n",
-           indent1.c_str());
-    printf("%s}\n", indent0.c_str());
+    return new json::Object({
+        {"name", new json::Object(name)},
+        {"block_names", new json::Object(block_names)},
+        {"blocks", new json::Object(block_objects)},
+    });
 }

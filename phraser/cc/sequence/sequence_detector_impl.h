@@ -99,9 +99,9 @@ json::Object* SequenceDetector<Atom, Token, AtomTokenComparer>::ToJSON() const {
                 auto obj = AtomTokenComparer::AtomToJSON(atom);
                 atom_objects.emplace_back(obj);
             }
-            option_objects.emplace_back(atom_objects);
+            option_objects.emplace_back(new json::Object(atom_objects));
         }
-        block_objects.emplace_back(option_objects);
+        block_objects.emplace_back(new json::Object(option_objects));
     }
 
     return new json::Object({

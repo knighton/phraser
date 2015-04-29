@@ -115,6 +115,8 @@ where
 
 ##### Overview
 
+`HTML` -> `Unicode` -> `PTB ASCII` -> `tokens` -> `normalized tokens`
+
 1. HTML entities (dec, hex, and named) are optionally converted to their Unicode code point equivalents.
 2. Unicode is normalized to Penn Treebank ASCII like the Stanford parser.
 3. The LAPOS tokenizer converts the ASCII text to ASCII tokens.

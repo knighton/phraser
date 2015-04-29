@@ -55,7 +55,6 @@ static bool IsLineADivider(const string& line) {
     return true;
 }
 
-// Parse "These (to be +pres +3rd +plur) (regex s(ome space-separated tokens
 static bool ParseLine(
         const string& line, EnglishExpressionEvaluator* vocab,
         vector<TokenGroupID>* group_ids, string* error) {

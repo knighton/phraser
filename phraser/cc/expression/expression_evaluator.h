@@ -25,10 +25,9 @@ using std::vector;
 // If odd: divide by two, and that is the index in the tokens_ vector.
 typedef uint32_t TokenGroupID;
 
-template <typename EE>
+template <typename ExprEval>
 struct TypeHandler {
-    // ExpressionEvaluator* evaluator;
-    EE* evaluator;
+    ExprEval* evaluator;
     vector<TokenGroupID> token_group_ids;
 };
 

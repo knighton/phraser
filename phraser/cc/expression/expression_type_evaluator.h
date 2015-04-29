@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "cc/expression/expression.h"
+#include "cc/misc/json.h"
 
 using std::string;
 using std::unordered_map;
@@ -19,6 +20,9 @@ class ExpressionTypeEvaluator {
     virtual ~ExpressionTypeEvaluator();
 
     const string& type() const { return type_; }
+
+    // Dump to JSON.
+    json::Object* ToJSON() const;
 
     // Is the expression possible?
     //

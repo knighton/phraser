@@ -3,6 +3,20 @@
 ExpressionTypeEvaluator::~ExpressionTypeEvaluator() {
 }
 
+json::Object* ExpressionTypeEvaluator::ToJSON() const {
+    map<string, json::Object*> dim2values;
+    for (auto& it : dimension2possible_values_) {
+        auto& dim = it.first;
+        auto& possible_values = it.second;
+        dim2values[dim] = new json::Object(possible_values);
+    }
+
+    return new json::Object({
+        {"type", new json::Object(type_)},
+        {"dimension2possible_values", new json::Object(dim2values)},
+    });
+}
+
 bool ExpressionTypeEvaluator::IsExpressionPossible(
         const Expression& expr, string* error) const {
     if (expr.type() != type_) {

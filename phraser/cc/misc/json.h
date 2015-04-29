@@ -1,0 +1,47 @@
+#ifndef CC_MISC_JSON_H_
+#define CC_MISC_JSON_H_
+
+#include <map>
+#include <set>
+#include <string>
+#include <unordered_set>
+#include <vector>
+
+using std::map;
+using std::set;
+using std::string;
+using std::unordered_set;
+using std::vector;
+
+namespace json {
+
+enum JSONObjectType {
+    JOT_BOOL,
+    JOT_INT,  // int64_t.
+    JOT_STR,
+    JOT_LIST,
+    JOT_DICT,
+};
+
+class Object {
+  public:
+    Object(const string& s);
+
+    Object(const vector<string>& v);
+    Object(const set<string>& set);
+    Object(const unordered_set<string>& set);
+
+    Object(const map<string, Object*>& d);
+
+    ~Object();
+
+  private:
+    void InitFromStrings(const vector<string>& v);
+
+    JSONObjectType type_;
+    void* data_;
+};
+
+}  // namespace json
+
+#endif  // CC_MISC_JSON_H_

@@ -145,7 +145,7 @@ The following steps occur for all Unicode code points in any index below in orde
 5. Decompose the Unicode code points according to NFKD
    * [nfc.txt](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/nfc.txt) from ICU
    * [nfkc.txt](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/nfkc.txt) from ICU
-6. Replace with visually similar ASCII characters except for `"` -- replace non-ASCII Unicode code points with "confusable" code point sequences of type SA (same script, any case) that contain at least one ASCII code point
+6. Replace non-ASCII Unicode code points with visually confusable code point sequences of type SA (same script, any case) that contain at least one ASCII code point
    * [confusables.txt](https://raw.githubusercontent.com/knighton/phraser/master/phraser/cc/tokenization/data_import/confusables.txt) from ICU
 7. Filter out non-ASCII characters.
 8. Join into a string.

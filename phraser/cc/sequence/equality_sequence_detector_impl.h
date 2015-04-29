@@ -22,4 +22,16 @@ bool EqualityAtomTokenComparer<Atom>::IsMatch(
     return token_have == atom_need;
 }
 
+template <typename Atom>
+json::Object* VectorMembershipAtomTokenComparer<Atom>::AtomToJSON(
+        const Atom& atom) {
+    return new json::Object(atom);
+}
+
+template <typename Atom>
+json::Object* VectorMembershipAtomTokenComparer<Atom>::TokenToJSON(
+        const Atom& token) {
+    return new json::Object(token);
+}
+
 #endif  // CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_

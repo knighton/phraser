@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "cc/misc/json.h"
 #include "cc/sequence/sequence_match.h"
 
 using std::string;
@@ -64,9 +65,8 @@ class SequenceDetector {
     // * You can't have identical options within the same option list.
     bool Init(const vector<vector<vector<Atom>>>& blocks, string* error);
 
-    // Dump my contents to stdout.
-    void Dump(void (*DumpAtom)(const Atom& atom), size_t indent,
-              size_t spaces_per_indent) const;
+    // Dump to JSON.
+    json::Object* ToJSON() const;
 
     // Get every possible match.
     //

@@ -16,15 +16,18 @@ using std::vector;
 namespace json {
 
 enum JSONObjectType {
+    JOT_NULL,
     JOT_BOOL,
     JOT_INT,  // int64_t.
     JOT_STR,
-    JOT_LIST,
-    JOT_DICT,
+    JOT_ARRAY,
+    JOT_OBJ,
 };
 
 class Object {
   public:
+    Object();  // NULL constructor.
+
     Object(int64_t n);
 
     Object(const string& s);
@@ -36,6 +39,8 @@ class Object {
     Object(const vector<string>& v);
     Object(const set<string>& set);
     Object(const unordered_set<string>& set);
+
+    Object(const vector<Object*>& v);
 
     Object(const map<string, Object*>& d);
 

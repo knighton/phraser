@@ -2,6 +2,11 @@
 
 namespace json {
 
+Object::Object() {
+    type_ = JOT_NULL;
+    data_ = NULL;
+}
+
 Object::Object(int64_t n) {
     type_ = JOT_INT;
     auto data = new int(n);
@@ -66,8 +71,14 @@ Object::Object(const unordered_set<string>& set) {
     InitFromStrings(v);
 }
 
+Object::Object(const vector<Object*>& v) {
+    type_ = JOT_ARRAY;
+    auto data = new vector<Object*>(v);
+    data_ = reinterpret_cast<void*>(data);
+}
+
 Object::Object(const map<string, Object*>& d) {
-    type_ = JOT_DICT;
+    type_ = JOT_OBJ;
     auto data = new map<string, Object*>();
     for (auto& it : d) {
         (*data)[it.first] = it.second;
@@ -77,6 +88,8 @@ Object::Object(const map<string, Object*>& d) {
 
 Object::~Object() {
     switch (type_) {
+    case JOT_NULL:
+        break;
     case JOT_BOOL:
         delete reinterpret_cast<bool*>(data_);
         break;
@@ -86,7 +99,7 @@ Object::~Object() {
     case JOT_STR:
         delete reinterpret_cast<string*>(data_);
         break;
-    case JOT_LIST:
+    case JOT_ARRAY:
         {
             auto* data = reinterpret_cast<vector<Object*>*>(data_);
             for (auto& obj : *data) {
@@ -95,7 +108,7 @@ Object::~Object() {
             delete data;
             break;
         }
-    case JOT_DICT:
+    case JOT_OBJ:
         {
             auto* data = reinterpret_cast<map<string, Object*>*>(data_);
             for (auto& it : *data) {
@@ -108,7 +121,7 @@ Object::~Object() {
 }
 
 void Object::InitFromInts(const vector<int64_t>& v) {
-    type_ = JOT_LIST;
+    type_ = JOT_ARRAY;
     auto data = new vector<Object*>();
     data->reserve(v.size());
     for (auto& n : v) {
@@ -118,7 +131,7 @@ void Object::InitFromInts(const vector<int64_t>& v) {
 }
 
 void Object::InitFromStrings(const vector<string>& v) {
-    type_ = JOT_LIST;
+    type_ = JOT_ARRAY;
     auto data = new vector<Object*>();
     data->reserve(v.size());
     for (auto& s : v) {

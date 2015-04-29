@@ -34,4 +34,16 @@ bool VectorMembershipAtomTokenComparer<Atom>::IsMatch(
     return false;
 }
 
+template <typename Atom>
+json::Object* VectorMembershipAtomTokenComparer<Atom>::AtomToJSON(
+        const Atom& atom) {
+    return new json::Object(atom);
+}
+
+template <typename Atom>
+json::Object* VectorMembershipAtomTokenComparer<Atom>::TokenToJSON(
+        const vector<Atom>& token) {
+    return new json::Object(token);
+}
+
 #endif  // CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_IMPL_H_

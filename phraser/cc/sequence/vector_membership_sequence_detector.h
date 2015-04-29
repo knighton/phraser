@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "cc/misc/json.h"
 #include "cc/sequence/sequence_detector.h"
 
 using std::vector; 
@@ -14,6 +15,8 @@ class VectorMembershipAtomTokenComparer {
     static const Atom* FirstAtom(const vector<Atom>& token);
     static const Atom* LastAtom(const vector<Atom>& token);
     static bool IsMatch(const vector<Atom>& token_have, const Atom& atom_need);
+    static json::Object* AtomToJSON(const Atom& atom);
+    static json::Object* TokenToJSON(const vector<Atom>& token);
 };
 
 template <typename Atom>

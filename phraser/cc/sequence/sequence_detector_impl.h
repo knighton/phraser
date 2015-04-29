@@ -83,33 +83,30 @@ bool SequenceDetector<Atom, Token, AtomTokenComparer>::Init(
 }
 
 template <typename Atom, typename Token, typename AtomTokenComparer>
-void SequenceDetector<Atom, Token, AtomTokenComparer>::Dump(
-        void (*DumpAtom)(const Atom& atom), size_t indent_level,
-        size_t spaces_per_indent) const {
-    string indent1 = string(indent_level * spaces_per_indent, ' ');
-    string indent2 = string((indent_level + 1) * spaces_per_indent, ' ');
-    string indent3 = string((indent_level + 2) * spaces_per_indent, ' ');
-    printf("%sSequenceDetector {\n", indent1.c_str());
+json::Object* SequenceDetector<Atom, Token, AtomTokenComparer>::ToJSON() const {
+    vector<json::Object*> block_objects;
+    block_objects.reserve(blocks_.size());
     for (auto i = 0u; i < blocks_.size(); ++i) {
         auto& options = blocks_[i];
-        printf("%sSubsequence #%u (%zu %s):\n", indent2.c_str(), i,
-               options.size(), options.size() == 1 ? "option" : "options");
+        vector<json::Object*> option_objects;
+        option_objects.reserve(options.size());
         for (auto j = 0u; j < options.size(); ++j) {
             auto& atoms = options[j];
-            printf("%sOption #%u (%zu %s): [", indent3.c_str(), j,
-                   atoms.size(), atoms.size() == 1 ? "atom" : "atoms");
-            if (atoms.size()) {
-                DumpAtom(atoms[0]);
+            vector<json::Object*> atom_objects;
+            atom_objects.reserve(atoms.size());
+            for (auto k = 0u; k < atoms.size(); ++k) {
+                auto& atom = atoms[k];
+                auto obj = AtomTokenComparer::AtomToJSON(atom);
+                atom_objects.emplace_back(obj);
             }
-            for (auto k = 1u; k < atoms.size(); ++k) {
-                printf(", ");
-                DumpAtom(atoms[k]);
-            }
-            printf("]\n");
+            option_objects.emplace_back(atom_objects);
         }
-        printf("%s}\n", indent2.c_str());
+        block_objects.emplace_back(option_objects);
     }
-    printf("%s}\n", indent1.c_str());
+
+    return new json::Object({
+        {"blocks", new json::Object(block_objects)},
+    });
 }
 
 template <typename Atom, typename Token, typename AtomTokenComparer>

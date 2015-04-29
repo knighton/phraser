@@ -4,19 +4,6 @@
 
 #include "cc/misc/strings.h"
 
-static void DumpList(vector<string>* v) {
-    printf("[");
-    sort(v->begin(), v->end());
-    if (v->size()) {
-        printf("%s", (*v)[0].c_str());
-    }
-    for (auto i = 1u; i < v->size(); ++i) {
-        printf(", %s", (*v)[i].c_str());
-    }
-    printf("]");
-    v->clear();
-}
-
 bool ExprEvalVocabulary::IdentifyToken(const string& token, size_t* index) {
     auto it = token2index_.find(token);
     if (it != token2index_.end()) {

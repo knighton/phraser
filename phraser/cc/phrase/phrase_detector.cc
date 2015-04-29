@@ -40,32 +40,8 @@ bool PhraseDetector::InitFromFiles(
     return true;
 }
 
-static void DumpTokenGroupID(const TokenGroupID& group_id) {
-    printf("%u", group_id);
-}
-
 void PhraseDetector::Dump(size_t indent_level, size_t spaces_per_indent) const {
-    string indent0(indent_level * spaces_per_indent, ' ');
-    string indent1((indent_level + 1) * spaces_per_indent, ' ');
-    string indent2((indent_level + 2) * spaces_per_indent, ' ');
-    string indent3((indent_level + 3) * spaces_per_indent, ' ');
-
-    printf("%sPhraseDetector {\n", indent0.c_str());
-
-    // vocab_.Dump(indent_level + 1, spaces_per_indent);
-
-    printf("%sPhrases: [\n", indent1.c_str());
-    for (auto i = 0u; i < detectors_.size(); ++i) {
-        printf("%s{\n", indent2.c_str());
-        printf("%sPhrase #%u:\n", indent3.c_str(), i);
-        phrases_[i].Dump(indent_level + 3, spaces_per_indent);
-        detectors_[i].Dump(
-                &DumpTokenGroupID, indent_level + 3, spaces_per_indent);
-        printf("%s}\n", indent2.c_str());
-    }
-    printf("%s]\n", indent1.c_str());
-
-    printf("%s}\n", indent0.c_str());
+    // TODO
 }
 
 bool PhraseDetector::Detect(

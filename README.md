@@ -118,7 +118,7 @@ where
 1. HTML entities (dec, hex, and named) are optionally converted to their Unicode code point equivalents.
 2. Unicode is normalized to Penn Treebank ASCII like the Stanford parser.
 3. The LAPOS tokenizer converts the ASCII text to ASCII tokens.
-4. Tokens are normalized (American spellings and escaping) like the Stanford parser.
+4. Tokens are normalized like the Stanford parser.
 
 ##### Lookup table generation:
 
@@ -163,4 +163,4 @@ We make some changes in order to match the tagger's training data.
 
 #### Tagging
 
-Penn Treebank ASCII tokens (see [Tokenization](#tokenization)) are fed to the [LAPOS tagger](http://www.logos.ic.i.u-tokyo.ac.jp/~tsuruoka/lapos/), which uses a model pretrained on WSJ sections 2-21.
+Penn Treebank ASCII tokens (see [Tokenization](#tokenization)) are fed to the [LAPOS tagger](http://www.logos.ic.i.u-tokyo.ac.jp/~tsuruoka/lapos/) (vendorized [here](https://github.com/knighton/phraser/blob/master/phraser/cc/third_party/lapos/), which uses a model pretrained on WSJ sections 2-21.

@@ -52,34 +52,19 @@ const Expression& ExprEvalVocabulary::GetExpression(size_t index) const {
     return expressions_[index];
 }
 
-void ExprEvalVocabulary::Dump(
-        size_t indent_level, size_t spaces_per_indent) const {
-    string indent1(indent_level * spaces_per_indent, ' ');
-    string indent2((indent_level + 1) * spaces_per_indent, ' ');
-    string indent3((indent_level + 2) * spaces_per_indent, ' ');
-
-    printf("%sExprEvalVocabulary {\n", indent1.c_str());
-
-    // List tokens.
-    printf("%s%zu tokens (%zu indexed): [\n", indent2.c_str(), tokens_.size(),
-            token2index_.size());
-    for (auto i = 0u; i < tokens_.size(); ++i) {
-        printf("%s%u: %s\n", indent3.c_str(), i, tokens_[i].c_str());
-    }
-    printf("%s]\n", indent2.c_str());
-
-    // List Expressions.
-    printf("%s%zu expressions (%zu indexed): [\n", indent2.c_str(),
-            expressions_.size(), exprstr2index_.size());
-    for (auto i = 0u; i < expressions_.size(); ++i) {
-        auto& e = expressions_[i];
+json::Object* ExprEvalVocabulary::ToJSON() const {
+    vector<string> expr_ss;
+    expr_ss.reserve(expressions_.size());
+    for (auto& expr : expressions_) {
         string s;
-        e.ToCanonicalString(&s);
-        printf("%s%u: %s\n", indent3.c_str(), i, s.c_str());
+        expr.ToCanonicalString(&s);
+        expr_ss.emplace_back(s);
     }
-    printf("%s]\n", indent2.c_str());
 
-    printf("%s}\n", indent1.c_str());
+    return new json::Object({
+        {"tokens", new json::Object(tokens_)},
+        {"expressions", new json::Object(expr_ss)},
+    });
 }
 
 void ExprEvalVocabulary::Clear() {
@@ -170,38 +155,34 @@ bool ExpressionEvaluator::InitWithEvaluators(
     return true;
 }
 
-void ExpressionEvaluator::Dump(
-        size_t indent_level, size_t spaces_per_indent) const {
-    string indent1 = string(indent_level * spaces_per_indent, ' ');
-    string indent2 = string((indent_level + 1) * spaces_per_indent, ' ');
-    vector<string> v;
-
-    printf("%sExpressionEvaluator {\n", indent1.c_str());
-
-    printf("%sprecomputable expression types: ", indent2.c_str());
+json::Object* ExpressionEvaluator::ToJSON() const {
+    map<string, json::Object*> type2precomputable;
     for (auto& it : precomputable_type2handler_) {
-        v.emplace_back(it.first);
+        type2precomputable[it.first] = it.second.evaluator->ToJSON();
     }
-    DumpList(&v);
-    printf("\n");
 
-    printf("%sdynamic expression types: ", indent2.c_str());
+    map<string, json::Object*> type2dynamic;
     for (auto& it : dynamic_type2handler_) {
-        v.emplace_back(it.first);
+        type2dynamic[it.first] = it.second.evaluator->ToJSON();
     }
-    DumpList(&v);
-    printf("\n");
 
-    printf("%sall-at-once expression types: ", indent2.c_str());
-    for (auto& it : dynamic_type2handler_) {
-        v.emplace_back(it.first);
+    map<string, json::Object*> type2allatonce;
+    for (auto& it : all_at_once_type2handler_) {
+        type2allatonce[it.first] = it.second.evaluator->ToJSON();
     }
-    DumpList(&v);
-    printf("\n");
 
-    vocab_.Dump(indent_level + 1, spaces_per_indent);
+    map<string, json::Object*> token2precomputed;
+    for (auto& it : token2precomputed_) {
+        token2precomputed[it.first] = new json::Object(it.second);
+    }
 
-    printf("%s}\n", indent1.c_str());
+    return new json::Object({
+        {"precomputable_evaluators", new json::Object(type2precomputable)},
+        {"dynamic_evaluators", new json::Object(type2dynamic)},
+        {"all_at_once_evaluators", new json::Object(type2allatonce)},
+        {"vocabulary", vocab_.ToJSON()},
+        {"token2precompted", new json::Object(token2precomputed)},
+    });
 }
 
 bool ExpressionEvaluator::AddToken(

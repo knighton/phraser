@@ -25,7 +25,13 @@ enum JSONObjectType {
 
 class Object {
   public:
+    Object(int64_t n);
+
     Object(const string& s);
+
+    Object(const vector<uint32_t>& v);
+    Object(const set<uint32_t>& set);
+    Object(const unordered_set<uint32_t>& set);
 
     Object(const vector<string>& v);
     Object(const set<string>& set);
@@ -36,6 +42,8 @@ class Object {
     ~Object();
 
   private:
+    void InitFromInts(const vector<int64_t>& v);
+
     void InitFromStrings(const vector<string>& v);
 
     JSONObjectType type_;

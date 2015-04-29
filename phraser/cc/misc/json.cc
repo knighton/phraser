@@ -2,10 +2,46 @@
 
 namespace json {
 
+Object::Object(int64_t n) {
+    type_ = JOT_INT;
+    auto data = new int(n);
+    data_ = reinterpret_cast<void*>(data);
+}
+
 Object::Object(const string& s) {
     type_ = JOT_STR;
     auto data = new string(s);
     data_ = reinterpret_cast<void*>(data);
+}
+
+Object::Object(const vector<uint32_t>& vec) {
+    vector<int64_t> v;
+    v.reserve(vec.size());
+    for (auto& it : vec) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
+}
+
+Object::Object(const set<uint32_t>& set) {
+    vector<int64_t> v;
+    v.reserve(set.size());
+    for (auto& it : set) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
+}
+
+Object::Object(const unordered_set<uint32_t>& set) {
+    vector<int64_t> v;
+    v.reserve(set.size());
+    for (auto& it : set) {
+        auto n = static_cast<int64_t>(it);
+        v.emplace_back(n);
+    }
+    InitFromInts(v);
 }
 
 Object::Object(const vector<string>& v) {
@@ -69,6 +105,16 @@ Object::~Object() {
             break;
         }
     }
+}
+
+void Object::InitFromInts(const vector<int64_t>& v) {
+    type_ = JOT_LIST;
+    auto data = new vector<Object*>();
+    data->reserve(v.size());
+    for (auto& n : v) {
+        data->emplace_back(new Object(n));
+    }
+    data_ = reinterpret_cast<void*>(data);
 }
 
 void Object::InitFromStrings(const vector<string>& v) {

@@ -9,6 +9,7 @@
 #include "cc/expression/dynamic_evaluator.h"
 #include "cc/expression/expression_evaluator.h"
 #include "cc/expression/precomputable_evaluator.h"
+#include "cc/misc/json.h"
 
 using std::string;
 using std::unordered_map;
@@ -34,6 +35,9 @@ struct TypeHandler {
 // A dictionary of Expressions and tokens.
 class ExprEvalVocabulary {
   public:
+    // Dump to JSON.
+    json::Object* ToJSON() const;
+
     // Returns whether it already existed.
     bool IdentifyToken(const string& token, size_t* index);
 
@@ -44,8 +48,6 @@ class ExprEvalVocabulary {
         const string& canon_expr_str, const Expression& expr, size_t* index);
 
     const Expression& GetExpression(size_t index) const;
-
-    void Dump(size_t indent_level, size_t spaces_per_indent) const;
 
     void Clear();
 
@@ -72,7 +74,8 @@ class ExpressionEvaluator {
         const unordered_map<string, AllAtOnceEvaluator<string>*>&
             type2allatonce);
 
-    void Dump(size_t indent_level, size_t spaces_per_indent) const;
+    // Dump to JSON.
+    json::Object* ToJSON() const;
 
     // Add the token to my internal dictionary.
     //

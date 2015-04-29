@@ -52,7 +52,7 @@ void PhraseDetector::Dump(size_t indent_level, size_t spaces_per_indent) const {
 
     printf("%sPhraseDetector {\n", indent0.c_str());
 
-    vocab_.Dump(indent_level + 1, spaces_per_indent);
+    // vocab_.Dump(indent_level + 1, spaces_per_indent);
 
     printf("%sPhrases: [\n", indent1.c_str());
     for (auto i = 0u; i < detectors_.size(); ++i) {

@@ -38,7 +38,58 @@ Results in:
 
 #### Expressions
 
-TODO
+##### All-at-once expression evaluators
+
+* `(tag <Penn tag>)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
+
+##### Dynamic expressions evaluators
+
+* `(number ...)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| class     | `+float` `+int`        |
+| polarity  | `+neg` `+nonneg`       |
+
+##### Precomputable expression evaluators
+
+* `(perspro ...)`
+
+| Dimension | Possible filter values    |
+| --------- | ------------------------- |
+| gender    | `+female` `male` `neuter` |
+| number    | `+plur` `+sing`           |
+| person    | `+1st` `+2nd` `+3rd`      |
+| ppcase    | `+obj` `+refl` `+subj`    |
+
+* `(pospro ...)`
+
+| Dimension | Possible filter values    |
+| --------- | ------------------------- |
+| gender    | `+female` `male` `neuter` |
+| number    | `+plur` `+sing`           |
+| person    | `+1st` `+2nd` `+3rd`      |
+| ppcase    | `+obj` `+refl` `+subj`    |
+
+* `(posdet ...)`
+
+| Dimension | Possible filter values    |
+| --------- | ------------------------- |
+| gender    | `+female` `male` `neuter` |
+| number    | `+plur` `+sing`           |
+| person    | `+1st` `+2nd` `+3rd`      |
+
+* `(to <verb lemma> ...)`
+
+| Dimension  | Possible filter values                           |
+| ---------- | ------------------------------------------------ |
+| field type | `+lemma` `+past` `+pastpart` `+pres` `+prespart` |
+| number     | `+plur` `+sing`                                  |
+| person     | `+1st` `+2nd` `+3rd`                             |
 
 #### Expression syntax
 

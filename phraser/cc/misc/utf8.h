@@ -1,6 +1,7 @@
 #ifndef CC_MISC_NEW_UTF8_H_
 #define CC_MISC_NEW_UTF8_H_
 
+#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -9,7 +10,7 @@
 using std::vector;
 
 UChar utf8_nextCharSafeBody(
-    const uint8_t* s, int32_t* pi, int32_t length, UChar c, int8_t strict);
+    const uint8_t* s, size_t* pi, size_t length, UChar c, int8_t strict);
 
 /*
  * Returns 0 for 0..0xbf as well as for 0xfe and 0xff.
@@ -97,16 +98,14 @@ UChar utf8_nextCharSafeBody(
  * (Post-incrementing forward iteration.)
  * "Safe" macro, checks for illegal sequences and for string boundaries.
  *
- * The length can be negative for a NUL-terminated string.
- *
  * The offset may point to the lead byte of a multi-byte sequence,
  * in which case the macro will read the whole sequence.
  * If the offset points to a trail byte or an illegal UTF-8 sequence, then
  * c is set to a negative value.
  *
  * @param s const uint8_t * string
- * @param i int32_t string offset, must be i<length
- * @param length int32_t string length
+ * @param i size_t string offset, must be i<length
+ * @param length size_t string length
  * @param c output UChar32 variable, set to <0 in case of an error
  * @see U8_NEXT_UNSAFE
  * @stable ICU 2.4
@@ -117,7 +116,7 @@ UChar utf8_nextCharSafeBody(
         uint8_t __t1, __t2; \
         if( /* handle U+1000..U+CFFF inline */ \
             (0xe0<(c) && (c)<=0xec) && \
-            (((i)+1)<(length) || (length)<0) && \
+            (((i)+1)<(length)) && \
             (__t1=(uint8_t)((s)[i]-0x80))<=0x3f && \
             (__t2=(uint8_t)((s)[(i)+1]-0x80))<= 0x3f \
         ) { \
@@ -140,6 +139,6 @@ UChar utf8_nextCharSafeBody(
 }
 
 // Returns true iff there is more text left.
-bool ReadLine(const char* s, int32_t* i, int32_t length, vector<UChar>* line);
+bool ReadLine(const char* s, size_t* i, size_t length, vector<UChar>* line);
 
 #endif  // CC_MISC_NEW_UTF8_H_

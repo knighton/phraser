@@ -54,7 +54,7 @@ utf8_errorValue[6]={
 };
 
 static UChar
-errorValue(int32_t count, int8_t strict) {
+errorValue(size_t count, int8_t strict) {
     if(strict>=0) {
         return utf8_errorValue[count];
     } else if(strict==-3) {
@@ -67,8 +67,6 @@ errorValue(int32_t count, int8_t strict) {
 /*
  * Handle the non-inline part of the U8_NEXT() and U8_NEXT_FFFD() macros
  * and their obsolete sibling UTF8_NEXT_CHAR_SAFE().
- *
- * U8_NEXT() supports NUL-terminated strings indicated via length<0.
  *
  * The "strict" parameter controls the error behavior:
  * <0  "Safe" behavior of U8_NEXT():
@@ -88,16 +86,16 @@ errorValue(int32_t count, int8_t strict) {
  *
  * Note that a UBool is the same as an int8_t.
  */
-UChar utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length,
+UChar utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
                             UChar c, int8_t strict) {
-    int32_t i=*pi;
+    size_t i=*pi;
     uint8_t count=U8_COUNT_TRAIL_BYTES(c);
     assert(count <= 5); /* U8_COUNT_TRAIL_BYTES returns value 0...5 */
-    if(i+count<=length || length<0) {
+    if(i+count<=length) {
         uint8_t trail;
 
         U8_MASK_LEAD_BYTE(c, count);
-        /* support NUL-terminated strings: do not read beyond the first non-trail byte */
+        /* do not read beyond the first non-trail byte */
         switch(count) {
         /* each branch falls through to the next one */
         case 0:
@@ -148,7 +146,7 @@ UChar utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length,
     return c;
 }
 
-bool ReadLine(const char* s, int32_t* i, int32_t length, vector<UChar>* line) {
+bool ReadLine(const char* s, size_t* i, size_t length, vector<UChar>* line) {
     line->clear();
     while (*i < length) {
         UChar c;

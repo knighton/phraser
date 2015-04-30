@@ -40,7 +40,7 @@ Results in:
 
 ##### All-at-once expression evaluators
 
-* `(tag <Penn tag>)`
+* `(tag <uppercase Penn POS tag>)` or `(<uppercase Penn POS tag>)`
 
 | Dimension | Possible filter values |
 | --------- | ---------------------- |

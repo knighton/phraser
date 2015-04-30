@@ -50,6 +50,9 @@ class Object {
 
     ~Object();
 
+    void AppendToString(string* s, size_t spaces_per_indent=4,
+                        size_t offset_spaces=0, bool leading_indent=true) const;
+
   private:
     void InitFromInts(const vector<int64_t>& v);
 

@@ -1,5 +1,7 @@
 #include "json.h"
 
+#include "cc/misc/strings.h"
+
 namespace json {
 
 Object::Object() {
@@ -147,6 +149,104 @@ Object::~Object() {
             delete data;
             break;
         }
+    }
+}
+
+static void Quote(const string& in, string* out) {
+    out->clear();
+    out->reserve(in.size() + 2);
+    *out += "\"";
+    for (auto& c : in) {
+        if (c == '"') {
+            *out += "\\\"";
+        } else {
+            *out += c;
+        }
+    }
+    *out += "\"";
+}
+
+void Object::AppendToString(
+        string* out, size_t spaces_per_indent, size_t offset_spaces,
+        bool leading_indent) const {
+    string indent0(offset_spaces, ' ');
+    string indent1(offset_spaces + spaces_per_indent, ' ');
+
+    if (leading_indent) {
+        *out += indent0;
+    }
+
+    switch (type_) {
+    case JOT_NULL: {
+        *out += "null";
+        break;
+    }
+    case JOT_BOOL: {
+        auto& b = *reinterpret_cast<bool*>(data_);
+        *out += (b ? "true" : "false");
+        break;
+    }
+    case JOT_INT: {
+        auto& n = *reinterpret_cast<int64_t*>(data_);
+        *out += strings::StringPrintf("%ld", n);
+        break;
+    }
+    case JOT_STR: {
+        auto& orig_s = *reinterpret_cast<string*>(data_);
+        string quoted_s;
+        Quote(orig_s, &quoted_s);
+        *out += quoted_s;
+        break;
+    }
+    case JOT_ARRAY: {
+        auto& v = *reinterpret_cast<vector<Object*>*>(data_);
+        *out += "[";
+        if (v.size()) {
+            *out += "\n";
+        }
+        for (auto i = 0u; i < v.size(); ++i) {
+            auto& obj = v[i];
+            obj->AppendToString(
+                out, spaces_per_indent, offset_spaces + spaces_per_indent,
+                true);
+            if (i != v.size() - 1) {
+                *out += ",";
+            }
+            *out += "\n";
+        }
+        if (v.size()) {
+            *out += indent0;
+        }
+        *out += "]";
+        break;
+    }
+    case JOT_OBJ: {
+        auto& d = *reinterpret_cast<map<string, Object*>*>(data_);
+        *out += "{";
+        if (d.size()) {
+            *out += "\n";
+        }
+        size_t count = 0;
+        for (auto& it : d) {
+            auto& orig_s = it.first;
+            string quoted_s;
+            Quote(orig_s, &quoted_s);
+            *out += indent1 + quoted_s + ": ";
+            auto& obj = it.second;
+            obj->AppendToString(
+                out, spaces_per_indent, offset_spaces + spaces_per_indent,
+                false);
+            if (count != d.size() - 1) {
+                *out += ",";
+            }
+            *out += "\n";
+        }
+        if (d.size()) {
+            *out += indent0;
+        }
+        *out += "}";
+        break;
+    }
     }
 }
 

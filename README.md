@@ -10,9 +10,9 @@ Contents:
     * [Regular expression](#regular-expression) — regex *regex*
   * [Precomputable expressions](#precomputable-expressions)
     * [Custom token group](#custom-token-group) — oneof *tokens...*
-    * [Personal pronoun](#possessive-pronoun) — perspro *+gender +number +person +case*
-    * [Possessive determiner](#possessive-pronoun) — posdet *+gender +number +person*
-    * [Possessive pronoun](#possessive-pronoun) — pospro *+gender +number +person +case*
+    * [Personal pronoun](#possessive-pronoun) — perspro *+case +gender +number +person +personhood*
+    * [Possessive determiner](#possessive-pronoun) — posdet *+gender +number +person +personhood*
+    * [Possessive pronoun](#possessive-pronoun) — pospro *+case +gender +number +person +personhood*
     * [Verb](#verb) — to *lemma +fieldtype +number +person*
 * [Configuration](#configuration)
   * [Expression syntax](#expression-syntax)
@@ -94,33 +94,36 @@ Results in:
 
 * `(perspro ...)`
 
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
-| case      | `+obj` `+refl` `+subj`    |
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| case       | `+obj` `+refl` `+subj`    |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
 
 ##### Possessive determiner
 
 * `(posdet ...)`
 
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
 
 ##### Possessive pronoun
 
 * `(pospro ...)`
 
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
-| case      | `+obj` `+refl` `+subj`    |
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| case       | `+obj` `+refl` `+subj`    |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
 
 ##### Verb
 

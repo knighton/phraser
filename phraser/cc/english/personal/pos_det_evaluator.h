@@ -7,7 +7,7 @@
 class PosDetEvaluator : public PrecomputableEvaluator {
   public:
     // Does not take ownership.
-    bool Init(PersonalManager* personal_mgr);
+    bool Init(PersonalManager* personal_mgr, string* error);
 
     bool GetExpressionMatches(
             const Expression& expr, vector<string>* tokens) const;

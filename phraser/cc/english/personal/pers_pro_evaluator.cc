@@ -1,6 +1,6 @@
 #include "pers_pro_evaluator.h"
 
-bool PersProEvaluator::Init(PersonalManager* personal_mgr) {
+bool PersProEvaluator::Init(PersonalManager* personal_mgr, string* error) {
     type_ = "perspro";
     dimension2possible_values_ = {
         {"ppcase", {"subj", "obj", "refl"}},
@@ -9,7 +9,7 @@ bool PersProEvaluator::Init(PersonalManager* personal_mgr) {
         {"gender", {"male", "female", "neuter"}},
     };
     personal_mgr_ = personal_mgr;
-    return true;
+    return PostInit(error);
 }
 
 bool PersProEvaluator::GetExpressionMatches(

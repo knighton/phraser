@@ -2,14 +2,20 @@
 #define CC_ENGLISH_NUMBER_NUMBER_EVALUATOR_H_
 
 #include <boost/regex.hpp>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "cc/expression/dynamic_evaluator.h"
 
 using boost::regex;
+using std::string;
+using std::unordered_map;
+using std::vector;
 
 class NumberEvaluator : public DynamicEvaluator {
   public:
-    void Init();
+    bool Init(string* error);
 
     bool MightMatch(const string& token) const;
 

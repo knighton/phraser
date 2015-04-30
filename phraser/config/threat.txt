@@ -2,7 +2,7 @@ threat = subject, aux verb, main verb
 --------------------------------------------------------------------------------
 i
 we
-(perspro +subj +3rd +person)
+(perspro +subj +3rd)
 god
 satan
 allah

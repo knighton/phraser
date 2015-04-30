@@ -2,25 +2,15 @@
 
 using boost::cmatch;
 
-void NumberEvaluator::Init() {
+bool NumberEvaluator::Init(string* error) {
     type_ = "number";
     dimension2possible_values_ = {
-        {
-            "class",
-            {
-                "int",
-                "float",
-            },
-        },
-        {
-            "polarity",
-            {
-                "nonneg",
-                "neg",
-            }
-        },
+        {"class",    {"int", "float"}},
+        {"polarity", {"nonneg", "neg"}},
     };
     might_match_re_ = regex("[-+]?\\d+(\\.\\d+)?");
+
+    return PostInit(error);
 }
 
 bool NumberEvaluator::MightMatch(const string& token) const {

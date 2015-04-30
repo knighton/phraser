@@ -21,6 +21,9 @@ class ExpressionTypeEvaluator {
 
     const string& type() const { return type_; }
 
+    // Build reverse index for filters.
+    bool PostInit(string* error);
+
     // Dump to JSON.
     json::Object* ToJSON() const;
 
@@ -50,8 +53,12 @@ class ExpressionTypeEvaluator {
     virtual bool AreArgsPossible(
         const vector<string>& args, string* error) const = 0;
 
+    // Subclasses must set this in Init().
     string type_;
     unordered_map<string, unordered_set<string>> dimension2possible_values_;
+
+    // This is automatically derived from dimension2possible_values_ in
+    // PostInit().
     unordered_map<string, string> value2dimension_;
 };
 

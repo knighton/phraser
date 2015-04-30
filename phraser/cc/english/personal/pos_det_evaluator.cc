@@ -1,6 +1,6 @@
 #include "pos_det_evaluator.h"
 
-bool PosDetEvaluator::Init(PersonalManager* personal_mgr) {
+bool PosDetEvaluator::Init(PersonalManager* personal_mgr, string* error) {
     type_ = "posdet";
     dimension2possible_values_ = {
         {"number", {"sing", "plur"}},
@@ -8,7 +8,7 @@ bool PosDetEvaluator::Init(PersonalManager* personal_mgr) {
         {"gender", {"male", "female", "neuter"}},
     };
     personal_mgr_ = personal_mgr;
-    return true;
+    return PostInit(error);
 }
 
 bool PosDetEvaluator::GetExpressionMatches(

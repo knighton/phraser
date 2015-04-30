@@ -3,6 +3,22 @@
 ExpressionTypeEvaluator::~ExpressionTypeEvaluator() {
 }
 
+bool ExpressionTypeEvaluator::PostInit(string* error) {
+    value2dimension_.clear();
+    for (auto& it : dimension2possible_values_) {
+        auto& dim = it.first;
+        for (auto& value : it.second) {
+            auto jt = value2dimension_.find(value);
+            if (jt != value2dimension_.end()) {
+                *error = "[ExpressionTypeEvaluator] Duplicate filter name.";
+                return false;
+            }
+            value2dimension_[value] = dim;
+        }
+    }
+    return true;
+};
+
 json::Object* ExpressionTypeEvaluator::ToJSON() const {
     map<string, json::Object*> dim2values;
     for (auto& it : dimension2possible_values_) {
@@ -62,7 +78,7 @@ bool ExpressionTypeEvaluator::OrganizeExpressionDimensionValues(
         auto it = value2dimension_.find(value);
         if (it == value2dimension_.end()) {
             *error = "[ExpressionTypeEvaluator] Unknown filter value: [" +
-                     value + "].";
+                     value + "] for an expression of type [" + type_ + "].";
             return false;
         }
 

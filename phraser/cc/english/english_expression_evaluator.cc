@@ -31,7 +31,7 @@ bool MakePersonalEvaluators(
     if (!*pers_pro) {
         return false;
     }
-    if (!(*pers_pro)->Init(personal_mgr)) {
+    if (!(*pers_pro)->Init(personal_mgr, error)) {
         return false;
     }
 
@@ -39,7 +39,7 @@ bool MakePersonalEvaluators(
     if (!*pos_pro) {
         return false;
     }
-    if (!(*pos_pro)->Init(personal_mgr)) {
+    if (!(*pos_pro)->Init(personal_mgr, error)) {
         return false;
     }
 
@@ -47,24 +47,27 @@ bool MakePersonalEvaluators(
     if (!*pos_det) {
         return false;
     }
-    if (!(*pos_det)->Init(personal_mgr)) {
+    if (!(*pos_det)->Init(personal_mgr, error)) {
         return false;
     }
 
     return true;
 }
 
-NumberEvaluator* MakeNumberEvaluator() {
+NumberEvaluator* MakeNumberEvaluator(string* error) {
     NumberEvaluator* e = new NumberEvaluator();
     if (!e) {
         return NULL;
     }
 
-    e->Init();
+    if (!e->Init(error)) {
+        return NULL;
+    }
+
     return e;
 }
 
-TagEvaluator* MakeTagEvaluator(const string& lapos_model_f) {
+TagEvaluator* MakeTagEvaluator(const string& lapos_model_f, string* error) {
     LaposTagger* tagger = new LaposTagger();
     if (!tagger) {
         return NULL;
@@ -79,14 +82,16 @@ TagEvaluator* MakeTagEvaluator(const string& lapos_model_f) {
         return NULL;
     }
 
-    e->Init(tagger);
+    if (!e->Init(tagger, error)) {
+        return NULL;
+    }
 
     return e;
 }
 
 #define T StringTransform::Create
 
-VerbEvaluator* MakeVerbEvaluator() {
+VerbEvaluator* MakeVerbEvaluator(string* error) {
     Conjugator* conj = new Conjugator();
     if (!conj) {
         return NULL;
@@ -114,7 +119,10 @@ VerbEvaluator* MakeVerbEvaluator() {
         return NULL;
     }
 
-    e->Init(conj);
+    if (!e->Init(conj, error)) {
+        return NULL;
+    }
+
     return e;
 }
 
@@ -124,32 +132,57 @@ VerbEvaluator* MakeVerbEvaluator() {
 
 bool EnglishExpressionEvaluator::InitWithConfig(
         const EnglishConfig& config, string* error) {
-    PersProEvaluator* pers_pro;
-    PosProEvaluator* pos_pro;
-    PosDetEvaluator* pos_det;
-    if (!MakePersonalEvaluators(&personal_mgr_, &pers_pro, &pos_pro, &pos_det,
-                                error)) {
-        return false;
+    // Precomputable evaluators.
+    unordered_map<string, PrecomputableEvaluator*> type2precomputable;
+    {
+        PersProEvaluator* pers_pro;
+        PosProEvaluator* pos_pro;
+        PosDetEvaluator* pos_det;
+        if (!MakePersonalEvaluators(
+                &personal_mgr_, &pers_pro, &pos_pro, &pos_det, error)) {
+            return false;
+        }
+
+        VerbEvaluator* verb = MakeVerbEvaluator(error);
+        if (!verb) {
+            return false;
+        }
+
+        type2precomputable = {
+            {"perspro", pers_pro},
+            {"pospro", pos_pro},
+            {"posdet", pos_det},
+
+            {"to", verb},
+        };
     }
 
-    unordered_map<string, PrecomputableEvaluator*> type2precomputable = {
-        // Personals.
-        {"perspro", pers_pro},
-        {"pospro", pos_pro},
-        {"posdet", pos_det},
+    // Dynamic evaluators.
+    unordered_map<string, DynamicEvaluator*> type2dynamic;
+    {
+        NumberEvaluator* number = MakeNumberEvaluator(error);
+        if (!number) {
+            return false;
+        }
 
-        // Verbs.
-        {"to", MakeVerbEvaluator()},
-    };
+        type2dynamic = {
+            {"number", number},
+        };
+    }
 
-    unordered_map<string, DynamicEvaluator*> type2dynamic = {
-        {"number", MakeNumberEvaluator()},
-    };
+    // All-at-once evaluators.
+    unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once;
+    {
+        TagEvaluator* tag = MakeTagEvaluator(config.lapos_model_f, error);
+        if (!tag) {
+            return false;
+        }
 
-    unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once = {
-        {"tag", MakeTagEvaluator(config.lapos_model_f)},
-    };
+        type2all_at_once = {
+            {"tag", tag},
+        };
+    }
 
-    return InitWithEvaluators(type2precomputable, type2dynamic,
-                              type2all_at_once);
+    return InitWithEvaluators(
+        type2precomputable, type2dynamic, type2all_at_once);
 }

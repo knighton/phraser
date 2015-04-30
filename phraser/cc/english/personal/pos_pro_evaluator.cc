@@ -1,6 +1,6 @@
 #include "pos_pro_evaluator.h"
 
-bool PosProEvaluator::Init(PersonalManager* personal_mgr) {
+bool PosProEvaluator::Init(PersonalManager* personal_mgr, string* error) {
     type_ = "pospro";
     dimension2possible_values_ = {
         {"ppcase", {"subj", "obj", "refl"}},
@@ -9,7 +9,7 @@ bool PosProEvaluator::Init(PersonalManager* personal_mgr) {
         {"gender", {"male", "female", "neuter"}},
     };
     personal_mgr_ = personal_mgr;
-    return true;
+    return PostInit(error);
 }
 
 bool PosProEvaluator::GetExpressionMatches(

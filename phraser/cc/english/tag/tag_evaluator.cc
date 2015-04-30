@@ -10,10 +10,11 @@ TagEvaluator::~TagEvaluator() {
     }
 }
 
-void TagEvaluator::Init(Tagger* tagger) {
+bool TagEvaluator::Init(Tagger* tagger, string* error) {
     type_ = "tag";
     dimension2possible_values_.clear();
     tagger_ = tagger;
+    return PostInit(error);
 }
 
 bool TagEvaluator::AnalyzeTokens(const vector<string>& tokens,

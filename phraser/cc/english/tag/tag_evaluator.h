@@ -16,7 +16,7 @@ class TagEvaluator : public AllAtOnceEvaluator<string> {
     ~TagEvaluator();
 
     // Takes ownership.
-    void Init(Tagger* tagger);
+    bool Init(Tagger* tagger, string* error);
 
     bool AnalyzeTokens(
         const vector<string>& tokens, vector<string>* tags,

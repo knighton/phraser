@@ -10,7 +10,7 @@ class VerbEvaluator : public PrecomputableEvaluator {
     ~VerbEvaluator();
 
     // Takes ownership.
-    void Init(Conjugator* conj);
+    bool Init(Conjugator* conj, string* error);
 
     bool GetExpressionMatches(
             const Expression& expr, vector<string>* tokens) const;

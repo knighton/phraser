@@ -21,10 +21,16 @@ VerbEvaluator::~VerbEvaluator() {
     }
 }
 
-void VerbEvaluator::Init(Conjugator* conj) {
+bool VerbEvaluator::Init(Conjugator* conj, string* error) {
     type_ = "verb";
-    dimension2possible_values_.clear();
+    dimension2possible_values_ = {
+        {"number", {"sing", "plur"}},
+        {"person", {"1st", "2nd", "3rd"}},
+        {"conj_spec_field_type",
+            {"lemma", "prespart", "pastpart", "pres", "past"}},
+    };
     conj_ = conj;
+    return PostInit(error);
 }
 
 bool VerbEvaluator::GetExpressionMatches(

@@ -545,4 +545,6 @@ uint32_t DIGITS[] = {
     0x1d7ff,  // MATHEMATICAL MONOSPACE DIGIT NINE
 };
 
+size_t DIGITS_SIZE = sizeof(DIGITS) / sizeof(DIGITS[0]);
+
 }  // namespace destutterer_data

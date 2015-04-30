@@ -9,7 +9,7 @@ Contents:
     * [Number](#number) — (number *+type +polarity*)
     * [Regular expression](#regular-expression) — (regex *regex*)
   * [Precomputable expressions](#precomputable-expressions)
-    * [Custom token group](#custom-token-group) — (oneof *tokens...*) or (*token1*|*token2*|*...*)
+    * [Custom token group](#custom-token-group) — (oneof *tokens...*) or (*token1*|*token2...*)
     * [Personal pronoun](#possessive-pronoun) — (perspro *+case +gender +number +person +personhood*)
     * [Possessive determiner](#possessive-pronoun) — (posdet *+gender +number +person +personhood*)
     * [Possessive pronoun](#possessive-pronoun) — (pospro *+case +gender +number +person +personhood*)

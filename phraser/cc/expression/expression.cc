@@ -62,10 +62,10 @@ void Expression::ToCanonicalString(string* s) const {
     sort(all_values.begin(), all_values.end());
 
     if (all_values.size()) {
-        *s += all_values[0];
+        *s += "+" + all_values[0];
     }
     for (auto i = 1u; i < all_values.size(); ++i) {
-        *s += ' ';
+        *s += " +";
         *s += all_values[i];
     }
 }

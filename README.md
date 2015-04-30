@@ -3,13 +3,26 @@ Phraser is a DSL for recognizing English phrases.  It finds consecutive lists of
 Contents:
 * [Demo](#demo)
 * [Expressions](#expressions)
-* [Expression syntax](#expression-syntax)
-* [Phrase file syntax](#phrase-file-syntax)
+  * [All-at-once expressions](#all-at-once-expressions)
+    * [Penn part-of-speech tag](#penn-part-of-speech-tag) — tag *TAG*
+  * [Dynamic expressions](#dynamic-expressions)
+    * [Number](#number) — number *+type +polarity*
+    * [Regular expression](#regular-expression) — regex *regex*
+  * [Precomputable expressions](#precomputable-expressions)
+    * [Custom token group](#custom-token-group) — oneof *tokens...*
+    * [Personal pronoun](#possessive-pronoun) — perspro *+gender +number +person +case*
+    * [Possessive determiner](#possessive-pronoun) — posdet *+gender +number +person*
+    * [Possessive pronoun](#possessive-pronoun) — pospro *+gender +number +person +case*
+    * [Verb](#verb) — to *lemma +fieldtype +number +person*
+* [Configuration](#configuration)
+  * [Expression syntax](#expression-syntax)
+  * [Phrase file syntax](#phrase-file-syntax)
 * [Architecture](#architecture)
-* [Tokenization](#tokenization)
-* [Tagging](#tagging)
+* [How it works](#how-it-works)
+  * [Tokenization](#tokenization)
+  * [Tagging](#tagging)
 
-#### Demo
+### Demo
 
 This phrase file:
 
@@ -36,9 +49,11 @@ Results in:
 
     TODO
 
-#### Expressions
+### Expressions
 
-##### All-at-once expression evaluators
+#### All-at-once expressions
+
+##### Penn part-of-speech tag
 
 * `(tag <uppercase Penn POS tag>)` or `(<uppercase Penn POS tag>)`
 
@@ -46,7 +61,9 @@ Results in:
 | --------- | ---------------------- |
 | N/A       | N/A                    |
 
-##### Dynamic expressions evaluators
+#### Dynamic expressions
+
+##### Number
 
 * `(number ...)`
 
@@ -55,7 +72,25 @@ Results in:
 | class     | `+float` `+int`        |
 | polarity  | `+neg` `+nonneg`       |
 
-##### Precomputable expression evaluators
+##### Regular expression
+
+* `(regex <regex>)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
+
+#### Precomputable expressions
+
+##### Custom token group
+
+* `(oneof <space-separated list of tokens>)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
+
+##### Personal pronoun
 
 * `(perspro ...)`
 
@@ -64,16 +99,9 @@ Results in:
 | gender    | `+female` `male` `neuter` |
 | number    | `+plur` `+sing`           |
 | person    | `+1st` `+2nd` `+3rd`      |
-| ppcase    | `+obj` `+refl` `+subj`    |
+| case      | `+obj` `+refl` `+subj`    |
 
-* `(pospro ...)`
-
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
-| ppcase    | `+obj` `+refl` `+subj`    |
+##### Possessive determiner
 
 * `(posdet ...)`
 
@@ -83,6 +111,19 @@ Results in:
 | number    | `+plur` `+sing`           |
 | person    | `+1st` `+2nd` `+3rd`      |
 
+##### Possessive pronoun
+
+* `(pospro ...)`
+
+| Dimension | Possible filter values    |
+| --------- | ------------------------- |
+| gender    | `+female` `male` `neuter` |
+| number    | `+plur` `+sing`           |
+| person    | `+1st` `+2nd` `+3rd`      |
+| case      | `+obj` `+refl` `+subj`    |
+
+##### Verb
+
 * `(to <verb lemma> ...)`
 
 | Dimension  | Possible filter values                           |
@@ -90,6 +131,8 @@ Results in:
 | field type | `+lemma` `+past` `+pastpart` `+pres` `+prespart` |
 | number     | `+plur` `+sing`                                  |
 | person     | `+1st` `+2nd` `+3rd`                             |
+
+### Configuration
 
 #### Expression syntax
 
@@ -131,7 +174,7 @@ where
 * an expression is a string containing arbitrary text separated by `(` and `)`
 * occurences of `(` and `)` inside an expression must be escaped by `\`
 
-#### Architecture
+### Architecture
 
             Analyzer (cc/analysis/)
               | | \
@@ -158,6 +201,8 @@ where
     * PrecomputableEvaluator
     * DynamicEvaluator
     * AllAtOnceEvaluator
+
+### How it works
 
 #### Tokenization
 

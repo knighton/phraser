@@ -124,12 +124,11 @@ where
 
 ##### Lookup table generation
 
-You call a script [generate_tokenizer_data.py](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/generate_tokenizer_data.py) that generates [tokenizer_data.h](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.h), [tokenizer_data.cc](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.cc) containing these tables:
+You call a script [generate_tokenizer_data.py](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/generate_tokenizer_data.py) that generates [tokenizer_data.h](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.h), [tokenizer_data.cc](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.cc) containing three lookup tables:
 
-* HTML named entity -> Unicode code point
-* Block containing NULL-terminated normalized PTB ASCII strings
-* Unicode code point -> index into that block
-* ASCII token -> normalized ASCII token
+* HTML named entities
+* Unicode code point -> PTB ASCII string
+* ASCII token normalizations
 
 ##### Unicode to PTB ASCII normalization (preprocessing)
 

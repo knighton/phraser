@@ -4,7 +4,9 @@
 
 // Based on https://en.wikipedia.org/wiki/UTF-8.
 
-void utf8::Append(UChar n, string* s) {
+namespace utf8 {
+
+void Append(UChar n, string* s) {
     if (n < 0x80) {
         *s += static_cast<char>(n);
         return;
@@ -34,7 +36,7 @@ void utf8::Append(UChar n, string* s) {
     assert(false);
 }
 
-bool utf8::Read(const string& s, size_t* x, UChar* n) {
+bool Read(const string& s, size_t* x, UChar* n) {
     if (!(*x < s.size())) {
         return false;
     }
@@ -117,12 +119,26 @@ bool utf8::Read(const string& s, size_t* x, UChar* n) {
         --(*x);
     ERROR1:
         *n = c0 + 0xDC00;
+    return true;
+}
+
+bool ReadLine(const string& s, size_t* x, vector<UChar>* line) {
+    line->clear();
+    UChar c;
+    while (Read(s, x, &c)) {
+        printf("(%u)\n", c);
+        line->emplace_back(c);
+        if (c == '\n') {
+            return true;
+        }
+    }
+    printf("<<%u>>\n", c);
     return false;
 }
 
-bool utf8::Expect(
+bool Expect(
         const string& s, size_t* x, UChar* n, UChar expected) {
-    if (!utf8::Read(s, x, n)) {
+    if (!Read(s, x, n)) {
         return false;
     }
 
@@ -132,3 +148,5 @@ bool utf8::Expect(
 
     return true;
 }
+
+}  // namespace utf8

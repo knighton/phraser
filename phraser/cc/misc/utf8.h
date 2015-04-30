@@ -2,10 +2,12 @@
 #define CC_MISC_UTF8_H_
 
 #include <string>
+#include <vector>
 
 #include "cc/misc/unicode.h"
 
 using std::string;
+using std::vector;
 
 namespace utf8 {
 
@@ -16,6 +18,11 @@ void Append(UChar c, string* s);
 //
 // Returns false when (a) out of string or (b) invalid data.
 bool Read(const string& s, size_t* x, UChar* c);
+
+// Read a next line.
+//
+// Returns true iff there is text left to process.
+bool ReadLine(const string& s, size_t* x, vector<UChar>* line);
 
 // Read the next UTF-8 code point.  Returns false if it is not the expected
 // character or the read returned false.

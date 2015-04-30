@@ -7,7 +7,7 @@
 #include <unordered_set>
 
 #include "cc/misc/json.h"
-#include "cc/sequence/sequence_match.h"
+#include "cc/sequence_detection/sequence_match.h"
 
 using std::string;
 using std::unordered_map;

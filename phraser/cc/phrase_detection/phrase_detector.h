@@ -7,10 +7,10 @@
 #include "cc/english/english_config.h"
 #include "cc/english/english_expression_evaluator.h"
 #include "cc/misc/json.h"
-#include "cc/phrase/phrase_config.h"
-#include "cc/phrase/phrase_detection_result.h"
-#include "cc/phrase/phrase_config_parser.h"
-#include "cc/sequence/vector_membership_sequence_detector.h"
+#include "cc/phrase_detection/phrase_config.h"
+#include "cc/phrase_detection/phrase_detection_result.h"
+#include "cc/phrase_detection/phrase_config_parser.h"
+#include "cc/sequence_detection/vector_membership_sequence_detector.h"
 
 using std::string;
 using std::vector;

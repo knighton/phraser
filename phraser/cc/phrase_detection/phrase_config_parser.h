@@ -4,7 +4,7 @@
 #include <string>
 
 #include "cc/english/english_expression_evaluator.h"
-#include "cc/phrase/phrase_config.h"
+#include "cc/phrase_detection/phrase_config.h"
 
 using std::string;
 

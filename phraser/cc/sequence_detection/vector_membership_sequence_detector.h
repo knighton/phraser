@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "cc/misc/json.h"
-#include "cc/sequence/sequence_detector.h"
+#include "cc/sequence_detection/sequence_detector.h"
 
 using std::vector; 
 

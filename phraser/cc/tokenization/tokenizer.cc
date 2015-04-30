@@ -260,8 +260,8 @@ void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
 }
 
 void Tokenizer::Tokenize(
-        const vector<UChar>& text, vector<string>* tokens,
-        bool replace_html_entities) const {
+        const vector<UChar>& text, bool replace_html_entities,
+        vector<string>* tokens) const {
     // HTML -> Unicode.
     vector<UChar> processed;
     const vector<UChar>* unicode;

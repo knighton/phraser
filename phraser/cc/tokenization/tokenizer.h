@@ -36,8 +36,8 @@ class Tokenizer {
     // the results.
     //
     // Returns false on error.
-    void Tokenize(const vector<UChar>& text, vector<string>* tokens,
-                  bool replace_html_entities) const;
+    void Tokenize(const vector<UChar>& text, bool replace_html_entities,
+                  vector<string>* tokens) const;
 
   private:
     bool ParseHTMLEntity(

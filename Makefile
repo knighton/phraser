@@ -40,4 +40,5 @@ FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 		$(FLAGS_WARN_DISABLE_LAPOS)
 
 all:
+	mkdir $(BUILD_DIR)
 	$(CC) `find -type f -name "*.cc"` -o $(BUILD_DIR)/phraser $(FLAGS)

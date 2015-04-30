@@ -1,6 +1,8 @@
 #ifndef CC_MISC_UNICODE_H_
 #define CC_MISC_UNICODE_H_
 
+#include <cstdint>
+
 typedef uint32_t UChar;
 
 /**

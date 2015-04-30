@@ -2,9 +2,8 @@
 #include <cstdio>
 #include <unordered_map>
 
-#include "cc/english/english_config.h"
-#include "cc/phrase/phrase_detector.h"
-#include "cc/sequence/vector_membership_sequence_detector.h"
+#include "cc/phrase_detection/phrase_detector.h"
+#include "cc/sequence_detection/vector_membership_sequence_detector.h"
 #include "cc/tagging/lapos/lapos_tagger.h"
 
 static void RunTagger() {
@@ -33,8 +32,7 @@ static void OutputError(const string& error) {
 #undef RED
 
 int main() {
-    EnglishConfig en_config;
-    en_config.lapos_model_f = "phraser/cc/third_party/lapos/model_wsj02-21/model.la";
+    string lapos_model_f = "phraser/cc/third_party/lapos/model_wsj02-21/model.la";
 
     PhraseDetector pd;
     vector<string> phrase_config_ff = {
@@ -42,16 +40,18 @@ int main() {
     };
 
     string error;
-    if (!pd.InitFromFiles(en_config, phrase_config_ff, &error)) {
+    if (!pd.InitFromFiles(lapos_model_f, phrase_config_ff, &error)) {
         OutputError(error);
         return 1;
     }
 
+    /*
     printf("---\n");
     size_t indent_level = 0;
     size_t spaces_per_indent = 4;
     pd.Dump(indent_level, spaces_per_indent);
     printf("---\n");
+    */
 
     vector<string> tokens = {"i", "will", "kill", "you"};
     vector<PhraseDetectionResult> results;
@@ -63,7 +63,7 @@ int main() {
     printf("Results:\n");
     for (auto i = 0u; i < results.size(); ++i) {
         printf("#%u: \n", i);
-        results[i].Dump(indent_level + 1, spaces_per_indent);
+        // results[i].Dump(indent_level + 1, spaces_per_indent);
     }
 
     printf("Done.\n");

@@ -4,16 +4,16 @@ Contents:
 * [Demo](#demo)
 * [Expressions](#expressions)
   * [All-at-once expressions](#all-at-once-expressions)
-    * [Penn part-of-speech tag](#penn-part-of-speech-tag) — tag *TAG*
+    * [Penn part-of-speech tag](#penn-part-of-speech-tag) — (tag *TAG*) or (*TAG*)
   * [Dynamic expressions](#dynamic-expressions)
-    * [Number](#number) — number *+type +polarity*
-    * [Regular expression](#regular-expression) — regex *regex*
+    * [Number](#number) — (number *+type +polarity*)
+    * [Regular expression](#regular-expression) — (regex *regex*)
   * [Precomputable expressions](#precomputable-expressions)
-    * [Custom token group](#custom-token-group) — oneof *tokens...*
-    * [Personal pronoun](#possessive-pronoun) — perspro *+case +gender +number +person +personhood*
-    * [Possessive determiner](#possessive-pronoun) — posdet *+gender +number +person +personhood*
-    * [Possessive pronoun](#possessive-pronoun) — pospro *+case +gender +number +person +personhood*
-    * [Verb](#verb) — to *lemma +fieldtype +number +person*
+    * [Custom token group](#custom-token-group) — (oneof *tokens...*) or (*token1*|*token2*|*...*)
+    * [Personal pronoun](#possessive-pronoun) — (perspro *+case +gender +number +person +personhood*)
+    * [Possessive determiner](#possessive-pronoun) — (posdet *+gender +number +person +personhood*)
+    * [Possessive pronoun](#possessive-pronoun) — (pospro *+case +gender +number +person +personhood*)
+    * [Verb](#verb) — (to *lemma +fieldtype +number +person*)
 * [Configuration](#configuration)
   * [Expression syntax](#expression-syntax)
   * [Phrase file syntax](#phrase-file-syntax)

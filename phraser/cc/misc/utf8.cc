@@ -2,151 +2,162 @@
 
 #include <cassert>
 
-// Based on https://en.wikipedia.org/wiki/UTF-8.
+/**
+ * UTF8_ERROR_VALUE_1 and UTF8_ERROR_VALUE_2 are special error values for UTF-8,
+ * which need 1 or 2 bytes in UTF-8:
+ * \code
+ * U+0015 = NAK = Negative Acknowledge, C0 control character
+ * U+009f = highest C1 control character
+ * \endcode
+ *
+ * These are used by UTF8_..._SAFE macros so that they can return an error value
+ * that needs the same number of code units (bytes) as were seen by
+ * a macro. They should be tested with UTF_IS_ERROR() or UTF_IS_VALID().
+ *
+ * @deprecated ICU 2.4. Obsolete, see utf_old.h.
+ */
+#define UTF8_ERROR_VALUE_1 0x15
 
-namespace utf8 {
+/**
+ * See documentation on UTF8_ERROR_VALUE_1 for details.
+ *
+ * @deprecated ICU 2.4. Obsolete, see utf_old.h.
+ */
+#define UTF8_ERROR_VALUE_2 0x9f
 
-void Append(UChar n, string* s) {
-    if (n < 0x80) {
-        *s += static_cast<char>(n);
-        return;
-    }
+/**
+ * Error value for all UTFs. This code point value will be set by macros with error
+ * checking if an error is detected.
+ *
+ * @deprecated ICU 2.4. Obsolete, see utf_old.h.
+ */
+#define UTF_ERROR_VALUE 0xffff
 
-    if (n < 0x800) {
-        *s += static_cast<char>((n >> 6) + 0xC0);
-        *s += static_cast<char>((n & 0x3F) + 0x80);
-        return;
-    }
+/**
+ * Is a given 32-bit code an error value
+ * as returned by one of the macros for any UTF?
+ *
+ * @deprecated ICU 2.4. Obsolete, see utf_old.h.
+ */
+// #define UTF_IS_ERROR(c) \
+//     (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
 
-    if (n < 0x10000) {
-        *s += static_cast<char>((n >> 12) + 0xE0);
-        *s += static_cast<char>(((n >> 6) & 0x3F) + 0x80);
-        *s += static_cast<char>((n & 0x3F) + 0x80);
-        return;
-    }
+#define U_SENTINEL (-1)
 
-    if (n < 0x110000) {
-        *s += static_cast<char>((n >> 18) + 0xF0);
-        *s += static_cast<char>(((n >> 12) & 0x3F) + 0x80);
-        *s += static_cast<char>(((n >> 6) & 0x3F) + 0x80);
-        *s += static_cast<char>((n & 0x3F) + 0x80);
-        return;
-    }
+static const UChar
+utf8_minLegal[4]={ 0, 0x80, 0x800, 0x10000 };
 
-    assert(false);
-}
+static const UChar
+utf8_errorValue[6]={
+    UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE, 0x10ffff,
+    0x3ffffff, 0x7fffffff
+};
 
-bool Read(const string& s, size_t* x, UChar* n) {
-    if (!(*x < s.size())) {
-        return false;
-    }
-
-    uint32_t c0;
-    uint32_t c1;
-    uint32_t c2;
-    uint32_t c3;
-
-    c0 = static_cast<uint32_t>(s[*x]);
-    ++(*x);
-
-    if (c0 < 0x80) {
-        *n = c0;
-        return true;
-    } else if (c0 < 0xC2) {
-        // Continuation or overlong 2-byte sequence.
-        goto ERROR1;
-    } else if (c0 < 0xE0) {
-        // 2-byte sequence.
-        c1 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c1 & 0xC0) != 0x80) {
-            goto ERROR2;
-        }
-        *n = (c0 << 6) + c1 - 0x3080;
-        return true;
-    } else if (c0 < 0xF0) {
-        // 3-byte sequence.
-        c1 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c1 & 0xC0) != 0x80) {
-            goto ERROR2;
-        }
-        if (c0 == 0xE0 && c1 < 0xA0) {
-            goto ERROR2;  // overlong.
-        }
-        c2 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c2 & 0xC0) != 0x80) {
-            goto ERROR3;
-        }
-        *n = (c0 << 12) + (c1 << 6) + c2 - 0xE2080;
-        return true;
-    } else if (c0 < 0xF5) {
-        // 4-byte sequence.
-        c1 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c1 & 0xC0) != 0x80) {
-            goto ERROR2;
-        }
-        if (c0 == 0xF0 && c1 < 0x90) {
-            goto ERROR2;  // Overlong.
-        }
-        if (c0 == 0xF4 && c1 >= 0x90) {
-            goto ERROR2;  // > U+10FFFF.
-        }
-        c2 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c2 & 0xC0) != 0x80) {
-            goto ERROR3;
-        }
-        c3 = static_cast<uint32_t>(s[*x]);
-        ++(*x);
-        if ((c3 & 0xC0) != 0x80) {
-            goto ERROR4;
-        }
-        *n = (c0 << 18) + (c1 << 12) + (c2 << 6) + c3 - 0x3C82080;
-        return true;
+static UChar
+errorValue(int32_t count, int8_t strict) {
+    if(strict>=0) {
+        return utf8_errorValue[count];
+    } else if(strict==-3) {
+        return 0xfffd;
     } else {
-        // U+10FFFF.
-        goto ERROR1;
+        return U_SENTINEL;
     }
-
-    ERROR4:
-        --(*x);
-    ERROR3:
-        --(*x);
-    ERROR2:
-        --(*x);
-    ERROR1:
-        *n = c0 + 0xDC00;
-    return true;
 }
 
-bool ReadLine(const string& s, size_t* x, vector<UChar>* line) {
+/*
+ * Handle the non-inline part of the U8_NEXT() and U8_NEXT_FFFD() macros
+ * and their obsolete sibling UTF8_NEXT_CHAR_SAFE().
+ *
+ * U8_NEXT() supports NUL-terminated strings indicated via length<0.
+ *
+ * The "strict" parameter controls the error behavior:
+ * <0  "Safe" behavior of U8_NEXT():
+ *     -1: All illegal byte sequences yield U_SENTINEL=-1.
+ *     -2: Same as -1, except for lenient treatment of surrogate code points as legal.
+ *         Some implementations use this for roundtripping of
+ *         Unicode 16-bit strings that are not well-formed UTF-16, that is, they
+ *         contain unpaired surrogates.
+ *     -3: All illegal byte sequences yield U+FFFD.
+ *  0  Obsolete "safe" behavior of UTF8_NEXT_CHAR_SAFE(..., FALSE):
+ *     All illegal byte sequences yield a positive code point such that this
+ *     result code point would be encoded with the same number of bytes as
+ *     the illegal sequence.
+ * >0  Obsolete "strict" behavior of UTF8_NEXT_CHAR_SAFE(..., TRUE):
+ *     Same as the obsolete "safe" behavior, but non-characters are also treated
+ *     like illegal sequences.
+ *
+ * Note that a UBool is the same as an int8_t.
+ */
+UChar utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length,
+                            UChar c, int8_t strict) {
+    int32_t i=*pi;
+    uint8_t count=U8_COUNT_TRAIL_BYTES(c);
+    assert(count <= 5); /* U8_COUNT_TRAIL_BYTES returns value 0...5 */
+    if(i+count<=length || length<0) {
+        uint8_t trail;
+
+        U8_MASK_LEAD_BYTE(c, count);
+        /* support NUL-terminated strings: do not read beyond the first non-trail byte */
+        switch(count) {
+        /* each branch falls through to the next one */
+        case 0:
+            /* count==0 for illegally leading trail bytes and the illegal bytes 0xfe and 0xff */
+        case 5:
+        case 4:
+            /* count>=4 is always illegal: no more than 3 trail bytes in Unicode's UTF-8 */
+            break;
+        case 3:
+            trail=s[i++]-0x80;
+            c=(c<<6)|trail;
+            /* c>=0x110 would result in code point>0x10ffff, outside Unicode */
+            if(c>=0x110 || trail>0x3f) { break; }
+        [[clang::fallthrough]]; case 2:
+            trail=s[i++]-0x80;
+            c=(c<<6)|trail;
+            /*
+             * test for a surrogate d800..dfff unless we are lenient:
+             * before the last (c<<6), a surrogate is c=360..37f
+             */
+            if(((c&0xffe0)==0x360 && strict!=-2) || trail>0x3f) { break; }
+        [[clang::fallthrough]]; case 1:
+            trail=s[i++]-0x80;
+            c=(c<<6)|trail;
+            if(trail>0x3f) { break; }
+            /* correct sequence - all trail bytes have (b7..b6)==(10) */
+            if(c>=utf8_minLegal[count] &&
+                    /* strict: forbid non-characters like U+fffe */
+                    (strict<=0 || !U_IS_UNICODE_NONCHAR(c))) {
+                *pi=i;
+                return c;
+            }
+        /* no default branch to optimize switch()  - all values are covered */
+        }
+    } else {
+        /* too few bytes left */
+        count=static_cast<uint8_t>(length-i);
+    }
+
+    /* error handling */
+    i=*pi;
+    while(count>0 && U8_IS_TRAIL(s[i])) {
+        ++i;
+        --count;
+    }
+    c=errorValue(i-*pi, strict);
+    *pi=i;
+    return c;
+}
+
+bool ReadLine(const char* s, int32_t* i, int32_t length, vector<UChar>* line) {
     line->clear();
-    UChar c;
-    while (Read(s, x, &c)) {
-        printf("(%u)\n", c);
+    while (*i < length) {
+        UChar c;
+        U8_NEXT(s, *i, length, c);
         line->emplace_back(c);
         if (c == '\n') {
-            return true;
+            break;
         }
     }
-    printf("<<%u>>\n", c);
-    return false;
+
+    return *i < length;
 }
-
-bool Expect(
-        const string& s, size_t* x, UChar* n, UChar expected) {
-    if (!Read(s, x, n)) {
-        return false;
-    }
-
-    if (*n != expected) {
-        return false;
-    }
-
-    return true;
-}
-
-}  // namespace utf8

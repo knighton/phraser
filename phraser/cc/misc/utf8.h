@@ -122,7 +122,7 @@ UChar utf8_nextCharSafeBody(
         ) { \
             /* no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (UChar) */ \
             (c)=(UChar)(((c)<<12)|(__t1<<6)|__t2); \
-            (c)%=0x10000; \
+            (c)%=0x10000; /* this line added by iamknighton@gmail.com to fix eg. U+2122 */ \
             (i)+=2; \
         } else if( /* handle U+0080..U+07FF inline */ \
             ((c)<0xe0 && (c)>=0xc2) && \

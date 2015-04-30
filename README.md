@@ -133,7 +133,7 @@ where
 
 #### Architecture
 
-            Analyzer 
+            Analyzer (cc/analysis/)
               | | \
               | |  Preprocessor (cc/preprocess/)
               | |        \
@@ -141,17 +141,14 @@ where
               |  \
              /   Tokenizer (cc/tokenization/)
             /
-      PhraseDetector (cc/phrase/)
+      PhraseDetector (cc/phrase_detection/)
          /    \
         /   EnglishExpressionEvaluator (cc/expression/)
-       /               \
-    VectorMembership    +--PrecomputableEvaluators
-    SequenceDetector    +--DynamicEvaluators
-    (cc/sequence/)      +--AllAtOnceEvaluators (eg, Tagger)
-                        (cc/english/, cc/tagging/)
-    
-    PreprocessStep
-    * Destutterer
+       /                     \
+    VectorMembership          +--PrecomputableEvaluators
+    SequenceDetector          +--DynamicEvaluators
+    (cc/sequence_detection/)  +--AllAtOnceEvaluators (eg, Tagger)
+                              (cc/english/, cc/tagging/)
     
     SequenceDetector
     * EqualitySequenceDetector

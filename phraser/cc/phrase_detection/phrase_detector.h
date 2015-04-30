@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "cc/english/english_config.h"
 #include "cc/english/english_expression_evaluator.h"
 #include "cc/misc/json.h"
 #include "cc/phrase_detection/phrase_config.h"
@@ -17,7 +16,7 @@ using std::vector;
 
 class PhraseDetector {
   public:
-    bool InitFromFiles(const EnglishConfig& english_config,
+    bool InitFromFiles(const string& lapos_model_f,
                        const vector<string>& phrase_config_ff,
                        string* error);
 

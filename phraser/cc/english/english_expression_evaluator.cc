@@ -12,7 +12,6 @@
 #include "cc/english/verb/conjugation_spec.h"
 #include "cc/english/verb/conjugation_spec_derivation.h"
 #include "cc/english/verb/verb_evaluator.h"
-#include "cc/english/english_config.h"
 #include "cc/tagging/lapos/lapos_tagger.h"
 
 using std::string;
@@ -131,7 +130,7 @@ VerbEvaluator* MakeVerbEvaluator(string* error) {
 }  // namespace
 
 bool EnglishExpressionEvaluator::InitWithConfig(
-        const EnglishConfig& config, string* error) {
+        const string& lapos_model_f, string* error) {
     // Precomputable evaluators.
     unordered_map<string, PrecomputableEvaluator*> type2precomputable;
     {
@@ -173,7 +172,7 @@ bool EnglishExpressionEvaluator::InitWithConfig(
     // All-at-once evaluators.
     unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once;
     {
-        TagEvaluator* tag = MakeTagEvaluator(config.lapos_model_f, error);
+        TagEvaluator* tag = MakeTagEvaluator(lapos_model_f, error);
         if (!tag) {
             return false;
         }

@@ -25,9 +25,9 @@ bool PhraseDetector::LoadPhraseConfig(const string& phrase_f, string* error) {
 }
 
 bool PhraseDetector::InitFromFiles(
-        const EnglishConfig& config, const vector<string>& phrase_ff,
+        const string& lapos_model_f, const vector<string>& phrase_ff,
         string* error) {
-    if (!vocab_.InitWithConfig(config, error)) {
+    if (!vocab_.InitWithConfig(lapos_model_f, error)) {
         return false;
     }
 

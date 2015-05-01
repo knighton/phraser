@@ -41,7 +41,9 @@ bool Destutterer::Destutter(
     UChar prev_c = dirty[0];
     clean->emplace_back(prev_c);
     auto run_length = 1;
-    for (auto& c : dirty) {
+    for (auto i = 1u; i < dirty.size(); ++i) {
+        auto& c = dirty[i];
+
         // Different character, or the same character but a digit?  Reset to it.
         if (c != prev_c || digits_.find(c) != digits_.end()) {
             clean->emplace_back(c);

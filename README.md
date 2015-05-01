@@ -13,6 +13,7 @@ Contents:
     * [Personal pronoun](#possessive-pronoun) — (perspro *+case +gender +number +person +personhood*)
     * [Possessive determiner](#possessive-pronoun) — (posdet *+gender +number +person +personhood*)
     * [Possessive pronoun](#possessive-pronoun) — (pospro *+case +gender +number +person +personhood*)
+    * [Possessive token](#possessive-token) — (pos)
     * [Verb](#verb) — (to *lemma +fieldtype +number +person*)
   * [Raw tokens](#raw-tokens)
 * [Configuration](#configuration)
@@ -137,6 +138,14 @@ Precomputable expressions are closed-class, so we enumerate every possible match
 | number     | `+plur` `+sing`           |
 | person     | `+1st` `+2nd` `+3rd`      |
 | personhood | `person` `thing`          |
+
+##### Possessive token
+
+* `(pos)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
 
 ##### Verb
 

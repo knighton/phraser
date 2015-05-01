@@ -8,7 +8,7 @@ namespace {
 // Row x column = token.
 string PERSONAL_TABLE_STR =
     "          NP_SUBJ NP_OBJ   NP_REFL     POS_SUBJ  POS_OBJ    POS_REFL    POS_DET"
-    " I        I       me       myself      mine      mine       myself's    my"
+    " I        i       me       myself      mine      mine       myself's    my"
     " YOU1     you     you      yourself    yours     yours      yourself's  your"
     " THOU     thou    thee     thyself     thine     thine      thyself's   thy"
     " HE       he      him      himself     his       his        himself's   his"

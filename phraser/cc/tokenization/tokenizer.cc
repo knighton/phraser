@@ -268,6 +268,16 @@ void Tokenizer::UnicodeToPTBAscii(const vector<UChar>& in, string* out) const {
 void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
     for (auto i = 0u; i < tokens->size(); ++i) {
         auto& s = (*tokens)[i];
+
+        // Lowercase.
+        for (auto j = 0u; j < s.size(); ++j) {
+            if ('A' <= s[j] && s[j] <= 'Z') {
+                s[j] -= 'A';
+                s[j] += 'a';
+            }
+        }
+
+        // Respell/escape.
         auto it = token2token_.find(s);
         if (it != token2token_.end()) {
             s = it->second;

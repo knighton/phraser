@@ -209,7 +209,9 @@ where
               | | \
               | |  Preprocessor (cc/preprocess/)
               | |        \
-              | |         +--Destutterer (cc/preprocess/)
+              | |         +--HTMLEntityParser
+              | |         +--Destutterer
+              | |         (cc/preprocess/)
               |  \
              /   Tokenizer (cc/tokenization/)
             /

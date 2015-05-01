@@ -14,6 +14,7 @@ Contents:
     * [Possessive determiner](#possessive-pronoun) — (posdet *+gender +number +person +personhood*)
     * [Possessive pronoun](#possessive-pronoun) — (pospro *+case +gender +number +person +personhood*)
     * [Verb](#verb) — (to *lemma +fieldtype +number +person*)
+  * [Raw tokens](#raw-tokens)
 * [Configuration](#configuration)
   * [Expression syntax](#expression-syntax)
   * [Phrase file syntax](#phrase-file-syntax)
@@ -51,7 +52,13 @@ Results in:
 
 ### Expressions
 
+All expressions are checked for validity by the expression evaluator of their type during initialization.
+
 #### All-at-once expressions
+
+All-at-once expressions require all the input tokens at once to make their judgements about whether each of them is a match.  Used for filtering on Penn part-of-speech tags.
+
+All-at-once expression evaluators contain an AnalyzeTokens() method which generates some opaque metadata about each token, and an IsMatch() method which makes a judgment about a token with metadata.
 
 ##### Penn part-of-speech tag
 
@@ -62,6 +69,10 @@ Results in:
 | N/A       | N/A                    |
 
 #### Dynamic expressions
+
+Dynamic expressions are open-class.  Each expression is evaluated against each input token at call time.
+
+Dynamic expression evaluators contain a MightMatch() method which may rule out all expressions of its type.
 
 ##### Number
 
@@ -81,6 +92,8 @@ Results in:
 | N/A       | N/A                    |
 
 #### Precomputable expressions
+
+Precomputable expressions are closed-class, so we enumerate every possible match and put these matches (literal tokens) in a lookup table during initialization.
 
 ##### Custom token group
 
@@ -134,6 +147,10 @@ Results in:
 | field type | `+lemma` `+past` `+pastpart` `+pres` `+prespart` |
 | number     | `+plur` `+sing`                                  |
 | person     | `+1st` `+2nd` `+3rd`                             |
+
+#### Raw tokens
+
+Everything that is not an expression is a raw token which is matched verbatim.
 
 ### Configuration
 

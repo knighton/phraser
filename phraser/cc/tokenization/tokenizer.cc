@@ -4,23 +4,12 @@
 #include "cc/tokenization/tokenizer_data.h"
 
 bool Tokenizer::Init(
-        const unordered_map<string, UChar>& html2unicode,
         const string& ascii_data,
         const unordered_map<UChar, uint16_t>& unicode2ascii,
         const unordered_map<string, string>& token2token, string* error) {
-    html2unicode_ = html2unicode;
     ascii_data_ = ascii_data;
     unicode2ascii_ = unicode2ascii;
     token2token_ = token2token;
-
-    max_html_length_ = 0;
-    for (auto& it : html2unicode) {
-        auto& html = it.first;
-        if (max_html_length_ < html.size()) {
-            max_html_length_ = html.size();
-        }
-    }
-
     return true;
 }
 
@@ -71,7 +60,6 @@ static bool MakeToken2Token(const string& s2z_s, const string& pairs_s,
 }
 
 bool Tokenizer::InitDefault(string* error) {
-    auto& html2unicode = tokenizer_data::HTML2UNICODE;
     auto& ascii_data = tokenizer_data::ASCII_DATA;
     auto& unicode2ascii = tokenizer_data::UNICODE2ASCII;
 
@@ -82,7 +70,7 @@ bool Tokenizer::InitDefault(string* error) {
         return false;
     }
 
-    return Init(html2unicode, ascii_data, unicode2ascii, token2token, error);
+    return Init(ascii_data, unicode2ascii, token2token, error);
 }
 
 void Tokenizer::UnicodeToPTBAscii(const vector<UChar>& in, string* out) const {
@@ -137,8 +125,8 @@ void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
 }
 
 void Tokenizer::Tokenize(
-        const vector<UChar>& text, bool replace_html_entities,
-        vector<string>* tokens, vector<Span>* token2clean_or_null) const {
+        const vector<UChar>& text, vector<string>* tokens,
+        vector<Span>* token2clean_or_null) const {
     // Unicode -> ASCII.
     string ptb_ascii;
     UnicodeToPTBAscii(text, &ptb_ascii);

@@ -1,6 +1,6 @@
 #include "html_entity_parser.h"
 
-bool HTMLEntityParser::InitDefault() {
+bool HTMLEntityParser::Init(string* error) {
     return false;  // XXX
 }
 

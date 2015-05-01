@@ -13,7 +13,7 @@ using std::vector;
 
 class HTMLEntityParser {
   public:
-    bool InitDefault();
+    bool Init(string* error);
 
     // HTML -> Unicode.
     //

@@ -33,15 +33,14 @@ bool Analyzer::Analyze(
     result->original_text = original_text;
 
     if (!preproc_.Preprocess(
-            result->original_text, options.destutter_max_consecutive,
-            &result->clean_text, &result->clean2original, &result->chr2drop,
-            error)) {
+            result->original_text, options.replace_html_entities,
+            options.destutter_max_consecutive, &result->clean_text,
+            &result->clean2original, &result->chr2drop, error)) {
         return false;
     }
 
     vector<string> tokens;
-    tok_.Tokenize(result->clean_text, options.replace_html_entities,
-                  &result->tokens, &result->token2clean);
+    tok_.Tokenize(result->clean_text, &result->tokens, &result->token2clean);
 
     vector<PhraseDetectionResult> phrase_results;
     if (!phrase_.Detect(result->tokens, &result->phrase_results, error)) {

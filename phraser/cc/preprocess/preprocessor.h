@@ -7,6 +7,7 @@
 
 #include "cc/misc/unicode.h"
 #include "cc/preprocess/destutterer.h"
+#include "cc/preprocess/html_entity_parser.h"
 
 using std::string;
 using std::vector;
@@ -23,12 +24,14 @@ class Preprocessor {
     //
     // Returns false on failure.
     bool Preprocess(
-        const vector<UChar>& dirty, size_t destutter_max_consecutive,
-        vector<UChar>* clean, vector<uint16_t>* clean2dirty_or_null,
+        const vector<UChar>& original, bool replace_html_entities,
+        size_t destutter_max_consecutive, vector<UChar>* clean,
+        vector<uint16_t>* clean2original_or_null,
         unordered_map<UChar, size_t>* chr2drop_or_null, string* error) const;
 
   private:
     bool ready_;
+    HTMLEntityParser html_;
     Destutterer destutter_;
 };
 

@@ -74,10 +74,10 @@ def dump_cc(code2name, file_name):
 
 
 def main():
-    dump_h('../destutterer_data.h')
+    dump_h('../../destutterer_data.h')
 
     code2name = get('digits.txt')
-    dump_cc(code2name, '../destutterer_data.cc')
+    dump_cc(code2name, '../../destutterer_data.cc')
 
 
 if __name__ == '__main__':

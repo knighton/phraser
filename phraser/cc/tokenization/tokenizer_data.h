@@ -11,9 +11,6 @@ using std::unordered_map;
 
 namespace tokenizer_data {
 
-// HTML entity -> Unicode code point.
-extern unordered_map<string, uint32_t> HTML2UNICODE;
-
 // Block containing newline-separated (as space is a valid character) strings
 // concatenated together.
 extern string ASCII_DATA;

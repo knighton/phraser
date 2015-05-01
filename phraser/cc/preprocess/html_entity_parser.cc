@@ -1,7 +1,10 @@
 #include "html_entity_parser.h"
 
+#include "cc/preprocess/html_entity_parser_data.h"
+
 bool HTMLEntityParser::Init(string* error) {
-    return false;  // XXX
+    name2code_ = html_entity_parser_data::HTML2UNICODE;
+    return true;
 }
 
 namespace {

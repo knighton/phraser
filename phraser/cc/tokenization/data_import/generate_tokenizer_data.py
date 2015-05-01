@@ -40,23 +40,6 @@ def parse_code_point(s):
     return int(s, 16)
 
 
-HTML_ENTITY_RE = re.compile('^&[A-Za-z0-9]+;$')
-
-
-def load_html_entities(f):
-    name2code = {}
-    for line in each_line(f):
-        ss = line.split()
-        code = parse_u_code_point(ss[0])
-        for s in ss[1:]:
-            assert HTML_ENTITY_RE.match(s)
-            name = s[1:-1]
-            name = str(name)
-            assert name not in name2code
-            name2code[name] = code
-    return name2code
-
-
 def load_quotes(f):
     code2code = {}
     for line in each_line(f):
@@ -208,9 +191,6 @@ using std::unordered_map;
 
 namespace tokenizer_data {
 
-// HTML entity -> Unicode code point.
-extern unordered_map<string, uint32_t> HTML2UNICODE;
-
 // Block containing newline-separated (as space is a valid character) strings
 // concatenated together.
 extern string ASCII_DATA;
@@ -248,12 +228,10 @@ extern string NRM_TOKEN_PAIRS;
 
 class TokenizerData(object):
     def __init__(
-            self, html_entity2code, normalize_quotes_code2code,
+            self, normalize_quotes_code2code,
             dollarize_code2codes, smart_quotes_code2codes, unicode_code2name,
             decomp_code2codes, confusable_code2codes, brackets_s2s,
             americanize_s2s):
-        self.html_entity2code = html_entity2code
-
         self.normalize_quotes_code2code = normalize_quotes_code2code
         self.dollarize_code2codes = dollarize_code2codes
         self.smart_quotes_code2codes = smart_quotes_code2codes
@@ -386,14 +364,6 @@ class TokenizerData(object):
         cc_lines.append('namespace tokenizer_data {')
         cc_lines.append('')
 
-        cc_lines.append('unordered_map<string, uint32_t> HTML2UNICODE = {')
-        for html in sorted(self.html_entity2code):
-            code = self.html_entity2code[html]
-            line = '    {"%s", 0x%05x},' % (html.replace('"', '\\"'), code)
-            cc_lines.append(line)
-        cc_lines.append('};')
-        cc_lines.append('')
-
         cc_lines.append('string ASCII_DATA = ')
         for i, s in enumerate(ss):
             index = s2index[s]
@@ -450,9 +420,6 @@ class TokenizerData(object):
 
 
 def main():
-    # String -> int.
-    html_entity2code = load_html_entities('html_entities.txt')
-
     # Int -> int.
     normalize_quotes_code2code = load_quotes('quotes.txt')
 
@@ -478,7 +445,7 @@ def main():
     americanize_s2s = load_americanize('americanize.txt')
 
     tok = TokenizerData(
-        html_entity2code, normalize_quotes_code2code, dollarize_code2codes,
+        normalize_quotes_code2code, dollarize_code2codes,
         smart_quotes_code2codes, unicode_code2name, decomp_code2codes,
         confusable_code2codes, brackets_s2s, americanize_s2s)
     h, cc = tok.generate_cpp()

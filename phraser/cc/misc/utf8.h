@@ -138,7 +138,25 @@ UChar utf8_nextCharSafeBody(
     } \
 }
 
-// Returns true iff there is more text left.
-bool ReadLine(const char* s, size_t* i, size_t length, vector<UChar>* line);
+namespace utf8 {
+
+// Returns true iff it read something.
+//
+//     string bytes = "An\nexample\n...\n";
+//     vector<UChar> line;
+//     size_t x = 0;
+//     while (utf8::NextLine(bytes.data(), bytes.size(), &x, &line)) {
+//         printf("Read %zu code points.\n", line.size());
+//     }
+bool NextLine(const char* s, size_t num_bytes, size_t* i, vector<UChar>* line);
+
+// Decode UTF-8 encoded code points from raw bytes.
+//
+//     string bytes = "I \xE2\x99\xA5 you.";
+//     vector<UChar> text;
+//     Decode(bytes.data(), bytes.size(), &text);
+void Decode(const char* s, size_t num_bytes, vector<UChar>* text);
+
+}  // namespace utf8
 
 #endif  // CC_MISC_NEW_UTF8_H_

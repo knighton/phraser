@@ -146,16 +146,35 @@ UChar utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
     return c;
 }
 
-bool ReadLine(const char* s, size_t* i, size_t length, vector<UChar>* line) {
+namespace utf8 {
+
+bool NextLine(const char* s, size_t num_bytes, size_t* i, vector<UChar>* line) {
+    if (num_bytes <= *i) {
+        return false;
+    }
+
     line->clear();
-    while (*i < length) {
+    while (*i < num_bytes) {
         UChar c;
-        U8_NEXT(s, *i, length, c);
+        U8_NEXT(s, *i, num_bytes, c);
         line->emplace_back(c);
         if (c == '\n') {
             break;
         }
     }
 
-    return *i < length;
+    return true;
 }
+
+void Decode(const char* s, size_t num_bytes, vector<UChar>* text) {
+    text->clear();
+    text->reserve(num_bytes);  // Best guess.
+    size_t i = 0;
+    while (i < num_bytes) {
+        UChar c;
+        U8_NEXT(s, i, num_bytes, c);
+        text->emplace_back(c);
+    }
+}
+
+}  // namespace utf8

@@ -41,7 +41,7 @@ bool Analyzer::Analyze(
 
     vector<string> tokens;
     tok_.Tokenize(result->clean_text, options.replace_html_entities,
-                  &result->tokens);
+                  &result->tokens, &result->token2clean);
 
     vector<PhraseDetectionResult> phrase_results;
     if (!phrase_.Detect(result->tokens, &result->phrase_results, error)) {

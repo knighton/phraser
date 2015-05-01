@@ -7,6 +7,7 @@
 
 #include "cc/misc/unicode.h"
 #include "cc/tokenization/lapos_ascii_tokenizer.h"
+#include "cc/tokenization/span.h"
 
 using std::string;
 using std::unordered_map;
@@ -37,22 +38,10 @@ class Tokenizer {
     //
     // Returns false on error.
     void Tokenize(const vector<UChar>& text, bool replace_html_entities,
-                  vector<string>* tokens) const;
+                  vector<string>* tokens,
+                  vector<Span>* token2clean_or_null) const;
 
   private:
-    bool ParseHTMLEntity(
-        const vector<UChar>& html, size_t begin, size_t end_excl,
-        UChar* out) const;
-
-    void HandlePossibleHTMLEntity(
-        const vector<UChar>& html, size_t amp_index, size_t semicolon_index,
-        vector<UChar>* out) const;
-
-    bool IsPossibleHTMLEntityChar(UChar c) const;
-
-    void ReplaceHTMLEntities(
-        const vector<UChar>& html, vector<UChar>* unicode) const;
-
     void UnicodeToPTBAscii(
         const vector<UChar>& unicode, string* ptb_ascii) const;
 

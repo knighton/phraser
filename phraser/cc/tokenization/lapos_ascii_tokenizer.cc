@@ -51,13 +51,14 @@ static void separate_commas(string& s) {
     s = t;
 }
 
-static void really_tokenize(const string& s1, vector<string>& lt) {
-    if (s1.size() == 0)
+static void really_tokenize(const string& input_text, vector<string>* out) {
+    out->clear();
+
+    if (input_text.size() == 0) {
         return;
+    }
 
-    lt.clear();
-
-    string s(s1);
+    string s = input_text;
 
     replace(s, "``", " `` ");
     if (s[0] == '"') {
@@ -170,18 +171,13 @@ static void really_tokenize(const string& s1, vector<string>& lt) {
     istringstream is(s);
     string t;
     while (is >> t) {
-        lt.push_back(t);
+        out->emplace_back(t);
     }
 }
 
 void LaposASCIITokenizer::Tokenize(
         const string& s, vector<string>* v) const {
-    v->clear();
-
-    vector<string> vs;
-    really_tokenize(s, vs);
-
-    *v = vs;
+    really_tokenize(s, v);
 
     /*
     int begin = 0;

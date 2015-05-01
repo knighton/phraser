@@ -8,17 +8,13 @@
 #include "cc/misc/json.h"
 #include "cc/misc/unicode.h"
 #include "cc/phrase_detection/phrase_detection_result.h"
+#include "cc/tokenization/span.h"
 
 using std::string;
 using std::unordered_map;
 using std::vector;
 
 #define TEXT_MAX_LEN (1ul << 16)
-
-struct ExclusiveSpan {
-    uint16_t begin;
-    uint16_t end_excl;
-};
 
 struct AnalysisResult {
     void Clear();
@@ -38,7 +34,7 @@ struct AnalysisResult {
     // * The fully processed tokens.
     // * Token index -> span in 'clean_text' that the token is from.
     vector<string> tokens;
-    vector<ExclusiveSpan> token2clean;
+    vector<Span> token2clean;
 
     // Phrase detection results:
     vector<PhraseDetectionResult> phrase_results;

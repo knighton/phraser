@@ -194,19 +194,6 @@ def load_americanize(f):
     return token2token
 
 
-def show(s):
-    return '%05x' % s
-
-
-def show_chr(n):
-    if n == 0:
-        return '\\0'
-    elif n == '"':
-        return '\\"'
-    else:
-        return chr(n)
-
-
 H_SOURCE = """
 #ifndef CC_TOKENIZATION_TOKENIZER_DATA_H_
 #define CC_TOKENIZATION_TOKENIZER_DATA_H_
@@ -224,7 +211,8 @@ namespace tokenizer_data {
 // HTML entity -> Unicode code point.
 extern unordered_map<string, uint32_t> HTML2UNICODE;
 
-// Block containing NULL-terminated strings concatenated together.
+// Block containing newline-separated (as space is a valid character) strings
+// concatenated together.
 extern string ASCII_DATA;
 
 // Unicode -> PTB ASCII (index into ASCII_DATA).
@@ -410,7 +398,7 @@ class TokenizerData(object):
         for i, s in enumerate(ss):
             index = s2index[s]
             s = s.replace('"', '\\"')
-            line = '    "%s\\0"  // %d' % (s, index)
+            line = '    "%s\\n"  // %d' % (s, index)
             cc_lines.append(line)
         cc_lines.append(';')
         cc_lines.append('')

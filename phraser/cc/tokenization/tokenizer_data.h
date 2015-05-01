@@ -14,7 +14,8 @@ namespace tokenizer_data {
 // HTML entity -> Unicode code point.
 extern unordered_map<string, uint32_t> HTML2UNICODE;
 
-// Block containing NULL-terminated strings concatenated together.
+// Block containing newline-separated (as space is a valid character) strings
+// concatenated together.
 extern string ASCII_DATA;
 
 // Unicode -> PTB ASCII (index into ASCII_DATA).

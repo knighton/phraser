@@ -9,7 +9,7 @@ FLAGS_BASE = \
 	-O3 \
 	-ferror-limit=5 \
 	-lboost_regex \
-	-I$(SRC_ROOT_DIR)
+	-I$(SRC_ROOT_DIR) \
 
 FLAGS_WARN = \
 	-Wpedantic \

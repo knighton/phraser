@@ -34,7 +34,8 @@ bool Analyzer::Analyze(
 
     if (!preproc_.Preprocess(
             result->original_text, options.destutter_max_consecutive,
-            &result->clean_text, error)) {
+            &result->clean_text, &result->clean2original, &result->chr2drop,
+            error)) {
         return false;
     }
 

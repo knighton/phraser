@@ -16,11 +16,16 @@ class Preprocessor {
   public:
     Preprocessor() : ready_(false) {}
 
+    // Returns false on failure.
     bool Init(string* error);
 
-    bool Preprocess(const vector<UChar>& dirty,
-                    size_t destutter_max_consecutive,
-                    vector<UChar>* clean, string* error) const;
+    // Dirty -> clean, with some optional additional info.
+    //
+    // Returns false on failure.
+    bool Preprocess(
+        const vector<UChar>& dirty, size_t destutter_max_consecutive,
+        vector<UChar>* clean, vector<uint16_t>* clean2dirty_or_null,
+        unordered_map<UChar, size_t>* chr2drop_or_null, string* error) const;
 
   private:
     bool ready_;

@@ -236,15 +236,31 @@ void Tokenizer::ReplaceHTMLEntities(
 
 void Tokenizer::UnicodeToPTBAscii(const vector<UChar>& in, string* out) const {
     for (auto i = 0u; i < in.size(); ++i) {
-        auto it = unicode2ascii_.find(in[i]);
-        if (it == unicode2ascii_.end()) {
-            if (out->size() && (*out)[out->size() - 1] != ' ') {
-                *out += ' ';
-            }
-        } else {
+        auto& c = in[i];
+
+        // If it maps to printable ASCII or is printable ASCII but overridden,
+        // use that.
+        auto it = unicode2ascii_.find(c);
+        if (it != unicode2ascii_.end()) {
             auto& index = it->second;
-            const auto& pointer = &ascii_data_[index];
-            *out = string(pointer);
+            const char* pointer = &ascii_data_[index];
+            while (*pointer != '\n') {
+                *out += *pointer;
+                ++pointer;
+            }
+            continue;
+        }
+
+        // Else, if it's printable ASCII, use it as is.
+        if (0x20 <= c && c < 0x7F) {
+            *out += static_cast<char>(c);
+            continue;
+        }
+
+        // Failing those, add whitespace if it doesn't already end with
+        // whitespace.
+        if (out->empty() || (*out)[out->size() - 1] != ' ') {
+            *out += ' ';
         }
     }
 }

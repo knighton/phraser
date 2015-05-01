@@ -1,0 +1,38 @@
+Important:
+
+New features:
+
+* "oneof" expressions.  Including the "|" syntax.
+
+* Regex expressions.  Parsing those out of the phrase configs will be fun.
+  Update expression syntax section of README.md when done.
+
+* Multiple possible tags in tag expressions?
+
+* Support "(TAG)" syntax.
+
+* Implement (pos) expression type for ' and 's.
+
+Correctness:
+
+* List the possible Penn tags for checking tag expression arguments (ie, the tag
+  the user wants to filter on) in TagEvaluator.
+
+* Multi-token expressions.  Internally preprocess the precomputable expressions
+  to generate normal single-token expressions.  Needed for some possessive
+  personal edge cases to work.  Example:
+
+      phrase config:   "I have (posdet +you) homework"
+
+      internal config: "I have (posdet-1-of-1 +you) homework"
+                       "I have (posdet-1-of-2 +you) (posdet-2-of-2 +you) homework"
+
+      user input:      "I have yall's homework"
+
+      tokenized:       "I have yall 's homework"
+
+  I do not forsee having a use for non-precomputable multi-word expressions.
+
+* Destuttering: Make it work on canonically equivalent code point sequences.
+  Can't solve it by just NFC normalization, have to take combining diacritical
+  marks into account.  Also do NFC normalization before calling it.

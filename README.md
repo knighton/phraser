@@ -3,13 +3,27 @@ Phraser is a DSL for recognizing English phrases.  It finds consecutive lists of
 Contents:
 * [Demo](#demo)
 * [Expressions](#expressions)
-* [Expression syntax](#expression-syntax)
-* [Phrase file syntax](#phrase-file-syntax)
+  * [All-at-once expressions](#all-at-once-expressions)
+    * [Penn part-of-speech tag](#penn-part-of-speech-tag) — (tag *TAG*) or (*TAG*)
+  * [Dynamic expressions](#dynamic-expressions)
+    * [Number](#number) — (number *+type +polarity*)
+    * [Regular expression](#regular-expression) — (regex *regex*)
+  * [Precomputable expressions](#precomputable-expressions)
+    * [Custom token group](#custom-token-group) — (oneof *tokens...*) or (*token1*|*token2...*)
+    * [Personal pronoun](#possessive-pronoun) — (perspro *+case +gender +number +person +personhood*)
+    * [Possessive determiner](#possessive-pronoun) — (posdet *+gender +number +person +personhood*)
+    * [Possessive pronoun](#possessive-pronoun) — (pospro *+case +gender +number +person +personhood*)
+    * [Verb](#verb) — (to *lemma +fieldtype +number +person*)
+  * [Raw tokens](#raw-tokens)
+* [Configuration](#configuration)
+  * [Expression syntax](#expression-syntax)
+  * [Phrase file syntax](#phrase-file-syntax)
 * [Architecture](#architecture)
-* [Tokenization](#tokenization)
-* [Tagging](#tagging)
+* [How it works](#how-it-works)
+  * [Tokenization](#tokenization)
+  * [Tagging](#tagging)
 
-#### Demo
+### Demo
 
 This phrase file:
 
@@ -36,9 +50,17 @@ Results in:
 
     TODO
 
-#### Expressions
+### Expressions
 
-##### All-at-once expression evaluators
+All expressions are checked for validity by the expression evaluator of their type during initialization.
+
+#### All-at-once expressions
+
+All-at-once expressions require all the input tokens at once to make their judgements about whether each of them is a match.  Used for filtering on Penn part-of-speech tags.
+
+All-at-once expression evaluators contain an AnalyzeTokens() method which generates some opaque metadata about each token, and an IsMatch() method which makes a judgment about a token with metadata.
+
+##### Penn part-of-speech tag
 
 * `(tag <uppercase Penn POS tag>)` or `(<uppercase Penn POS tag>)`
 
@@ -46,7 +68,13 @@ Results in:
 | --------- | ---------------------- |
 | N/A       | N/A                    |
 
-##### Dynamic expressions evaluators
+#### Dynamic expressions
+
+Dynamic expressions are open-class.  Each expression is evaluated against each input token at call time.
+
+Dynamic expression evaluators contain a MightMatch() method which may rule out all expressions of its type.
+
+##### Number
 
 * `(number ...)`
 
@@ -55,33 +83,62 @@ Results in:
 | class     | `+float` `+int`        |
 | polarity  | `+neg` `+nonneg`       |
 
-##### Precomputable expression evaluators
+##### Regular expression
+
+* `(regex <regex>)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
+
+#### Precomputable expressions
+
+Precomputable expressions are closed-class, so we enumerate every possible match and put these matches (literal tokens) in a lookup table during initialization.
+
+##### Custom token group
+
+* `(oneof <space-separated list of tokens>)`
+
+| Dimension | Possible filter values |
+| --------- | ---------------------- |
+| N/A       | N/A                    |
+
+##### Personal pronoun
 
 * `(perspro ...)`
 
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
-| ppcase    | `+obj` `+refl` `+subj`    |
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| case       | `+obj` `+refl` `+subj`    |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
 
-* `(pospro ...)`
-
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
-| ppcase    | `+obj` `+refl` `+subj`    |
+##### Possessive determiner
 
 * `(posdet ...)`
 
-| Dimension | Possible filter values    |
-| --------- | ------------------------- |
-| gender    | `+female` `male` `neuter` |
-| number    | `+plur` `+sing`           |
-| person    | `+1st` `+2nd` `+3rd`      |
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
+
+##### Possessive pronoun
+
+* `(pospro ...)`
+
+| Dimension  | Possible filter values    |
+| ---------- | ------------------------- |
+| case       | `+obj` `+refl` `+subj`    |
+| gender     | `+female` `male` `neuter` |
+| number     | `+plur` `+sing`           |
+| person     | `+1st` `+2nd` `+3rd`      |
+| personhood | `person` `thing`          |
+
+##### Verb
 
 * `(to <verb lemma> ...)`
 
@@ -90,6 +147,12 @@ Results in:
 | field type | `+lemma` `+past` `+pastpart` `+pres` `+prespart` |
 | number     | `+plur` `+sing`                                  |
 | person     | `+1st` `+2nd` `+3rd`                             |
+
+#### Raw tokens
+
+Everything that is not an expression is a raw token which is matched verbatim.
+
+### Configuration
 
 #### Expression syntax
 
@@ -131,9 +194,9 @@ where
 * an expression is a string containing arbitrary text separated by `(` and `)`
 * occurences of `(` and `)` inside an expression must be escaped by `\`
 
-#### Architecture
+### Architecture
 
-            Analyzer 
+            Analyzer (cc/analysis/)
               | | \
               | |  Preprocessor (cc/preprocess/)
               | |        \
@@ -141,17 +204,14 @@ where
               |  \
              /   Tokenizer (cc/tokenization/)
             /
-      PhraseDetector (cc/phrase/)
+      PhraseDetector (cc/phrase_detection/)
          /    \
         /   EnglishExpressionEvaluator (cc/expression/)
-       /               \
-    VectorMembership    +--PrecomputableEvaluators
-    SequenceDetector    +--DynamicEvaluators
-    (cc/sequence/)      +--AllAtOnceEvaluators (eg, Tagger)
-                        (cc/english/, cc/tagging/)
-    
-    PreprocessStep
-    * Destutterer
+       /                     \
+    VectorMembership          +--PrecomputableEvaluators
+    SequenceDetector          +--DynamicEvaluators
+    (cc/sequence_detection/)  +--AllAtOnceEvaluators (eg, Tagger)
+                              (cc/english/, cc/tagging/)
     
     SequenceDetector
     * EqualitySequenceDetector
@@ -161,6 +221,8 @@ where
     * PrecomputableEvaluator
     * DynamicEvaluator
     * AllAtOnceEvaluator
+
+### How it works
 
 #### Tokenization
 

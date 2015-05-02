@@ -20,15 +20,15 @@ struct AnalysisResult {
     void Clear();
 
     // Input:
-    vector<UChar> original_text;
+    ustring original_text;
 
     // Preprocessing results:
     // * Text after preprocessing.
     // * Index in 'clean_text' -> index in 'original_text'.
     // * Code point -> number of times it was dropped by destuttering.
-    vector<UChar> clean_text;
+    ustring clean_text;
     vector<uint16_t> clean2original;
-    unordered_map<UChar, size_t> chr2drop;
+    unordered_map<uchar, size_t> chr2drop;
 
     // Tokenization results:
     // * The fully processed tokens.

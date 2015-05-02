@@ -24,10 +24,10 @@ class Preprocessor {
     //
     // Returns false on failure.
     bool Preprocess(
-        const vector<UChar>& original, bool replace_html_entities,
-        size_t destutter_max_consecutive, vector<UChar>* clean,
+        const ustring& original, bool replace_html_entities,
+        size_t destutter_max_consecutive, ustring* clean,
         vector<uint16_t>* clean2original_or_null,
-        unordered_map<UChar, size_t>* chr2drop_or_null, string* error) const;
+        unordered_map<uchar, size_t>* chr2drop_or_null, string* error) const;
 
   private:
     bool ready_;

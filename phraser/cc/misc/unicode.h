@@ -2,8 +2,12 @@
 #define CC_MISC_UNICODE_H_
 
 #include <cstdint>
+#include <vector>
 
-typedef uint32_t UChar;
+using std::vector;
+
+typedef uint32_t uchar;
+typedef vector<uchar> ustring;
 
 /**
  * From common/uicode/utf.h:

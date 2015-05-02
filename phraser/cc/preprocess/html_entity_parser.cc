@@ -9,8 +9,8 @@ bool HTMLEntityParser::Init(string* error) {
 
 namespace {
 
-bool ParseHex(const vector<UChar>& in, size_t begin, size_t end_excl,
-              UChar* code) {
+bool ParseHex(const ustring& in, size_t begin, size_t end_excl,
+              uchar* code) {
     *code = 0;
     for (auto i = begin; i < end_excl; ++i) {
         auto c = in[i];
@@ -31,8 +31,7 @@ bool ParseHex(const vector<UChar>& in, size_t begin, size_t end_excl,
     return true;
 }
 
-bool ParseDec(const vector<UChar>& in, size_t begin, size_t end_excl,
-              UChar* code) {
+bool ParseDec(const ustring& in, size_t begin, size_t end_excl, uchar* code) {
     *code = 0;
     for (auto i = begin; i < end_excl; ++i) {
         auto c = in[i];
@@ -47,8 +46,7 @@ bool ParseDec(const vector<UChar>& in, size_t begin, size_t end_excl,
     return true;
 }
 
-bool ParseName(const vector<UChar>& in, size_t begin, size_t end_excl,
-               string* name) {
+bool ParseName(const ustring& in, size_t begin, size_t end_excl, string* name) {
     name->clear();
     for (auto i = begin; i < end_excl; ++i) {
         auto& c = in[i];
@@ -65,8 +63,8 @@ bool ParseName(const vector<UChar>& in, size_t begin, size_t end_excl,
 }  // namespace
 
 bool HTMLEntityParser::ParseHTMLEntity(
-        const vector<UChar>& in, size_t begin, size_t end_excl,
-        UChar* code) const {
+        const ustring& in, size_t begin, size_t end_excl,
+        uchar* code) const {
     size_t length = end_excl - begin;
     if (1 <= length && in[begin] == '#') {
         if (2 <= length && in[begin + 1] == 'x') {
@@ -100,9 +98,9 @@ bool HTMLEntityParser::ParseHTMLEntity(
 }
 
 void HTMLEntityParser::AppendPossibleHTMLEntity(
-        const vector<UChar>& in, size_t amp_index, size_t semicolon_index,
-        vector<UChar>* out, vector<uint16_t>* out2in) const {
-    UChar c;
+        const ustring& in, size_t amp_index, size_t semicolon_index,
+        ustring* out, vector<uint16_t>* out2in) const {
+    uchar c;
     if (ParseHTMLEntity(in, amp_index + 1, semicolon_index, &c)) {
         out->emplace_back(c);
         out2in->emplace_back(amp_index);
@@ -115,7 +113,7 @@ void HTMLEntityParser::AppendPossibleHTMLEntity(
     }
 }
 
-bool HTMLEntityParser::IsPossibleHTMLEntityChar(UChar c) const {
+bool HTMLEntityParser::IsPossibleHTMLEntityChar(uchar c) const {
     if (c == '#') {
         return true;
     }
@@ -136,8 +134,7 @@ bool HTMLEntityParser::IsPossibleHTMLEntityChar(UChar c) const {
 }
 
 void HTMLEntityParser::Replace(
-        const vector<UChar>& in, vector<UChar>* out,
-        vector<uint16_t>* out2in) const {
+        const ustring& in, ustring* out, vector<uint16_t>* out2in) const {
     out->clear();
     out2in->clear();
 

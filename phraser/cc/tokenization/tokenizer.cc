@@ -5,7 +5,7 @@
 
 bool Tokenizer::Init(
         const string& ascii_data,
-        const unordered_map<UChar, uint16_t>& unicode2ascii,
+        const unordered_map<uchar, uint16_t>& unicode2ascii,
         const unordered_map<string, string>& token2token, string* error) {
     ascii_data_ = ascii_data;
     unicode2ascii_ = unicode2ascii;
@@ -73,7 +73,7 @@ bool Tokenizer::InitDefault(string* error) {
     return Init(ascii_data, unicode2ascii, token2token, error);
 }
 
-void Tokenizer::UnicodeToPTBAscii(const vector<UChar>& in, string* out) const {
+void Tokenizer::UnicodeToPTBAscii(const ustring& in, string* out) const {
     for (auto i = 0u; i < in.size(); ++i) {
         auto& c = in[i];
 
@@ -125,7 +125,7 @@ void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
 }
 
 void Tokenizer::Tokenize(
-        const vector<UChar>& text, vector<string>* tokens,
+        const ustring& text, vector<string>* tokens,
         vector<Span>* token2clean_or_null) const {
     // Unicode -> ASCII.
     string ptb_ascii;

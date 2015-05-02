@@ -33,14 +33,14 @@ class Destutterer {
     //
     // Returns false on failure.  If it failed, saves reason in |error|.
     bool Destutter(
-        const vector<UChar>& in, size_t max_consecutive,
-        vector<UChar>* out, vector<uint16_t>* out2in,
-        unordered_map<UChar, size_t>* chr2drop, string* error) const;
+        const ustring& in, size_t max_consecutive, ustring* out,
+        vector<uint16_t>* out2in, unordered_map<uchar, size_t>* chr2drop,
+        string* error) const;
 
   private:
     // List of digits in all the scripts of the world.  We don't destutter
     // digits.
-    unordered_set<UChar> digits_;
+    unordered_set<uchar> digits_;
 };
 
 #endif  // CC_PREPROCESS_DESTUTTERER_H_

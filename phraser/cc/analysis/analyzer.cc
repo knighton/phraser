@@ -20,7 +20,7 @@ bool Analyzer::Init(
 }
 
 bool Analyzer::Analyze(
-        const vector<UChar>& original_text, const AnalysisOptions& options,
+        const ustring& original_text, const AnalysisOptions& options,
         AnalysisResult* result, string* error) const {
     if (!ready_) {
         *error = "[Analyzer] You forgot to call Init().";

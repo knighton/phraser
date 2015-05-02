@@ -24,7 +24,7 @@ class Tokenizer {
   public:
     // Init with configuration.
     bool Init(const string& ascii_data,
-              const unordered_map<UChar, uint16_t>& unicode2ascii,
+              const unordered_map<uchar, uint16_t>& unicode2ascii,
               const unordered_map<string, string>& token2token, string* error);
 
     // Initialize from definitions in tokenizer_data.h.
@@ -36,12 +36,12 @@ class Tokenizer {
     // the results.
     //
     // Returns false on error.
-    void Tokenize(const vector<UChar>& text, vector<string>* tokens,
+    void Tokenize(const ustring& text, vector<string>* tokens,
                   vector<Span>* token2clean_or_null) const;
 
   private:
     void UnicodeToPTBAscii(
-        const vector<UChar>& unicode, string* ptb_ascii) const;
+        const ustring& unicode, string* ptb_ascii) const;
 
     void NormalizeTokens(vector<string>* tokens) const;
 
@@ -49,7 +49,7 @@ class Tokenizer {
     //
     // If not present, maps to whitespace (0x20).
     string ascii_data_;
-    unordered_map<UChar, uint16_t> unicode2ascii_;
+    unordered_map<uchar, uint16_t> unicode2ascii_;
 
     // Step 2: ASCII tokenizer trained on the Penn Treebank.
     LaposASCIITokenizer ascii_tokenizer_;

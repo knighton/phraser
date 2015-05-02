@@ -37,9 +37,9 @@ void CombineMappings(const vector<uint16_t>& mid2in,
 }  // namespace
 
 bool Preprocessor::Preprocess(
-        const vector<UChar>& in, bool replace_html_entities,
-        size_t destutter_max_consecutive, vector<UChar>* out,
-        vector<uint16_t>* out2in, unordered_map<UChar, size_t>* chr2drop,
+        const ustring& in, bool replace_html_entities,
+        size_t destutter_max_consecutive, ustring* out,
+        vector<uint16_t>* out2in, unordered_map<uchar, size_t>* chr2drop,
         string* error) const {
     out->clear();
     out2in->clear();
@@ -59,15 +59,15 @@ bool Preprocessor::Preprocess(
     }
 
     // Scratch space for intermediate steps.
-    vector<UChar> input_for_odd_steps;
-    vector<UChar> input_for_even_steps;
+    ustring input_for_odd_steps;
+    ustring input_for_even_steps;
     vector<uint16_t> out2in_for_odd_steps;
     vector<uint16_t> out2in_for_even_steps;
 
     // Pointers to the inputs/outputs of a single step (these are configured for
     // each step).  This is done to minimize copying.
-    const vector<UChar>* cur_input;
-    vector<UChar>* cur_output;
+    const ustring* cur_input;
+    ustring* cur_output;
     vector<uint16_t>* cur_out2in;
     vector<uint16_t>* prev_out2in;
 

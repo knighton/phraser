@@ -17,7 +17,7 @@ class Analyzer {
               const vector<string>& phrase_config_ff, string* error);
 
     // Returns false if the analysis failed.
-    bool Analyze(const vector<UChar>& text, const AnalysisOptions& options,
+    bool Analyze(const ustring& text, const AnalysisOptions& options,
                  AnalysisResult* result, string* error) const;
 
   private:

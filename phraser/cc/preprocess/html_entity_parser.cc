@@ -101,15 +101,17 @@ bool HTMLEntityParser::ParseHTMLEntity(
 
 void HTMLEntityParser::AppendPossibleHTMLEntity(
         const vector<UChar>& in, size_t amp_index, size_t semicolon_index,
-        vector<UChar>* out) const {
+        vector<UChar>* out, vector<uint16_t>* out2in) const {
     UChar c;
     if (ParseHTMLEntity(in, amp_index + 1, semicolon_index, &c)) {
         out->emplace_back(c);
+        out2in->emplace_back(amp_index);
         return;
     }
 
     for (auto i = amp_index; i <= semicolon_index; ++i) {
         out->emplace_back(in[i]);
+        out2in->emplace_back(i);
     }
 }
 
@@ -134,7 +136,11 @@ bool HTMLEntityParser::IsPossibleHTMLEntityChar(UChar c) const {
 }
 
 void HTMLEntityParser::Replace(
-        const vector<UChar>& in, vector<UChar>* out) const {
+        const vector<UChar>& in, vector<UChar>* out,
+        vector<uint16_t>* out2in) const {
+    out->clear();
+    out2in->clear();
+
     size_t begin = ~0ul;
     bool inside = false;
     for (auto i = 0u; i < in.size(); ++i) {
@@ -147,6 +153,7 @@ void HTMLEntityParser::Replace(
                 inside = true;
             } else {
                 out->emplace_back(c);
+                out2in->emplace_back(i);
             }
             continue;
         }
@@ -156,17 +163,19 @@ void HTMLEntityParser::Replace(
             // Ampersand?  Reject what we buffered and start here.
             for (auto j = begin; j < i; ++j) {
                 out->emplace_back(in[j]);
+                out2in->emplace_back(j);
             }
             begin = i;
         } else if (c == ';') {
             // Semicolon?  Try to parse it (append entity or string).
-            AppendPossibleHTMLEntity(in, begin, i, out);
+            AppendPossibleHTMLEntity(in, begin, i, out, out2in);
             begin = ~0ul;
             inside = false;
         } else if (!IsPossibleHTMLEntityChar(c)) {
             // Not possible inside an HTML entity?  Reject it.
             for (auto j = begin; j <= i; ++j) {
                 out->emplace_back(in[j]);
+                out2in->emplace_back(j);
             }
             begin = ~0ul;
             inside = false;
@@ -176,6 +185,7 @@ void HTMLEntityParser::Replace(
     if (inside) {
         for (auto i = begin; i < in.size(); ++i) {
             out->emplace_back(in[i]);
+            out2in->emplace_back(i);
         }
     }
 }

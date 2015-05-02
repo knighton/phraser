@@ -19,7 +19,11 @@ class HTMLEntityParser {
     //
     // Replace HTML entities in Unicode strings with their Unicode character
     // equivalents.
-    void Replace(const vector<UChar>& in, vector<UChar>* out) const;
+    //
+    // Save mapping of 'out' code point -> beginning of span in 'in' code
+    // points that it maps to into 'out2in'.
+    void Replace(const vector<UChar>& in, vector<UChar>* out,
+                 vector<uint16_t>* out2in) const;
 
   private:
     bool ParseHTMLEntity(
@@ -28,7 +32,7 @@ class HTMLEntityParser {
 
     void AppendPossibleHTMLEntity(
         const vector<UChar>& in, size_t amp_index, size_t semicolon_index,
-        vector<UChar>* out) const;
+        vector<UChar>* out, vector<uint16_t>* out2in) const;
 
     bool IsPossibleHTMLEntityChar(UChar c) const;
 

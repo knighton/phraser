@@ -24,40 +24,28 @@ bool Destutterer::Init(string* error) {
 }
 
 bool Destutterer::Destutter(
-        const vector<UChar>& dirty, size_t max_consecutive,
-        vector<UChar>* clean, vector<uint16_t>* clean2dirty_or_null,
-        unordered_map<UChar, size_t>* chr2drop_or_null, string* error) const {
-    clean->clear();
-    if (clean2dirty_or_null) {
-        clean2dirty_or_null->clear();
-    }
-    if (chr2drop_or_null) {
-        chr2drop_or_null->clear();
-    }
+        const vector<UChar>& in, size_t max_consecutive,
+        vector<UChar>* out, vector<uint16_t>* out2in,
+        unordered_map<UChar, size_t>* chr2drop, string* error) const {
+    out->clear();
+    out2in->clear();
+    chr2drop->clear();
 
-    if (chr2drop_or_null) {
-        chr2drop_or_null->clear();
-    }
-
-    if (dirty.empty()) {
+    if (in.empty()) {
         return true;
     }
 
-    UChar prev_c = dirty[0];
-    clean->emplace_back(prev_c);
-    if (clean2dirty_or_null) {
-        clean2dirty_or_null->emplace_back(0);
-    }
+    UChar prev_c = in[0];
+    out->emplace_back(prev_c);
+    out2in->emplace_back(0);
     auto run_length = 1;
-    for (auto i = 1u; i < dirty.size(); ++i) {
-        auto& c = dirty[i];
+    for (auto i = 1u; i < in.size(); ++i) {
+        auto& c = in[i];
 
         // Different character, or the same character but a digit?  Reset to it.
         if (c != prev_c || digits_.find(c) != digits_.end()) {
-            clean->emplace_back(c);
-            if (clean2dirty_or_null) {
-                clean2dirty_or_null->emplace_back(i);
-            }
+            out->emplace_back(c);
+            out2in->emplace_back(i);
             run_length = 1;
             prev_c = c;
             continue;
@@ -66,17 +54,13 @@ bool Destutterer::Destutter(
         // A repeat character but not at the limit?  Keep it.
         ++run_length;
         if (run_length <= max_consecutive) {
-            clean->emplace_back(c);
-            if (clean2dirty_or_null) {
-                clean2dirty_or_null->emplace_back(i);
-            }
+            out->emplace_back(c);
+            out2in->emplace_back(i);
             continue;
         }
 
         // Repeated too many times?  Drop it.
-        if (chr2drop_or_null) {
-            ++(*chr2drop_or_null)[c];
-        }
+        ++(*chr2drop)[c];
     }
 
     return true;

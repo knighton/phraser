@@ -22,10 +22,6 @@ class Destutterer {
     //
     //     "happppy" -> "happy"
     //
-    // Processes the text in |dirty| and puts it in |clean|, optionally saving a
-    // mapping to the original indexes in |clean2dirty_or_null| and/or a mapping
-    // of code point to drop count in |chr2drop_or_null|.
-    //
     // All non-digit code points past |max_consecutive| will be dropped.  If set
     // to 0, destuttering will not be applied.
     //
@@ -37,9 +33,9 @@ class Destutterer {
     //
     // Returns false on failure.  If it failed, saves reason in |error|.
     bool Destutter(
-        const vector<UChar>& dirty, size_t max_consecutive,
-        vector<UChar>* clean, vector<uint16_t>* clean2dirty_or_null,
-        unordered_map<UChar, size_t>* chr2drop_or_null, string* error) const;
+        const vector<UChar>& in, size_t max_consecutive,
+        vector<UChar>* out, vector<uint16_t>* out2in,
+        unordered_map<UChar, size_t>* chr2drop, string* error) const;
 
   private:
     // List of digits in all the scripts of the world.  We don't destutter

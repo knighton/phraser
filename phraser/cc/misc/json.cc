@@ -11,7 +11,7 @@ Object::Object() {
 
 Object::Object(int64_t n) {
     type_ = JOT_INT;
-    auto data = new int(n);
+    auto data = new int64_t(n);
     data_ = reinterpret_cast<void*>(data);
 }
 

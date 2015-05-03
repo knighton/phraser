@@ -4,12 +4,15 @@
 #include <string>
 #include <vector>
 
+#include "cc/tokenization/span.h"
+
 using std::string;
 using std::vector;
 
 class LaposASCIITokenizer {
   public:
-    void Tokenize(const string& s, vector<string>* tokens) const;
+    bool Tokenize(const string& s, vector<string>* tokens,
+                  vector<Span>* out2in) const;
 };
 
 #endif  // CC_TOKENIZATION_ASCII_TOKENIZER_H_

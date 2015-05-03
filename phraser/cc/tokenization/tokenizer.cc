@@ -73,7 +73,10 @@ bool Tokenizer::InitDefault(string* error) {
     return Init(ascii_data, unicode2ascii, token2token, error);
 }
 
-void Tokenizer::UnicodeToPTBAscii(const ustring& in, string* out) const {
+void Tokenizer::UnicodeToPTBAscii(
+        const ustring& in, string* out, vector<uint16_t>* out2in) const {
+    out->clear();
+    out2in->clear();
     for (auto i = 0u; i < in.size(); ++i) {
         auto& c = in[i];
 
@@ -85,6 +88,7 @@ void Tokenizer::UnicodeToPTBAscii(const ustring& in, string* out) const {
             const char* pointer = &ascii_data_[index];
             while (*pointer != '\n') {
                 *out += *pointer;
+                out2in->emplace_back(i);
                 ++pointer;
             }
             continue;
@@ -93,6 +97,7 @@ void Tokenizer::UnicodeToPTBAscii(const ustring& in, string* out) const {
         // Else, if it's printable ASCII, use it as is.
         if (0x20 <= c && c < 0x7F) {
             *out += static_cast<char>(c);
+            out2in->emplace_back(i);
             continue;
         }
 
@@ -100,6 +105,7 @@ void Tokenizer::UnicodeToPTBAscii(const ustring& in, string* out) const {
         // whitespace.
         if (out->empty() || (*out)[out->size() - 1] != ' ') {
             *out += ' ';
+            out2in->emplace_back(i);
         }
     }
 }
@@ -124,16 +130,39 @@ void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
     }
 }
 
-void Tokenizer::Tokenize(
-        const ustring& text, vector<string>* tokens,
-        vector<Span>* token2clean_or_null) const {
+// Assume indexes are correct.
+static void CombineMappings(const vector<uint16_t>& ascii2unicode,
+                            vector<Span>* spans) {
+    for (auto i = 0u; i < spans->size() - 1; ++i) {
+        auto& span = (*spans)[i];
+        span.begin = ascii2unicode[span.begin];
+        span.end_excl = ascii2unicode[span.end_excl];
+    }
+
+    // Last token span's exclusive end index goes off the end by one.
+    auto& span = (*spans)[spans->size() - 1];
+    span.begin = ascii2unicode[span.begin];
+    span.end_excl = static_cast<uint16_t>(ascii2unicode.size());
+}
+
+bool Tokenizer::Tokenize(
+        const ustring& unicode, vector<string>* tokens,
+        vector<Span>* token2unicode) const {
     // Unicode -> ASCII.
-    string ptb_ascii;
-    UnicodeToPTBAscii(text, &ptb_ascii);
+    string ascii;
+    vector<uint16_t> ascii2unicode;
+    UnicodeToPTBAscii(unicode, &ascii, &ascii2unicode);
 
     // ASCII -> tokens.
-    ascii_tokenizer_.Tokenize(ptb_ascii, tokens);
+    if (!ascii_tokenizer_.Tokenize(ascii, tokens, token2unicode)) {
+        return false;
+    }
+
+    // Transitively combine index mappings.
+    CombineMappings(ascii2unicode, token2unicode);
 
     // Tokens -> tokens.
     NormalizeTokens(tokens);
+
+    return true;
 }

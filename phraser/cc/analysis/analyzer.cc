@@ -40,7 +40,10 @@ bool Analyzer::Analyze(
     }
 
     vector<string> tokens;
-    tok_.Tokenize(result->clean_text, &result->tokens, &result->token2clean);
+    if (!tok_.Tokenize(result->clean_text, &result->tokens,
+                       &result->token2clean)) {
+        return false;
+    }
 
     vector<PhraseDetectionResult> phrase_results;
     if (!phrase_.Detect(result->tokens, &result->phrase_results, error)) {

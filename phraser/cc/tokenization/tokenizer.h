@@ -36,12 +36,13 @@ class Tokenizer {
     // the results.
     //
     // Returns false on error.
-    void Tokenize(const ustring& text, vector<string>* tokens,
-                  vector<Span>* token2clean_or_null) const;
+    bool Tokenize(const ustring& unicode, vector<string>* tokens,
+                  vector<Span>* token2unicode) const;
 
   private:
     void UnicodeToPTBAscii(
-        const ustring& unicode, string* ptb_ascii) const;
+        const ustring& unicode, string* ptb_ascii,
+        vector<uint16_t>* ascii2unicode) const;
 
     void NormalizeTokens(vector<string>* tokens) const;
 

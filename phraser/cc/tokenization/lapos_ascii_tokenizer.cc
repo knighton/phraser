@@ -11,8 +11,10 @@ using std::string;
 using std::vector;
 using std::istringstream;
 
-static void replace(string& s, const string& s1, const string& s2,
-                    const char skip=0, bool left=true) {
+namespace {
+
+void replace(string& s, const string& s1, const string& s2, const char skip=0,
+             bool left=true) {
     string::size_type pos = 0;
     while (1) {
         string::size_type i = s.find(s1, pos);
@@ -33,7 +35,7 @@ static void replace(string& s, const string& s1, const string& s2,
     }
 }
 
-static void separate_commas(string& s) {
+void SeparateCommas(string& s) {
     const int n = s.size();
 
     string t;
@@ -51,7 +53,7 @@ static void separate_commas(string& s) {
     s = t;
 }
 
-static void really_tokenize(const string& input_text, vector<string>* out) {
+void ReallyTokenize(const string& input_text, vector<string>* out) {
     out->clear();
 
     if (input_text.size() == 0) {
@@ -80,8 +82,7 @@ static void really_tokenize(const string& input_text, vector<string>* out) {
 
     replace(s, "...", " ... ");
 
-    // replace(s, ",", " , ");
-    separate_commas(s);
+    SeparateCommas(s);
     replace(s, ";", " ; ");
     replace(s, ":", " : ");
     replace(s, "@", " @ ");
@@ -175,37 +176,107 @@ static void really_tokenize(const string& input_text, vector<string>* out) {
     }
 }
 
-void LaposASCIITokenizer::Tokenize(
-        const string& s, vector<string>* v) const {
-    really_tokenize(s, v);
-
-    /*
-    int begin = 0;
-    for (vector<string>::const_iterator i = vs.begin(); i != vs.end(); i++) {
-        string::size_type x = s.find(*i, begin);
-        int strlen = i->size();
-        if (*i == "''") {
-            string::size_type y = s.find("\"", begin);
-            if (y != string::npos && (x == string::npos || y < x)) {
-                x = y;
-                strlen = 1;
+size_t FindOneOf(const string& s, size_t search_from, const string& cc) {
+    for (auto i = search_from; i < s.size(); ++i) {
+        for (auto& c : cc) {
+            if (s[i] == c) {
+                return i;
             }
         }
-        if (*i == "``") {
-            string::size_type y = s.find("\"", begin);
-            if (y != string::npos && (x == string::npos || y < x)) {
-                x = y;
-                strlen = 1;
-            }
-        }
-        if (x == string::npos) {
-            fprintf(stderr, "internal error: tokenization failed.\n");
-            fprintf(stderr, "input = %s\n", s.c_str());
-            exit(1);
-        }
-        const int end = x + strlen;
-        v->emplace_back(*i);
-        begin = end;
     }
-    */
+    return ~0ul;
+}
+
+size_t FindFirstNot(const string& s, size_t search_from, char c) {
+    for (auto i = search_from; i < s.size(); ++i) {
+        if (s[i] != c) {
+            return i;
+        }
+    }
+    return ~0ul;
+}
+
+bool GetSpans(const string& text, const vector<string>& tokens,
+              vector<Span>* spans) {
+    spans->reserve(tokens.size());
+    size_t search_from = 0;
+    for (auto& token : tokens) {
+        Span span;
+        if (token == "''") {
+            size_t x = FindOneOf(text, search_from, "\"'");
+            if (UINT16_MAX < x) {
+                return false;
+            }
+            span.begin = static_cast<uint16_t>(x);
+            if (text.size() < span.begin) {
+                return false;
+            } else if (text[span.begin] == '"') {
+                span.end_excl = span.begin + 1;
+            } else {
+                span.end_excl = span.begin + 2;
+            }
+        } else if (token == "``") {
+            size_t x = FindOneOf(text, search_from, "\"`");
+            if (UINT16_MAX < x) {
+                return false;
+            }
+            span.begin = static_cast<uint16_t>(x);
+            if (text.size() < span.begin) {
+                return false;
+            } else if (text[span.begin] == '"') {
+                span.end_excl = span.begin + 1;
+            } else {
+                span.end_excl = span.begin + 2;
+            }
+        } else {
+            size_t x = FindFirstNot(text, search_from, ' ');
+            if (UINT16_MAX < x) {
+                return false;
+            }
+            span.begin = static_cast<uint16_t>(x);
+            if (text.size() < span.begin) {
+                return false;
+            } else {
+                span.end_excl =
+                    span.begin + static_cast<uint16_t>(token.size());
+            }
+        }
+
+        // Assume that the characters match (see asumptions list in Tokenize()).
+        if (text.size() < span.end_excl) {
+            return false;
+        }
+
+        spans->emplace_back(span);
+        search_from = span.end_excl;
+    }
+
+    return true;
+}
+
+}  // namespace
+
+bool LaposASCIITokenizer::Tokenize(
+        const string& in, vector<string>* out, vector<Span>* spans) const {
+    // Assumptions we can make in order to efficiently compute original spans:
+    //
+    // * The input string's size < UINT16_MAX.
+    //
+    // * Tokenization only inserts spacing.
+    //   * Except for " -> `` or ''.
+    //
+    // * `` and '' may already exist in the input string (due to preprocessing).
+    //
+    // * The input string only contains printable ASCII (therefore the only
+    //   possible whitespace character is space/0x20).
+
+    // Tokenize.
+    ReallyTokenize(in, out);
+
+    // Map tokens to spans.
+    if (!GetSpans(in, *out, spans)) {
+        return false;
+    }
+
+    return true;
 }

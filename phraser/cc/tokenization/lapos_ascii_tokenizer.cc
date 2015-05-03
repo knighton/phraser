@@ -13,7 +13,7 @@ using std::istringstream;
 
 namespace {
 
-void replace(string& s, const string& s1, const string& s2, const char skip=0,
+void Replace(string& s, const string& s1, const string& s2, const char skip=0,
              bool left=true) {
     string::size_type pos = 0;
     while (1) {
@@ -62,34 +62,34 @@ void ReallyTokenize(const string& input_text, vector<string>* out) {
 
     string s = input_text;
 
-    replace(s, "``", " `` ");
+    Replace(s, "``", " `` ");
     if (s[0] == '"') {
         s.replace(0, 1, "`` ");
     }
     if (s.size() > 2 && s[0] == '`' && s[1] != '`') {
         s.replace(0, 1, "` ");
     }
-    replace(s, " \"", "  `` ");
-    replace(s, "(\"", "( `` ");
-    replace(s, "[\"", "[ `` ");
-    replace(s, "{\"", "{ `` ");
-    replace(s, "<\"", "< `` ");
-    replace(s, " `", "  ` ", '`', false);
-    replace(s, "(`", "( ` ", '`', false);
-    replace(s, "[`", "[ ` ", '`', false);
-    replace(s, "{`", "{ ` ", '`', false);
-    replace(s, "<`", "< ` ", '`', false);
+    Replace(s, " \"", "  `` ");
+    Replace(s, "(\"", "( `` ");
+    Replace(s, "[\"", "[ `` ");
+    Replace(s, "{\"", "{ `` ");
+    Replace(s, "<\"", "< `` ");
+    Replace(s, " `", "  ` ", '`', false);
+    Replace(s, "(`", "( ` ", '`', false);
+    Replace(s, "[`", "[ ` ", '`', false);
+    Replace(s, "{`", "{ ` ", '`', false);
+    Replace(s, "<`", "< ` ", '`', false);
 
-    replace(s, "...", " ... ");
+    Replace(s, "...", " ... ");
 
     SeparateCommas(s);
-    replace(s, ";", " ; ");
-    replace(s, ":", " : ");
-    replace(s, "@", " @ ");
-    replace(s, "#", " # ");
-    replace(s, "$", " $ ");
-    replace(s, "%", " % ");
-    replace(s, "&", " & ");
+    Replace(s, ";", " ; ");
+    Replace(s, ":", " : ");
+    Replace(s, "@", " @ ");
+    Replace(s, "#", " # ");
+    Replace(s, "$", " $ ");
+    Replace(s, "%", " % ");
+    Replace(s, "&", " & ");
 
     int pos = s.size() - 1;
     while (pos > 0 && s[pos] == ' ') {
@@ -108,62 +108,61 @@ void ReallyTokenize(const string& input_text, vector<string>* out) {
         s.replace(pos, 1, " .");
     }
 
-    replace(s, "?", " ? ");
-    replace(s, "!", " ! ");
-    replace(s, "[", " [ ");
-    replace(s, "]", " ] ");
-    replace(s, "(", " ( ");
-    replace(s, ")", " ) ");
-    replace(s, "{", " { ");
-    replace(s, "}", " } ");
-    replace(s, "<", " < ");
-    replace(s, ">", " > ");
+    Replace(s, "?", " ? ");
+    Replace(s, "!", " ! ");
+    Replace(s, "[", " [ ");
+    Replace(s, "]", " ] ");
+    Replace(s, "(", " ( ");
+    Replace(s, ")", " ) ");
+    Replace(s, "{", " { ");
+    Replace(s, "}", " } ");
+    Replace(s, "<", " < ");
+    Replace(s, ">", " > ");
 
-    replace(s, "--", " -- ");
+    Replace(s, "--", " -- ");
 
     s.replace(string::size_type(0), 0, " ");
     s.replace(s.size(), 0, " ");
 
-    replace(s, "''", " '' ");
-    replace(s, "\"", " '' ");
+    Replace(s, "''", " '' ");
+    Replace(s, "\"", " '' ");
 
-    replace(s, "' ", " ' ", '\'');
-    replace(s, "'s ", " 's ");
-    replace(s, "'S ", " 'S ");
-    replace(s, "'m ", " 'm ");
-    replace(s, "'M ", " 'M ");
-    replace(s, "'d ", " 'd ");
-    replace(s, "'D ", " 'D ");
-    replace(s, "'ll ", " 'll ");
-    replace(s, "'re ", " 're ");
-    replace(s, "'ve ", " 've ");
-    replace(s, "n't ", " n't ");
-    replace(s, "'LL ", " 'LL ");
-    replace(s, "'RE ", " 'RE ");
-    replace(s, "'VE ", " 'VE ");
-    replace(s, "N'T ", " N'T ");
+    Replace(s, "' ", " ' ", '\'');
+    Replace(s, "'s ", " 's ");
+    Replace(s, "'S ", " 'S ");
+    Replace(s, "'m ", " 'm ");
+    Replace(s, "'M ", " 'M ");
+    Replace(s, "'d ", " 'd ");
+    Replace(s, "'D ", " 'D ");
+    Replace(s, "'ll ", " 'll ");
+    Replace(s, "'re ", " 're ");
+    Replace(s, "'ve ", " 've ");
+    Replace(s, "n't ", " n't ");
+    Replace(s, "'LL ", " 'LL ");
+    Replace(s, "'RE ", " 'RE ");
+    Replace(s, "'VE ", " 'VE ");
+    Replace(s, "N'T ", " N'T ");
 
-    replace(s, " Cannot ", " Can not ");
-    replace(s, " cannot ", " can not ");
-    replace(s, " D'ye ", " D' ye ");
-    replace(s, " d'ye ", " d' ye ");
-    replace(s, " Gimme ", " Gim me ");
-    replace(s, " gimme ", " gim me ");
-    replace(s, " Gonna ", " Gon na ");
-    replace(s, " gonna ", " gon na ");
-    replace(s, " Gotta ", " Got ta ");
-    replace(s, " gotta ", " got ta ");
-    replace(s, " Lemme ", " Lem me ");
-    replace(s, " lemme ", " lem me ");
-    replace(s, " More'n ", " More 'n ");
-    replace(s, " more'n ", " more 'n ");
-    replace(s, "'Tis ", " 'T is ");
-    replace(s, "'tis ", " 't is ");
-    replace(s, "'Twas ", " 'T was ");
-    replace(s, "'twas ", " 't was ");
-    replace(s, " Wanna ", " Wan na ");
-    //  replace(s, " wanna ", " wanna ");
-    replace(s, " wanna ", " wan na ");
+    Replace(s, " Cannot ", " Can not ");
+    Replace(s, " cannot ", " can not ");
+    Replace(s, " D'ye ", " D' ye ");
+    Replace(s, " d'ye ", " d' ye ");
+    Replace(s, " Gimme ", " Gim me ");
+    Replace(s, " gimme ", " gim me ");
+    Replace(s, " Gonna ", " Gon na ");
+    Replace(s, " gonna ", " gon na ");
+    Replace(s, " Gotta ", " Got ta ");
+    Replace(s, " gotta ", " got ta ");
+    Replace(s, " Lemme ", " Lem me ");
+    Replace(s, " lemme ", " lem me ");
+    Replace(s, " More'n ", " More 'n ");
+    Replace(s, " more'n ", " more 'n ");
+    Replace(s, "'Tis ", " 'T is ");
+    Replace(s, "'tis ", " 't is ");
+    Replace(s, "'Twas ", " 'T was ");
+    Replace(s, "'twas ", " 't was ");
+    Replace(s, " Wanna ", " Wan na ");
+    Replace(s, " wanna ", " wan na ");
 
     if (s[s.size() - 1] == '\'') {
         s.replace(s.size() - 1, 1, " ' ");

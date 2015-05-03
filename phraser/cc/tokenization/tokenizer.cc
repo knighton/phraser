@@ -133,6 +133,10 @@ void Tokenizer::NormalizeTokens(vector<string>* tokens) const {
 // Assume indexes are correct.
 static void CombineMappings(const vector<uint16_t>& ascii2unicode,
                             vector<Span>* spans) {
+    if (spans->empty()) {
+        return;
+    }
+
     for (auto i = 0u; i < spans->size() - 1; ++i) {
         auto& span = (*spans)[i];
         span.begin = ascii2unicode[span.begin];

@@ -270,6 +270,7 @@ void Object::AppendToString(
                 *out += ",";
             }
             *out += "\n";
+            ++count;
         }
         if (d.size()) {
             *out += indent0;

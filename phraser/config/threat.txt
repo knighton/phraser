@@ -1,4 +1,4 @@
-threat = subject, aux verb, main verb
+i_will_kill_you = subject, aux verb, main verb
 --------------------------------------------------------------------------------
 i
 we
@@ -19,18 +19,24 @@ allah
 (to swear +pres) (perspro +subj +1st +3rd) (to be +pres +1st +3rd) gon na
 (to swear +pres) (perspro +subj +1st +3rd) (to be +pres +1st +3rd) will
 (to want +pres) to
-wanna
-wan to
+wan na
+want to
+wanted to
 will
 would
 would like to
 would love to
 would so
 would want to
+can
+could
 --------------------------------------------------------------------------------
 abduct
+beat the crap out of
+beat the crapola out of
 choke
 kick (pospro)
+kick the (*) out of
 kill
 make (perspro +obj) a martyr
 make an example of (perspro +obj)

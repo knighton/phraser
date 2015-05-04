@@ -52,6 +52,14 @@ json::Object* AnalysisResult::ToJSON() const {
     });
 }
 
+static char PrintableAsciiOnly(uchar c) {
+    if (0x20 <= c && c <= 0x7E) {
+        return static_cast<char>(c);
+    } else {
+        return ' ';
+    }
+}
+
 static void PrintableAsciiOnly(const string& in, string* out) {
     out->clear();
     for (auto& c : in) {

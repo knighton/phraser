@@ -19,7 +19,13 @@ using std::vector;
 struct AnalysisResult {
     void Clear();
 
+    // Output.
+    json::Object* ToJSON() const;
+    void Dump() const;
+    void ToHTML(string* s) const;
+
     // Input:
+    // * The original text.
     ustring original_text;
 
     // Preprocessing results:

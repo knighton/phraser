@@ -3,4 +3,4 @@ threat_command = verb, reflexive
 fuck
 kill
 --------------------------------------------------------------------------------
-yourself
+(perspro +refl +2nd)

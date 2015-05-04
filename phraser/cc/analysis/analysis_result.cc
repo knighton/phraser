@@ -169,3 +169,34 @@ void AnalysisResult::ToHTML(string* s) const {
     }
     *s += "</div>\n";
 }
+
+void AnalysisResult::AppendAsLine(string* s) const {
+    vector<uint16_t> indexes;
+    for (auto& phrase : phrase_results) {
+        for (auto& match : phrase.matches) {
+            // Token indexes.
+            uint16_t begin = static_cast<uint16_t>(
+                match.piece_begin_indexes[0]);
+            uint16_t end_excl = static_cast<uint16_t>(match.end_excl);
+
+            // Clean char indexes.
+            begin = token2clean[begin].begin;
+            end_excl = token2clean[end_excl - 1].end_excl;
+
+            // Original char indexes.
+            begin = clean2original[begin];
+            end_excl = clean2original[end_excl];
+
+            indexes.emplace_back(begin);
+            indexes.emplace_back(end_excl);
+        }
+    }
+
+    *s += strings::StringPrintf("%zu ", indexes.size());
+    for (auto& x : indexes) {
+        *s += strings::StringPrintf("%u ", x);
+    }
+    for (auto& c : original_text) {
+        AppendCharHTML(c, s);
+    }
+}

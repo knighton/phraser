@@ -23,6 +23,7 @@ struct AnalysisResult {
     json::Object* ToJSON() const;
     void Dump() const;
     void ToHTML(string* s) const;
+    void AppendAsLine(string* s) const;
 
     // Input:
     // * The original text.

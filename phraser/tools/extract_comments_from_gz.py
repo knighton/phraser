@@ -1,6 +1,10 @@
 #!/usr/bin/python
 #
 # Gzipped files -> one comment per line, with tags.
+#
+# Also dumps statistics about what it processed for sanity checking.
+#
+# Takes about 20 minutes to extract all of Impermium.
 
 from argparse import ArgumentParser
 from collections import defaultdict

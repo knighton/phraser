@@ -5,6 +5,10 @@
 #include <cfloat>
 #include <set>
 
+#include "cc/misc/files.h"
+#include "cc/misc/strings.h"
+#include "cc/third_party/lapos/lapos_model_data.h"
+
 using namespace std;
 
 namespace lapos {
@@ -15,7 +19,7 @@ bool USE_EDGE_TRIGRAMS = false;
 
 const string BOS_LABEL = "!BOS!";
 const string EOS_LABEL = "!EOS!";
-// const bool USE_BOS_EOS = true;  // need to fix load_from_file(). BOE and EOS
+// const bool USE_BOS_EOS = true;  // need to fix init_from_file(). BOE and EOS
 // should be put first.
 const bool USE_BOS_EOS = false;
 
@@ -844,23 +848,53 @@ void CRF_Model::get_features(list<pair<pair<string, string>, double>>& fl) {
     }
 }
 
-bool CRF_Model::load_from_file(const string& filename, bool verbose) {
-    FILE* fp = fopen(filename.c_str(), "r");
-    if (!fp) {
-        cerr << "error: cannot open " << filename << "!" << endl;
-        return false;
-    }
+bool CRF_Model::init_default(bool verbose) {
     if (verbose) {
-        cerr << "loading " << filename;
+        cerr << "loading built-in model" << endl;
     }
 
+    vector<string> lines;
+    for (auto i = 0u; ; ++i) {
+        const char* s = lapos_model_data::WSJ_02_21_LINES[i];
+        if (!s) {
+            break;
+        }
+
+        lines.emplace_back(s);
+    }
+
+    return init(lines, verbose);
+}
+
+bool CRF_Model::init_from_file(const string& file_name, bool verbose) {
+    if (verbose) {
+        cerr << "loading " << file_name << endl;
+    }
+
+    string model_text;
+    if (!files::FileToString(file_name, &model_text)) {
+        return false;
+    }
+
+    vector<string> lines;
+    strings::Split(model_text, '\n', &lines);
+
+    // Account for final newline.
+    if (lines.size() && lines[lines.size() - 1].empty()) {
+        lines.pop_back();
+    }
+
+    return init(lines, verbose);
+}
+
+bool CRF_Model::init(const vector<string>& lines, bool verbose) {
+    // Process each line.
     _vl.clear();
     _label_bag.Clear();
     _featurename_bag.Clear();
     _fb.Clear();
-    char buf[1024];
-    while (fgets(buf, 1024, fp)) {
-        string line(buf);
+
+    for (auto& line : lines) {
         string::size_type t1 = line.find_first_of('\t');
         string::size_type t2 = line.find_last_of('\t');
         string classname = line.substr(0, t1);
@@ -930,8 +964,6 @@ bool CRF_Model::load_from_file(const string& filename, bool verbose) {
 
     init_feature2mef();
     initialize_edge_weights();
-
-    fclose(fp);
 
     if (verbose) {
         cerr << "...done" << endl;

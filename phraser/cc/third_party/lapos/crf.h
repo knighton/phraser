@@ -78,7 +78,11 @@ class CRF_Model {
         std::vector<std::pair<double, std::vector<std::string>>>& nbest,
         const int num, const double min_prob);
     void decode_lookahead(CRF_Sequence& s0);
-    bool load_from_file(const std::string& filename, bool verbose = true);
+
+    bool init(const std::vector<std::string>& lines, bool verbose = true);
+    bool init_default(bool verbose = true);
+    bool init_from_file(const std::string& file_name, bool verbose = true);
+
     bool save_to_file(const std::string& filename, const double t = 0) const;
     int num_classes() const {
         return _num_classes;

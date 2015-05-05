@@ -196,7 +196,7 @@ int main(int argc, char** argv) {
         cerr << "loading the models from the directory \"" << MODEL_DIR
              << "\" ...";
     }
-    if (!crfm.load_from_file(MODEL_DIR + "model.la", ENJU ? false : true))
+    if (!crfm.init_from_file(MODEL_DIR + "model.la", ENJU ? false : true))
         exit(1);
     if (!ENJU) {
         cerr << "done" << endl;

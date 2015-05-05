@@ -10,8 +10,8 @@ using std::string;
 
 class EnglishExpressionEvaluator : public ExpressionEvaluator {
   public:
-    // Returns false on error.
-    bool InitWithConfig(const string& lapos_model_f, string* error);
+    // Returns false on fatal error.
+    bool Init(string* error);
 
   private:
     PersonalManager personal_mgr_;

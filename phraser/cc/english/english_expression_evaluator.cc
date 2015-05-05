@@ -28,6 +28,7 @@ bool MakePersonalEvaluators(
 
     *pers_pro = new PersProEvaluator();
     if (!*pers_pro) {
+        *error = "Allocating the persProEvaluator failed.";
         return false;
     }
     if (!(*pers_pro)->Init(personal_mgr, error)) {
@@ -36,6 +37,7 @@ bool MakePersonalEvaluators(
 
     *pos_pro = new PosProEvaluator();
     if (!*pos_pro) {
+        *error = "Allocating the PosProEvaluator failed.";
         return false;
     }
     if (!(*pos_pro)->Init(personal_mgr, error)) {
@@ -44,6 +46,7 @@ bool MakePersonalEvaluators(
 
     *pos_det = new PosDetEvaluator();
     if (!*pos_det) {
+        *error = "Allocating the PosDetEvaluator failed.";
         return false;
     }
     if (!(*pos_det)->Init(personal_mgr, error)) {
@@ -56,6 +59,7 @@ bool MakePersonalEvaluators(
 NumberEvaluator* MakeNumberEvaluator(string* error) {
     NumberEvaluator* e = new NumberEvaluator();
     if (!e) {
+        *error = "Allocating the NumberEvaluator failed.";
         return NULL;
     }
 
@@ -66,18 +70,21 @@ NumberEvaluator* MakeNumberEvaluator(string* error) {
     return e;
 }
 
-TagEvaluator* MakeTagEvaluator(const string& lapos_model_f, string* error) {
+TagEvaluator* MakeTagEvaluator(string* error) {
     LaposTagger* tagger = new LaposTagger();
     if (!tagger) {
+        *error = "Allocating the tagger failed.";
         return NULL;
     }
 
-    if (!tagger->Init(lapos_model_f)) {
+    if (!tagger->Init()) {
+        *error = "Tagger init failed.";
         return NULL;
     }
 
     TagEvaluator* e = new TagEvaluator();
     if (!e) {
+        *error = "Allocating the TagEvaluator failed.";
         return NULL;
     }
 
@@ -129,8 +136,7 @@ VerbEvaluator* MakeVerbEvaluator(string* error) {
 
 }  // namespace
 
-bool EnglishExpressionEvaluator::InitWithConfig(
-        const string& lapos_model_f, string* error) {
+bool EnglishExpressionEvaluator::Init(string* error) {
     // Precomputable evaluators.
     unordered_map<string, PrecomputableEvaluator*> type2precomputable;
     {
@@ -172,7 +178,7 @@ bool EnglishExpressionEvaluator::InitWithConfig(
     // All-at-once evaluators.
     unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once;
     {
-        TagEvaluator* tag = MakeTagEvaluator(lapos_model_f, error);
+        TagEvaluator* tag = MakeTagEvaluator(error);
         if (!tag) {
             return false;
         }

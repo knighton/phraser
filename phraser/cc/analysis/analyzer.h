@@ -13,8 +13,7 @@ class Analyzer {
     Analyzer() : ready_(false) {}
 
     // Returns false on fatal error.
-    bool Init(const string& lapos_model_f,
-              const vector<string>& phrase_config_ff, string* error);
+    bool Init(const vector<string>& phrase_config_texts, string* error);
 
     // Returns false if the analysis failed.
     bool Analyze(const ustring& text, const AnalysisOptions& options,

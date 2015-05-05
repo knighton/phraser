@@ -15,9 +15,9 @@ LaposTagger::LaposTagger() : is_ok_(false) {
 LaposTagger::~LaposTagger() {
 }
 
-bool LaposTagger::Init(const string& model_f) {
+bool LaposTagger::Init() {
     bool is_enju = false;
-    if (!crfm_.load_from_file(model_f.c_str(), is_enju)) {
+    if (!crfm_.init_default()) {
         return false;
     }
 

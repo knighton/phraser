@@ -1,8 +1,6 @@
 #include "analyzer.h"
 
-bool Analyzer::Init(
-        const string& lapos_model_f, const vector<string>& phrase_config_ff,
-        string* error) {
+bool Analyzer::Init(const vector<string>& phrase_configs, string* error) {
     if (!preproc_.Init(error)) {
         return false;
     }
@@ -11,7 +9,7 @@ bool Analyzer::Init(
         return false;
     }
 
-    if (!phrase_.InitFromFiles(lapos_model_f, phrase_config_ff, error)) {
+    if (!phrase_.Init(phrase_configs, error)) {
         return false;
     }
 

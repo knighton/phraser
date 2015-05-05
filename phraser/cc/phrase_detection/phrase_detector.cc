@@ -2,13 +2,7 @@
 
 #include "cc/misc/files.h"
 
-bool PhraseDetector::LoadPhraseConfig(const string& phrase_f, string* error) {
-    string text;
-    if (!files::FileToString(phrase_f, &text)) {
-        *error = "[PhraseDetector] Unable to read file: [" + phrase_f + "]";
-        return false;
-    }
-
+bool PhraseDetector::LoadPhraseConfig(const string& text, string* error) {
     phrases_.resize(phrases_.size() + 1);
     auto& phrase = phrases_[phrases_.size() - 1];
     if (!phrase_parser_.Parse(text, &vocab_, &phrase, error)) {
@@ -24,15 +18,13 @@ bool PhraseDetector::LoadPhraseConfig(const string& phrase_f, string* error) {
     return true;
 }
 
-bool PhraseDetector::InitFromFiles(
-        const string& lapos_model_f, const vector<string>& phrase_ff,
-        string* error) {
-    if (!vocab_.InitWithConfig(lapos_model_f, error)) {
+bool PhraseDetector::Init(const vector<string>& phrase_configs, string* error) {
+    if (!vocab_.Init(error)) {
         return false;
     }
 
-    for (auto& phrase_f : phrase_ff) {
-        if (!LoadPhraseConfig(phrase_f, error)) {
+    for (auto& phrase_config : phrase_configs) {
+        if (!LoadPhraseConfig(phrase_config, error)) {
             return false;
         }
     }

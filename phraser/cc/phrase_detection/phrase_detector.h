@@ -7,8 +7,8 @@
 #include "cc/english/english_expression_evaluator.h"
 #include "cc/misc/json.h"
 #include "cc/phrase_detection/phrase_config.h"
-#include "cc/phrase_detection/phrase_detection_result.h"
 #include "cc/phrase_detection/phrase_config_parser.h"
+#include "cc/phrase_detection/phrase_detection_result.h"
 #include "cc/sequence_detection/vector_membership_sequence_detector.h"
 
 using std::string;
@@ -16,9 +16,7 @@ using std::vector;
 
 class PhraseDetector {
   public:
-    bool InitFromFiles(const string& lapos_model_f,
-                       const vector<string>& phrase_config_ff,
-                       string* error);
+    bool Init(const vector<string>& phrase_configs, string* error);
 
     // Dump to JSON.
     json::Object* ToJSON() const;
@@ -27,7 +25,7 @@ class PhraseDetector {
                 vector<PhraseDetectionResult>* results, string* error) const;
 
   private:
-    bool LoadPhraseConfig(const string& phrase_f, string* error);
+    bool LoadPhraseConfig(const string& phrase_config, string* error);
 
     // Thing that parses PhraseConfigs.
     PhraseConfigParser phrase_parser_;

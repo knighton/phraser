@@ -16,7 +16,7 @@ class LaposTagger : public Tagger {
     LaposTagger();
     ~LaposTagger();
 
-    bool Init(const string& model_f);
+    bool Init();
 
     bool Tag(const vector<string>& tokens, vector<string>* tags, string* error);
 

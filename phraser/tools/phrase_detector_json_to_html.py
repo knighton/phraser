@@ -91,11 +91,12 @@ def dump_phrase(j, expressions, tokens):
     print '<ul>'
     for block_index, block in enumerate(j['blocks']):
         print '<li>'
-        print j['block_names'][block_index]
+        print block_index, j['block_names'][block_index]
         print '<ul>'
         for option_index, option in enumerate(block):
             print '<li>'
             print '<div class="token_groups">'
+            print option_index
             for group_id_index, group_id in enumerate(option):
                 ss = []
                 ss.append('<b>%d</b>' % group_id)

@@ -93,6 +93,8 @@ bool PhraseDetector::Detect(
         // For each sequence match,
         for (auto& sequence_match : sequence_matches) {
             PhraseMatch m;
+
+            // Get piece begin indexes.
             size_t cur_index = sequence_match.begin();
             for (auto j = 0u; j < sequence_match.option_choices().size(); ++j) {
                 auto& piece_index = j;
@@ -101,6 +103,13 @@ bool PhraseDetector::Detect(
                 cur_index += phrase.blocks[piece_index][choice].size();
             }
             m.end_excl = cur_index;
+
+            // Sanity check against what we already know.
+            if (m.end_excl != sequence_match.end_excl()) {
+                *error = "Code error.";
+                return false;
+            }
+
             result.matches.emplace_back(m);
         }
     }

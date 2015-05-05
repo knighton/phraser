@@ -55,11 +55,12 @@ bool SequenceDetector<Atom, Token, AtomTokenComparer>::Init(
         auto& options = blocks_[i];
 
         // Sort options for locality during lookup.
-        sort(options.begin(), options.end());
+        auto new_options = options;
+        sort(new_options.begin(), new_options.end());
 
         // Verify that there are no duplicate options.
-        for (auto j = 1u; j < options.size(); ++j) {
-            if (options[j - 1] == options[j]) {
+        for (auto j = 1u; j < new_options.size(); ++j) {
+            if (new_options[j - 1] == new_options[j]) {
                 *error = "[SequenceDetector] Duplicate options detected during "
                          "Init.";
                 return false;

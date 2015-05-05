@@ -170,7 +170,7 @@ void AnalysisResult::ToHTML(string* s) const {
     *s += "</div>\n";
 }
 
-void AnalysisResult::AppendAsLine(string* s) const {
+void AnalysisResult::AppendAsLine(const vector<string>& tags, string* s) const {
     vector<uint16_t> indexes;
     for (auto& phrase : phrase_results) {
         for (auto& match : phrase.matches) {
@@ -192,11 +192,22 @@ void AnalysisResult::AppendAsLine(string* s) const {
         }
     }
 
-    *s += strings::StringPrintf("%zu ", indexes.size());
-    for (auto& x : indexes) {
-        *s += strings::StringPrintf("%u ", x);
+    // Dump tags.
+    *s += strings::StringPrintf("%zu", tags.size());
+    for (auto& tag : tags) {
+        *s += strings::StringPrintf(" %s", tag.data());
     }
+
+    // Dump match spans.
+    *s += strings::StringPrintf(" %zu", indexes.size());
+    for (auto& x : indexes) {
+        *s += strings::StringPrintf(" %u", x);
+    }
+
+    // Dump the original text as hex code points.  We can't just escape
+    // non-ASCII as HTML entities because we wouldn't be able to reconstruct
+    // offsets into the text.
     for (auto& c : original_text) {
-        AppendCharHTML(c, s);
+        *s += strings::StringPrintf(" %X", c);
     }
 }

@@ -39,7 +39,6 @@ bool Analyzer::Analyze(
         return false;
     }
 
-    vector<string> tokens;
     if (!tok_.Tokenize(result->clean_text, &result->tokens,
                        &result->token2clean)) {
         return false;

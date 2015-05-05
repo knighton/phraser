@@ -47,7 +47,7 @@ static bool HandleComment(
     }
 
     string s;
-    result.AppendAsLine(&s);
+    result.AppendAsLine(comment.tags(), &s);
     fprintf(f, "%s\n", s.data());
     fflush(f);  // Finding matches is rare and this runs for a long time.
     return true;

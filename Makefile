@@ -1,15 +1,16 @@
 CC = clang++
 
-SRC_ROOT_DIR = phraser/
-BUILD_DIR = build/
+SRC_ROOT = phraser/
+BIN_DIR = bin/
+EXT_DIR = ext/
 
 FLAGS_BASE = \
 	-std=c++11 \
 	-fcolor-diagnostics \
 	-O3 \
 	-ferror-limit=5 \
-	-lboost_regex \
-	-I$(SRC_ROOT_DIR) \
+	-I$(SRC_ROOT) \
+	#-lboost_regex \
 
 FLAGS_WARN = \
 	-Wpedantic \
@@ -39,6 +40,17 @@ FLAGS_WARN_DISABLE_LAPOS = \
 FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 		$(FLAGS_WARN_DISABLE_LAPOS)
 
+clean:
+	rm -rf $(BIN_DIR)
+	rm -rf $(EXT_DIR)
+
+compare_against_impermium:
+	mkdir -p $(BIN_DIR)
+	$(CC) `find -type f -name "*.cc"` $(SRC_ROOT)/tools/compare_against_impermium.cpp -o $(BIN_DIR)/compare_against_impermium $(FLAGS)
+
 all:
-	mkdir -p $(BUILD_DIR)
-	$(CC) `find -type f -name "*.cc"` -o $(BUILD_DIR)/phraser $(FLAGS)
+	rm -rf $(EXT_DIR)
+	mkdir -p $(EXT_DIR)
+	touch $(EXT_DIR)/__init__.py
+	CFLAGS="$(FLAGS)" python setup.py build_ext --build-lib $(EXT_DIR) --compiler unix
+	rm -rf build/

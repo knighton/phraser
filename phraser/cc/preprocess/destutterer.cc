@@ -16,6 +16,8 @@ static bool LoadDigits(unordered_set<uchar>* digits, string* error) {
 }
 
 bool Destutterer::Init(string* error) {
+    digits_.clear();
+
     if (!LoadDigits(&digits_, error)) {
         return false;
     }

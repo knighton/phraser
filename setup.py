@@ -23,6 +23,8 @@ phraser = Extension(
     'phraser',
     sources=find_cc_files(SRC_ROOT) + ['phraser/cc/pyext/phraser.cpp'],
     include_dirs=[SRC_ROOT],
+    libraries=['boost_regex'],
+    library_dirs=['/usr/local/lib/'],
 )
 
 

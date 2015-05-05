@@ -28,7 +28,7 @@ PyObject* Init(PyObject* self, PyObject* args) {
     // Get args.
     PyObject* list;
     if (!PyArg_ParseTuple(args, "O!", &PyList_Type, &list)) {
-        return PyUnicode_FromString("Invalid arguments.");
+        return PyUnicode_FromString("[Phraser] Invalid arguments.");
     }
 
     // Extract phrase configs from list.
@@ -38,7 +38,7 @@ PyObject* Init(PyObject* self, PyObject* args) {
         PyObject* s = PyList_GetItem(list, i);
         if (!PyString_Check(s)) {
             return PyUnicode_FromFormat(
-                "List item at index %ld was not a string.", i);
+                "[Phraser] List item at index %ld was not a string.", i);
         }
         phrase_configs.emplace_back(PyString_AsString(s));
     }

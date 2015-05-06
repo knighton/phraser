@@ -2,7 +2,7 @@ CC = clang++
 
 SRC_ROOT = phraser/
 BIN_DIR = bin/
-EXT_DIR = ext/
+EXT_DIR = phraser/ext/
 
 FLAGS_BASE = \
 	-std=c++11 \

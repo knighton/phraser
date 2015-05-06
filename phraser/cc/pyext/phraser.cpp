@@ -142,6 +142,30 @@ PyObject* UnicodeFromUstring(const ustring& s) {
     return NULL;
 }
 
+PyObject* MakeDict(const vector<PyObject*>& keys,
+                   const vector<PyObject*>& values) {
+    if (keys.size() != values.size()) {
+        return NULL;
+    }
+
+    PyObject* d = PyDict_New();
+    for (auto i = 0u; i < keys.size(); ++i) {
+        PyObject* k = keys[i];
+        PyObject* v = values[i];
+        if (!k) {
+            return NULL;
+        }
+        if (!v) {
+            return NULL;
+        }
+        if (PyDict_SetItem(d, k, v)) {
+            return NULL;
+        }
+    }
+
+    return d;
+}
+
 // Returned dicts look like
 //
 // {
@@ -158,14 +182,7 @@ PyObject* UnicodeFromUstring(const ustring& s) {
 //     'subsequence_names': ['subject', 'aux', 'verb'],
 //     'index_lists': [...]
 // }
-bool DictFromAnalysisResult(
-        const AnalysisResult& result, PyObject** d, string* error) {
-    *d = PyDict_New();
-    if (!*d) {
-        *error = "[Phraser] Result dict allocation failed.";
-        return false;
-    }
-
+PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
     PyObject* key;
     PyObject* value;
     vector<PyObject*> keys;
@@ -226,34 +243,18 @@ bool DictFromAnalysisResult(
             }
             PyObject* item = PyInt_FromLong(match.end_excl);
             PyList_SET_ITEM(index_list, match.piece_begin_indexes.size(), item);
+            PyList_SET_ITEM(tmp_value, j, index_list);
         }
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
 
-        PyObject* phrase_result_d = PyDict_New();
-        for (auto j = 0u; j < tmp_keys.size(); ++j) {
-            tmp_key = tmp_keys[j];
-            tmp_value = tmp_values[j];
-            if (PyDict_SetItem(phrase_result_d, tmp_key, tmp_value)) {
-                *error = "[Phraser] Dict set failed.";
-                return false;
-            }
-        }
-        PyList_SET_ITEM(value, i, phrase_result_d);
+        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values);
+        PyList_SET_ITEM(value, i, tmp_d);
     }
     keys.emplace_back(key);
     values.emplace_back(value);
 
-    for (auto i = 0u; i < keys.size(); ++i) {
-        key = keys[i];
-        value = values[i];
-        if (PyDict_SetItem(*d, key, value)) {
-            *error = "[Phraser] Dict set failed.";
-            return false;
-        }
-    }
-
-    return true;
+    return MakeDict(keys, values);
 }
 
 PyObject* MakeTuple(PyObject* first, PyObject* second) {
@@ -301,7 +302,7 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
 
     // Convert the results to a python dict.
     PyObject* result_dict;
-    if (!DictFromAnalysisResult(result, &result_dict, &error)) {
+    if (!(result_dict = DictFromAnalysisResult(result, &error))) {
         return MakeTuple(
             Py_None, PyUnicode_FromString(error.data()));
     }

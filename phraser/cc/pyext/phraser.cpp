@@ -122,24 +122,17 @@ bool AnalysisOptionsFromDict(
 }
 
 PyObject* UnicodeFromUstring(const ustring& s) {
-    size_t bytes = sizeof(Py_UNICODE);
-
+#ifdef Py_UNICODE_WIDE
     // UCS 4 (eg, Linux).
-    if (bytes == 4) {
-        return PyUnicode_FromUnicode(s.data(), s.size());
-    }
-
+    return PyUnicode_FromUnicode(s.data(), s.size());
+#else
     // UCS 2 (eg, Mac OS X).
-    if (bytes == 2) {
-        vector<Py_UNICODE> v;
-        for (auto& c : s) {
-            v.emplace_back(static_cast<Py_UNICODE>(c));
-        }
-        return PyUnicode_FromUnicode(v.data(), v.size());
+    vector<Py_UNICODE> v;
+    for (auto& c : s) {
+        v.emplace_back(static_cast<Py_UNICODE>(c));
     }
-
-    // Unknown.
-    return NULL;
+    return PyUnicode_FromUnicode(v.data(), v.size());
+#endif
 }
 
 PyObject* MakeDict(const vector<PyObject*>& keys,

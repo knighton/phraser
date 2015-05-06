@@ -52,5 +52,5 @@ all:
 	rm -rf $(EXT_DIR)
 	mkdir -p $(EXT_DIR)
 	touch $(EXT_DIR)/__init__.py
-	python setup.py build_ext --build-lib $(EXT_DIR) --compiler unix
+	python setup.py build_ext
 	rm -rf build/

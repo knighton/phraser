@@ -74,7 +74,7 @@ char TO_D_DOC[] =
     "You can call phrase_detector_json_to_html.py to visualize the output as\n"
     "pretty HTML.\n"
     "\n"
-    "    >>> d = _phraser.to_dict()\n"
+    "    >>> d = _phraser.to_dict()\n";
 
 PyObject* ToDict(PyObject* self, PyObject* args) {
     return PyDict_New();  // TODO

@@ -51,36 +51,6 @@ Object::Object(const unordered_set<uint64_t>& set) {
     InitFromInts(v);
 }
 
-Object::Object(const vector<size_t>& vec) {
-    vector<int64_t> v;
-    v.reserve(vec.size());
-    for (auto& it : vec) {
-        auto n = static_cast<int64_t>(it);
-        v.emplace_back(n);
-    }
-    InitFromInts(v);
-}
-
-Object::Object(const set<size_t>& set) {
-    vector<int64_t> v;
-    v.reserve(set.size());
-    for (auto& it : set) {
-        auto n = static_cast<int64_t>(it);
-        v.emplace_back(n);
-    }
-    InitFromInts(v);
-}
-
-Object::Object(const unordered_set<size_t>& set) {
-    vector<int64_t> v;
-    v.reserve(set.size());
-    for (auto& it : set) {
-        auto n = static_cast<int64_t>(it);
-        v.emplace_back(n);
-    }
-    InitFromInts(v);
-}
-
 Object::Object(const vector<uint32_t>& vec) {
     vector<int64_t> v;
     v.reserve(vec.size());

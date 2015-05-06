@@ -3,8 +3,11 @@
 #include <cstdio>
 
 json::Object* PhraseMatch::ToJSON() const {
+    // For clang++ on OS X.
+    const vector<uint64_t>& tmp =
+        *reinterpret_cast<const vector<uint64_t>*>(&piece_begin_indexes);
     return new json::Object({
-        {"piece_begin_indexes", new json::Object(piece_begin_indexes)},
+        {"piece_begin_indexes", new json::Object(tmp)},
         {"end_excl", new json::Object(end_excl)},
     });
 }

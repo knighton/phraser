@@ -7,3 +7,5 @@ echo
 find . -type f -name "*.h" | sort | grep -v third_party | grep -v _data | xargs wc
 echo
 find . -type f -name "*.cc" | sort | grep -v third_party | grep -v _data | xargs wc
+echo
+find . -type f -name "*.cpp" | sort | grep -v third_party | grep -v _data | xargs wc

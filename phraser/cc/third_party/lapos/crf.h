@@ -13,7 +13,7 @@
 
 #include "string_store.h"
 
-#include <tr1/unordered_map>
+#include <unordered_map>
 
 namespace lapos {
 
@@ -175,7 +175,7 @@ class CRF_Model {
 
     struct ME_FeatureBag {
         //    typedef __gnu_cxx::hash_map<mefeature_type, int> map_type;
-        typedef std::tr1::unordered_map<mefeature_type, int32_t> map_type;
+        typedef std::unordered_map<mefeature_type, int32_t> map_type;
         map_type mef2id;
         std::vector<ME_Feature> id2mef;
 
@@ -232,7 +232,7 @@ class CRF_Model {
     };
 
     struct MiniStringBag {
-        typedef std::tr1::unordered_map<std::string, int32_t, hashfun_str> map_type;
+        typedef std::unordered_map<std::string, int32_t, hashfun_str> map_type;
         size_t _size;
         map_type str2id;
 

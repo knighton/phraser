@@ -307,6 +307,7 @@ PyMethodDef PHRASER_METHODS[] = {
     {"init",    Init,    METH_VARARGS, INIT_DOC},
     {"to_d",    ToD,     METH_VARARGS, TO_D_DOC},
     {"analyze", Analyze, METH_VARARGS, ANALYZE_DOC},
+    {nullptr,   nullptr, 0,            nullptr},
 };
 
 }  // namespace

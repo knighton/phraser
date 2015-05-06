@@ -39,7 +39,6 @@ class AnalysisResult(object):
         self.tokens = d['tokens']
         self.phrase_matches = []
         for sub in d['phrase_matches']:
-            print '?', sub
             phrase = PhraseResult(
                 sub['phrase_name'], sub['subsequence_names'],
                 sub['index_lists'])

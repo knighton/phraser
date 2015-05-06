@@ -20,10 +20,18 @@ char INIT_DOC[] =
     "\n"
     "Initialize the module.  Must call this first.\n"
     "\n"
-    "    phrase_config_ff = [...]\n"
-    "    phrases = map(lambda f: open(f).read(), phrase_config_ff)\n"
-    "    err = phraser.Init(phrases)\n"
-    "    assert not err\n";
+    "    >>> open('plaudit.txt', 'wb').write('\\n'.join([\n"
+    "            'plaudit = verb object',\n"
+    "            '----------',\n"
+    "            'thanks',\n"
+    "            '----------',\n"
+    "            'obama',\n"
+    "            'hitler',\n"
+    "        ]))\n"
+    "    >>> phrases_config_ff = ['plaudit.txt']\n"
+    "    >>> phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)\n"
+    "    >>> err = _phraser.init(phrase_configs)\n"
+    "    >>> assert not err\n";
 
 PyObject* Init(PyObject* self, PyObject* args) {
     // Get args.
@@ -66,8 +74,7 @@ char TO_D_DOC[] =
     "You can call phrase_detector_json_to_html.py to visualize the output as\n"
     "pretty HTML.\n"
     "\n"
-    "    d = phrasser.to_d()\n"
-    "    print d\n";
+    "    >>> d = _phraser.to_d()\n"
 
 PyObject* ToD(PyObject* self, PyObject* args) {
     return NULL;
@@ -76,16 +83,16 @@ PyObject* ToD(PyObject* self, PyObject* args) {
 char ANALYZE_DOC[] =
     "text, options -> phrase detection result dict, error str.\n"
     "\n"
-    "Analyze the text.  Returns a pair.  Either the dict or the error str\n"
-    "will be None.\n"
+    "Analyze the text.  Returns a pair.  Either the results dict or the \n"
+    "error str will be None.\n"
     "\n"
-    "    text = u'This is a comment.'\n"
-    "    options = {\n"
-    "        'destutter_max_consecutive': 3,\n"
-    "        'replace_html_entities: True,\n"
-    "    }\n"
-    "    err = phraser.Analyze(text, options)\n"
-    "    assert not err\n";
+    "    >>> text = u'This is a comment.'\n"
+    "    >>> options = {\n"
+    "            'destutter_max_consecutive': 3,\n"
+    "            'replace_html_entities': True,\n"
+    "        }\n"
+    "    >>> err = _phraser.analyze(text, options)\n"
+    "    >>> assert not err\n";
 
 bool AnalysisOptionsFromDict(
         PyObject* obj, AnalysisOptions* options, string* error) {

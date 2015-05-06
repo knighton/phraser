@@ -1,9 +1,9 @@
 #ifndef CC_PREPROCESS_DESTUTTERER_DATA_H_
 #define CC_PREPROCESS_DESTUTTERER_DATA_H_
 
+#include <cstddef>
 #include <cstdint>
-
-using std::size_t;
+#include <cstdlib>
 
 namespace destutterer_data {
 

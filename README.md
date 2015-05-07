@@ -289,3 +289,26 @@ We make some changes in order to match the tagger's training data.
 #### Tagging
 
 Penn Treebank ASCII tokens (see [Tokenization](#tokenization)) are fed to the [LAPOS tagger](http://www.logos.ic.i.u-tokyo.ac.jp/~tsuruoka/lapos/) (vendorized [here](https://github.com/knighton/phraser/blob/master/phraser/cc/third_party/lapos/)), which uses a model pretrained on WSJ sections 2-21.
+
+
+### Release notes
+
+#### 0.0.2 (2014-05-06)
+
+* Phraser is now importable via pip as a python module.
+
+#### 0.0.1 (2014-05-06)
+
+* Initial release.  Written in C++11.  Also builds a python extension.  Compile with clang on Xubuntu or OS X.  Tested versions:
+
+  Xubuntu:
+  
+      clang version 3.6.0 (trunk 223446)
+      Target: x86_64-unknown-linux-gnu
+      Thread model: posix
+  
+  OS X:
+  
+      Apple LLVM version 6.0 (clang-600.0.57) (based on LLVM 3.5svn)
+      Target: x86_64-apple-darwin13.4.0
+      Thread model: posix

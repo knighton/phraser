@@ -1,12 +1,12 @@
-#ifndef CC_PREPROCESS_DESTUTTERER_H_
-#define CC_PREPROCESS_DESTUTTERER_H_
+#ifndef PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
+#define PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
 
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::string;
 using std::unordered_map;
@@ -43,4 +43,4 @@ class Destutterer {
     unordered_set<uchar> digits_;
 };
 
-#endif  // CC_PREPROCESS_DESTUTTERER_H_
+#endif  // PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_

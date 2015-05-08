@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_
-#define PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_
+#ifndef CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_
+#define CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_
 
 #include <string>
 #include <unordered_map>
@@ -16,4 +16,4 @@ extern unordered_map<string, uint32_t> HTML2UNICODE;
 
 }  // namespace html_entity_parser_data
 
-#endif  // PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_
+#endif  // CC_FRONTEND_HTML_HTML_ENTITY_PARSER_DATA_H_

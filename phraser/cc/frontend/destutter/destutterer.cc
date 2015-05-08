@@ -1,6 +1,6 @@
 #include "destutterer.h"
 
-#include "cc/preprocess/destutterer_data.h"
+#include "cc/frontend/destutter/destutterer_data.h"
 
 static bool LoadDigits(unordered_set<uchar>* digits, string* error) {
     for (auto i = 0u; i < destutterer_data::DIGITS_SIZE; ++i) {

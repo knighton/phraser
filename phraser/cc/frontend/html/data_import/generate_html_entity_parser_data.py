@@ -109,8 +109,8 @@ def main():
     name2code = load_html_entities('html_entities.txt')
     cc = generate_cc(name2code)
 
-    open('../../html_entity_parser_data.h', 'wb').write(h)
-    open('../../html_entity_parser_data.cc', 'wb').write(cc)
+    open('../html_entity_parser_data.h', 'wb').write(h)
+    open('../html_entity_parser_data.cc', 'wb').write(cc)
 
 
 if __name__ == '__main__':

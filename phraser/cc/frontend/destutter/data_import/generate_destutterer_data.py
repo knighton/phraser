@@ -7,8 +7,8 @@ INDENT = ' ' * 4
 
 
 H_SRC = """
-#ifndef CC_PREPROCESS_DESTUTTERER_DATA_H_
-#define CC_PREPROCESS_DESTUTTERER_DATA_H_
+#ifndef CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_
+#define CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -22,7 +22,7 @@ extern size_t DIGITS_SIZE;
 
 }  // namespace destutterer_data
 
-#endif  // CC_PREPROCESS_DESTUTTERER_DATA_H_
+#endif  // CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_
 """[1:]
 
 
@@ -74,10 +74,10 @@ def dump_cc(code2name, file_name):
 
 
 def main():
-    dump_h('../../destutterer_data.h')
+    dump_h('../destutterer_data.h')
 
     code2name = get('digits.txt')
-    dump_cc(code2name, '../../destutterer_data.cc')
+    dump_cc(code2name, '../destutterer_data.cc')
 
 
 if __name__ == '__main__':

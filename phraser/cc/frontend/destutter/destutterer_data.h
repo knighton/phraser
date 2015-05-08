@@ -1,5 +1,5 @@
-#ifndef CC_PREPROCESS_DESTUTTERER_DATA_H_
-#define CC_PREPROCESS_DESTUTTERER_DATA_H_
+#ifndef CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_
+#define CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -13,4 +13,4 @@ extern size_t DIGITS_SIZE;
 
 }  // namespace destutterer_data
 
-#endif  // CC_PREPROCESS_DESTUTTERER_DATA_H_
+#endif  // CC_FRONTEND_DESTUTTER_DESTUTTERER_DATA_H_

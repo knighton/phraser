@@ -11,7 +11,7 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-class HTMLEntityParser {
+class HtmlEntityParser {
   public:
     bool Init(string* error);
 
@@ -22,18 +22,22 @@ class HTMLEntityParser {
     //
     // Save mapping of 'out' code point -> beginning of span in 'in' code
     // points that it maps to into 'out2in'.
-    void Replace(const ustring& in, ustring* out,
+    //
+    // Returns whether it did any replacing.  This is so that it can be called
+    // multiple times until done.
+    bool Replace(const ustring& in, ustring* out,
                  vector<uint16_t>* out2in) const;
 
   private:
-    bool ParseHTMLEntity(
+    bool ParseHtmlEntity(
         const ustring& in, size_t begin, size_t end_excl, uchar* code) const;
 
-    void AppendPossibleHTMLEntity(
+    // Returns whether it parsed an HTML entity.
+    bool AppendPossibleHtmlEntity(
         const ustring& in, size_t amp_index, size_t semicolon_index,
         ustring* out, vector<uint16_t>* out2in) const;
 
-    bool IsPossibleHTMLEntityChar(uchar c) const;
+    bool IsPossibleHtmlEntityChar(uchar c) const;
 
     size_t max_name_length_;
     unordered_map<string, uchar> name2code_;

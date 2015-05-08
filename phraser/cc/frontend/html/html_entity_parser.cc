@@ -2,7 +2,7 @@
 
 #include "cc/frontend/html/html_entity_parser_data.h"
 
-bool HTMLEntityParser::Init(string* error) {
+bool HtmlEntityParser::Init(string* error) {
     name2code_ = html_entity_parser_data::HTML2UNICODE;
     return true;
 }
@@ -62,7 +62,7 @@ bool ParseName(const ustring& in, size_t begin, size_t end_excl, string* name) {
 
 }  // namespace
 
-bool HTMLEntityParser::ParseHTMLEntity(
+bool HtmlEntityParser::ParseHtmlEntity(
         const ustring& in, size_t begin, size_t end_excl,
         uchar* code) const {
     size_t length = end_excl - begin;
@@ -97,23 +97,24 @@ bool HTMLEntityParser::ParseHTMLEntity(
     return true;
 }
 
-void HTMLEntityParser::AppendPossibleHTMLEntity(
+bool HtmlEntityParser::AppendPossibleHtmlEntity(
         const ustring& in, size_t amp_index, size_t semicolon_index,
         ustring* out, vector<uint16_t>* out2in) const {
     uchar c;
-    if (ParseHTMLEntity(in, amp_index + 1, semicolon_index, &c)) {
+    if (ParseHtmlEntity(in, amp_index + 1, semicolon_index, &c)) {
         out->emplace_back(c);
         out2in->emplace_back(amp_index);
-        return;
+        return true;
     }
 
     for (auto i = amp_index; i <= semicolon_index; ++i) {
         out->emplace_back(in[i]);
         out2in->emplace_back(i);
     }
+    return false;
 }
 
-bool HTMLEntityParser::IsPossibleHTMLEntityChar(uchar c) const {
+bool HtmlEntityParser::IsPossibleHtmlEntityChar(uchar c) const {
     if (c == '#') {
         return true;
     }
@@ -133,10 +134,12 @@ bool HTMLEntityParser::IsPossibleHTMLEntityChar(uchar c) const {
     return false;
 }
 
-void HTMLEntityParser::Replace(
+bool HtmlEntityParser::Replace(
         const ustring& in, ustring* out, vector<uint16_t>* out2in) const {
     out->clear();
     out2in->clear();
+
+    bool found = false;
 
     size_t begin = ~0ul;
     bool inside = false;
@@ -165,10 +168,12 @@ void HTMLEntityParser::Replace(
             begin = i;
         } else if (c == ';') {
             // Semicolon?  Try to parse it (append entity or string).
-            AppendPossibleHTMLEntity(in, begin, i, out, out2in);
+            if (AppendPossibleHtmlEntity(in, begin, i, out, out2in)) {
+                found = true;
+            }
             begin = ~0ul;
             inside = false;
-        } else if (!IsPossibleHTMLEntityChar(c)) {
+        } else if (!IsPossibleHtmlEntityChar(c)) {
             // Not possible inside an HTML entity?  Reject it.
             for (auto j = begin; j <= i; ++j) {
                 out->emplace_back(in[j]);
@@ -185,4 +190,6 @@ void HTMLEntityParser::Replace(
             out2in->emplace_back(i);
         }
     }
+
+    return found;
 }

@@ -20,9 +20,16 @@ Contents:
   * [Expression syntax](#expression-syntax)
   * [Phrase file syntax](#phrase-file-syntax)
 * [Architecture](#architecture)
-* [How it works](#how-it-works)
+* [Preprocessing](#preprocessing)
+  * [HTML entity parsing](#html-entity-parsing)
+  * [Destuttering](#destuttering)
+  * [Unicode to ASCII normalization](#unicode-to-ascii-normalization)
+  * [Sentence boundary detection](#sentence-boundary-detection)
   * [Tokenization](#tokenization)
+  * [Token normalization](#token-normalization)
   * [Tagging](#tagging)
+  * [Contraction reversing](#contraction-reversing)
+  * [Textspeak normalization](#textspeak-normalization)
 
 ### Demo
 
@@ -206,14 +213,19 @@ where
 ### Architecture
 
             Analyzer (cc/analysis/)
-              | | \
-              | |  Preprocessor (cc/preprocess/)
-              | |        \
-              | |         +--HTMLEntityParser
-              | |         +--Destutterer
-              | |         (cc/preprocess/)
               |  \
-             /   Tokenizer (cc/tokenization/)
+              |   Frontend (cc/frontend/)
+              |         \
+              |          +--HTMLEntityParser (cc/frontend/html/)
+              |          +--Destutterer (cc/frontend/destutter/)
+              |          +--AsciiNormalizer (cc/frontend/ascii/)
+              |          +--SentenceSplitter (cc/frontend/sbd/)
+              |          +--Tokenizer (cc/frontend/tokenize/)
+              |          +--Americanizer (cc/frontend/americanize/)
+              |          +--Tagger (cc/frontend/tag/)
+              |          +--Uncontractor (cc/frontend/contractions/)
+              |          +--TextSpeakNormalizer (cc/frontend/textspeak/)
+              /
             /
       PhraseDetector (cc/phrase_detection/)
          /    \
@@ -221,7 +233,7 @@ where
        /                     \
     VectorMembership          +--PrecomputableEvaluators
     SequenceDetector          +--DynamicEvaluators
-    (cc/sequence_detection/)  +--AllAtOnceEvaluators (eg, Tagger)
+    (cc/sequence_detection/)
                               (cc/english/, cc/tagging/)
     
     SequenceDetector
@@ -231,30 +243,28 @@ where
     ExpressionTypeEvaluator
     * PrecomputableEvaluator
     * DynamicEvaluator
-    * AllAtOnceEvaluator
 
-### How it works
+### Preprocessing
 
-#### Tokenization
+Raw text is transformed into tagged tokens for use by the phrase detectors.
 
-##### Overview
+Conversions: `HTML` &rarr; `Unicode` &rarr; `ASCII` &rarr; `list of tokens` &rarr; `list of (possible tokens, tag)`
 
-`HTML` -> `Unicode` -> `PTB ASCII` -> `tokens` -> `normalized tokens`
+We use code from [LAPOS](www.logos.ic.i.u-tokyo.ac.jp/~tsuruoka/lapos/) for tokenization and especially tagging.
 
-1. HTML entities (dec, hex, and named) are optionally converted to their Unicode code point equivalents.
-2. Unicode is normalized to Penn Treebank ASCII like the Stanford parser.
-3. The LAPOS tokenizer converts the ASCII text to ASCII tokens.
-4. Tokens are normalized like the Stanford parser.
+Some of the Unicode normalization and token normalization is designed to behave like the Stanford parser.
 
-##### Lookup table generation
+#### 1. HTML entity parsing
 
-You call a script [generate_tokenizer_data.py](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/generate_tokenizer_data.py) that generates [tokenizer_data.h](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.h), [tokenizer_data.cc](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/tokenizer_data.cc) containing three lookup tables:
+Example: `&copy; &#169; &#xA9;` &rarr; `© © ©`
 
-* HTML named entities
-* Unicode code point -> PTB ASCII string
-* ASCII token normalizations
+#### 2. Destuttering
 
-##### Unicode to PTB ASCII normalization (preprocessing)
+Example: `Whooooooooooooooa!!!!!!`&rarr; `Whoooa!`
+
+We drop overly repeated characters.
+
+#### 3. Unicode to ASCII normalization
 
 Essentially, we want to strip accents, map symbols to ASCII equivalents, and use LaTeX quotes.
 
@@ -277,7 +287,15 @@ The following steps occur for all Unicode code points in any index below in orde
 9. Condense spaces.
 10. Drop parenthesized non-Latin characters that don't map to ASCII (eg, U+3208 `㈈`).
 
-##### Token normalization (postprocessing)
+#### 4. Sentence boundary detection
+
+We use a custom rule-based classifier written for web comments.
+
+#### 5. Tokenization
+
+The result of the previous steps is then fed to the LAPOS tokenizer.
+
+#### 6. Token normalization
 
 We make some changes in order to match the tagger's training data.
 
@@ -286,18 +304,38 @@ We make some changes in order to match the tagger's training data.
 2. Commonwealth spellings are Americanized
    * [americanize.txt](https://github.com/knighton/phraser/blob/master/phraser/cc/tokenization/data_import/americanize.txt)
 
-#### Tagging
+#### 7. Tagging
 
-Penn Treebank ASCII tokens (see [Tokenization](#tokenization)) are fed to the [LAPOS tagger](http://www.logos.ic.i.u-tokyo.ac.jp/~tsuruoka/lapos/) (vendorized [here](https://github.com/knighton/phraser/blob/master/phraser/cc/third_party/lapos/)), which uses a model pretrained on WSJ sections 2-21.
+Respelled tokens are fed to the LAPOS tagger, which uses a model pretrained on WSJ sections 2-21.
 
+#### 8. Contraction reversing
+
+We reverse contractions, using the part-of-speech tag to disambiguate verb `'s` and possessive `'s`.  This results in multiple possible words for some contractions (ie. 's = is/has, 'd = did/had/would/).
+
+#### 9. Textspeak normalization
+
+We list alternate forms of tokens ("ur" &rarr; "ur", "your", "you're").
+
+----
 
 ### Release notes
 
-#### 0.0.2 (2014-05-06)
+#### 0.1.0 (2015-05-??) Wishlist
+
+* Boolean operators on expressions are added (and, or, not, etc.).
+* Phrase configurations are now in YAML (before, a custom text format).
+* Integrated a rule-based sentence boundary detector for web comments (before, assumed one sentence per input).
+* English contractions are automatically replaced with their uncontracted equivalents.
+* All-at-once expressions removed (use dynamic expressions instead).  Tagging is now done automatically in the frontend.
+* Destuttering handles bigrams ("hahahahaha" &rarr; "haha").
+* Destuttering handles symbols ("😋😋😋" &rarr; "😋").
+* Added basic textspeak normalization.
+
+#### 0.0.2 (2015-05-06)
 
 * Phraser is now importable via pip as a python module.
 
-#### 0.0.1 (2014-05-06)
+#### 0.0.1 (2015-05-06)
 
 * Initial release.  Written in C++11.  Also builds a python extension.  Compile with clang on Xubuntu or OS X.  Tested versions:
 

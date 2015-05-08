@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
-#define PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
+#ifndef CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
+#define CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
 
 #include <string>
 #include <unordered_map>
@@ -43,4 +43,4 @@ class Destutterer {
     unordered_set<uchar> digits_;
 };
 
-#endif  // PHRASER_CC_FRONTEND_DESTUTTER_DESTUTTERER_H_
+#endif  // CC_FRONTEND_DESTUTTER_DESTUTTERER_H_

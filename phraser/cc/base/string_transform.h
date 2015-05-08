@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_BASE_STRING_TRANSFORM_H_
-#define PHRASER_CC_BASE_STRING_TRANSFORM_H_
+#ifndef CC_BASE_STRING_TRANSFORM_H_
+#define CC_BASE_STRING_TRANSFORM_H_
 
 #include <string>
 
@@ -17,5 +17,5 @@ class StringTransform {
     string append_;
 };
 
-#endif  // PHRASER_CC_BASE_STRING_TRANSFORM_H_
+#endif  // CC_BASE_STRING_TRANSFORM_H_
 

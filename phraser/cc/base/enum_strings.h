@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_BASE_ENUM_STRINGS_H_
-#define PHRASER_CC_BASE_ENUM_STRINGS_H_
+#ifndef CC_BASE_ENUM_STRINGS_H_
+#define CC_BASE_ENUM_STRINGS_H_
 
 // Usage:
 //
@@ -83,4 +83,4 @@ class EnumStrings {
 
 #include "enum_strings_impl.h"
 
-#endif  // PHRASER_CC_BASE_ENUM_STRINGS_H_
+#endif  // CC_BASE_ENUM_STRINGS_H_

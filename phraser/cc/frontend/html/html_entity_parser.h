@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
-#define PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
+#ifndef CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
+#define CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
 
 #include <string>
 #include <unordered_map>
@@ -39,4 +39,4 @@ class HTMLEntityParser {
     unordered_map<string, uchar> name2code_;
 };
 
-#endif  // PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
+#endif  // CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_

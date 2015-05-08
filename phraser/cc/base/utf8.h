@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_BASE_UTF8_H_
-#define PHRASER_CC_BASE_UTF8_H_
+#ifndef CC_BASE_UTF8_H_
+#define CC_BASE_UTF8_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -159,4 +159,4 @@ void Decode(const char* s, size_t num_bytes, ustring* text);
 
 }  // namespace utf8
 
-#endif  // PHRASER_CC_BASE_UTF8_H_
+#endif  // CC_BASE_UTF8_H_

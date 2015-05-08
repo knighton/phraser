@@ -1,5 +1,5 @@
-#ifndef PHRASER_CC_BASE_JSON_H_
-#define PHRASER_CC_BASE_JSON_H_
+#ifndef CC_BASE_JSON_H_
+#define CC_BASE_JSON_H_
 
 #include <map>
 #include <set>
@@ -68,4 +68,4 @@ class Object {
 
 }  // namespace json
 
-#endif  // PHRASER_CC_BASE_JSON_H_
+#endif  // CC_BASE_JSON_H_

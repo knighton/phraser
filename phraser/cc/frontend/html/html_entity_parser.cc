@@ -1,6 +1,6 @@
 #include "html_entity_parser.h"
 
-#include "cc/preprocess/html_entity_parser_data.h"
+#include "cc/frontend/html/html_entity_parser_data.h"
 
 bool HTMLEntityParser::Init(string* error) {
     name2code_ = html_entity_parser_data::HTML2UNICODE;

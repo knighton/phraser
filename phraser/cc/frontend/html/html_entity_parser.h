@@ -1,11 +1,11 @@
-#ifndef CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
-#define CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#ifndef PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
+#define PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_
 
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::string;
 using std::unordered_map;
@@ -39,4 +39,4 @@ class HTMLEntityParser {
     unordered_map<string, uchar> name2code_;
 };
 
-#endif  // CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#endif  // PHRASER_CC_FRONTEND_HTML_HTML_ENTITY_PARSER_H_

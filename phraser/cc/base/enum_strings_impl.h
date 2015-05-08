@@ -1,7 +1,7 @@
 #ifndef PHRASER_CC_BASE_ENUM_STRINGS_IMPL_H_
 #define PHRASER_CC_BASE_ENUM_STRINGS_IMPL_H_
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 
 template <typename E>
 vector<E> EnumRange(uint64_t a, uint64_t z_excl) {

@@ -1,6 +1,6 @@
 #include "json.h"
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 
 namespace json {
 

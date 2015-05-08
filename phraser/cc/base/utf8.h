@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::vector;
 

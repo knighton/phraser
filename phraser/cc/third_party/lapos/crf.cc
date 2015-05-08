@@ -5,8 +5,8 @@
 #include <cfloat>
 #include <set>
 
-#include "cc/misc/files.h"
-#include "cc/misc/strings.h"
+#include "cc/base/files.h"
+#include "cc/base/strings.h"
 #include "cc/third_party/lapos/lapos_model_data.h"
 
 using namespace std;

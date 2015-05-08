@@ -1,5 +1,5 @@
-#ifndef CC_THIRD_PARTY_LAPOS_MODEL_DATA_H_
-#define CC_THIRD_PARTY_LAPOS_MODEL_DATA_H_
+#ifndef CC_THIRD_PARTY_LAPOS_LAPOS_MODEL_DATA_H_
+#define CC_THIRD_PARTY_LAPOS_LAPOS_MODEL_DATA_H_
 
 #include <vector>
 
@@ -11,4 +11,4 @@ extern const char* WSJ_02_21_LINES[];
 
 }  // namespace lapos_model_data
 
-#endif  // CC_THIRD_PARTY_LAPOS_MODEL_DATA_H_
+#endif  // CC_THIRD_PARTY_LAPOS_LAPOS_MODEL_DATA_H_

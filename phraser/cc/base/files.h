@@ -1,5 +1,5 @@
-#ifndef CC_MISC_FILES_H_
-#define CC_MISC_FILES_H_
+#ifndef PHRASER_CC_BASE_FILES_H_
+#define PHRASER_CC_BASE_FILES_H_
 
 #include <string>
 #include <vector>
@@ -23,4 +23,4 @@ bool ListDir(const string& dir_name, vector<string>* names);
 
 }  // namespace files
 
-#endif  // CC_MISC_FILES_H_
+#endif  // PHRASER_CC_BASE_FILES_H_

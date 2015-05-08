@@ -1,5 +1,5 @@
-#ifndef CC_MISC_COMBINATORICS_IMPL_H_
-#define CC_MISC_COMBINATORICS_IMPL_H_
+#ifndef PHRASER_CC_BASE_COMBINATORICS_IMPL_H_
+#define PHRASER_CC_BASE_COMBINATORICS_IMPL_H_
 
 #include "combinatorics.h"
 
@@ -86,4 +86,4 @@ bool ExpandCatchalls(const vector<T>& fields_with_catchalls,
 
 }  // namespace combinatorics
 
-#endif  // CC_MISC_COMBINATORICS_IMPL_H_
+#endif  // PHRASER_CC_BASE_COMBINATORICS_IMPL_H_

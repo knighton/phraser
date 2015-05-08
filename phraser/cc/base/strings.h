@@ -1,5 +1,5 @@
-#ifndef CC_MISC_STRINGS_H_
-#define CC_MISC_STRINGS_H_
+#ifndef PHRASER_CC_BASE_STRINGS_H_
+#define PHRASER_CC_BASE_STRINGS_H_
 
 #include <string>
 #include <vector>
@@ -32,4 +32,4 @@ string StringPrintf(const char* format, ...);
 
 }  // namespace string
 
-#endif  // CC_MISC_STRINGS_H_
+#endif  // PHRASER_CC_BASE_STRINGS_H_

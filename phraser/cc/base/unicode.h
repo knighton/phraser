@@ -1,5 +1,5 @@
-#ifndef CC_MISC_UNICODE_H_
-#define CC_MISC_UNICODE_H_
+#ifndef PHRASER_CC_BASE_UNICODE_H_
+#define PHRASER_CC_BASE_UNICODE_H_
 
 #include <cstdint>
 #include <vector>
@@ -22,4 +22,4 @@ typedef vector<uchar> ustring;
      ((uint32_t)(c)<=0xfdef || ((c)&0xfffe)==0xfffe) && \
      (uint32_t)(c)<=0x10ffff)
 
-#endif  // CC_MISC_UNICODE_H_
+#endif  // PHRASER_CC_BASE_UNICODE_H_

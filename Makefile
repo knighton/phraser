@@ -10,7 +10,7 @@ FLAGS_BASE = \
 	-O3 \
 	-ferror-limit=5 \
 	-I$(SRC_ROOT) \
-	#-lboost_regex \
+	-lboost_regex \
 
 FLAGS_WARN = \
 	-Wpedantic \
@@ -39,6 +39,18 @@ FLAGS_WARN_DISABLE_LAPOS = \
 
 FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 		$(FLAGS_WARN_DISABLE_LAPOS)
+
+a:
+	@echo
+	@echo
+	@echo
+	@echo
+	@echo
+	@echo
+	@echo
+	@echo
+	mkdir -p $(BIN_DIR)
+	$(CC) `find -type f -name "*.cc"` $(SRC_ROOT)/tools/a.cpp -o $(BIN_DIR)/a $(FLAGS)
 
 clean:
 	rm -rf $(BIN_DIR)

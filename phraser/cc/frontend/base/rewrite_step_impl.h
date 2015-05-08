@@ -1,5 +1,5 @@
-#ifndef CC_FRONTEND_REWRITE_STEP_IMPL_H_
-#define CC_FRONTEND_REWRITE_STEP_IMPL_H_
+#ifndef CC_FRONTEND_BASE_REWRITE_STEP_IMPL_H_
+#define CC_FRONTEND_BASE_REWRITE_STEP_IMPL_H_
 
 namespace {
 
@@ -85,4 +85,4 @@ bool ApplyRewriteSteps(
     return true;
 }
 
-#endif  // CC_FRONTEND_REWRITE_STEP_IMPL_H_
+#endif  // CC_FRONTEND_BASE_REWRITE_STEP_IMPL_H_

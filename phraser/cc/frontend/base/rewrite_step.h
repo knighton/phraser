@@ -1,5 +1,5 @@
-#ifndef CC_FRONTEND_REWRITE_STEP_H_
-#define CC_FRONTEND_REWRITE_STEP_H_
+#ifndef CC_FRONTEND_BASE_REWRITE_STEP_H_
+#define CC_FRONTEND_BASE_REWRITE_STEP_H_
 
 #include <string>
 #include <vector>
@@ -26,4 +26,4 @@ bool ApplyRewriteSteps(
 
 #include "rewrite_step_impl.h"
 
-#endif  // CC_FRONTEND_REWRITE_STEP_H_
+#endif  // CC_FRONTEND_BASE_REWRITE_STEP_H_

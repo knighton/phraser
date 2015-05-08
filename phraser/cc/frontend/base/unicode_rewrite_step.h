@@ -1,5 +1,5 @@
-#ifndef CC_FRONTEND_UNICODE_REWRITE_STEP_H_
-#define CC_FRONTEND_UNICODE_REWRITE_STEP_H_
+#ifndef CC_FRONTEND_BASE_UNICODE_REWRITE_STEP_H_
+#define CC_FRONTEND_BASE_UNICODE_REWRITE_STEP_H_
 
 #include <string>
 #include <unordered_map>
@@ -30,4 +30,4 @@ class UnicodeRewriteStep {
         UnicodeRewriteInfo* more_out, string* error) const = 0;
 };
 
-#endif  // CC_FRONTEND_UNICODE_REWRITE_STEP_H_
+#endif  // CC_FRONTEND_BASE_UNICODE_REWRITE_STEP_H_

@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "cc/comment/comment.h"
-#include "cc/misc/files.h"
-#include "cc/misc/utf8.h"
+#include "cc/base/files.h"
+#include "cc/base/utf8.h"
+#include "cc/mac_log/comment.h"
 
 using std::string;
 using std::vector;

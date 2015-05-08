@@ -1,10 +1,10 @@
-#ifndef CC_COMMENT_COMMENT_H_
-#define CC_COMMENT_COMMENT_H_
+#ifndef CC_MAC_LOG_COMMENT_H_
+#define CC_MAC_LOG_COMMENT_H_
 
 #include <string>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::string;
 using std::vector;
@@ -21,4 +21,4 @@ class Comment {
     vector<string> tags_;
 };
 
-#endif  // CC_COMMENT_COMMENT_H_
+#endif  // CC_MAC_LOG_COMMENT_H_

@@ -1,10 +1,10 @@
-#ifndef CC_COMMENT_COMMENT_READER_H_
-#define CC_COMMENT_COMMENT_READER_H_
+#ifndef CC_MAC_LOG_COMMENT_READER_H_
+#define CC_MAC_LOG_COMMENT_READER_H_
 
 #include <string>
 #include <vector>
 
-#include "cc/comment/comment.h"
+#include "cc/mac_log/comment.h"
 
 using std::string;
 using std::vector;
@@ -30,4 +30,4 @@ class CommentReader {
     size_t byte_index_;
 };
 
-#endif  // CC_COMMENT_COMMENT_READER_H_
+#endif  // CC_MAC_LOG_COMMENT_READER_H_

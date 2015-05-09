@@ -5,6 +5,7 @@
 
 #include "cc/frontend/ascii/ptb_ascii_normalizer.h"
 #include "cc/frontend/base/unicode_rewrite_step.h"
+#include "cc/frontend/contractions/uncontractor.h"
 #include "cc/frontend/frontend_options.h"
 #include "cc/frontend/frontend_result.h"
 
@@ -43,10 +44,10 @@ class Frontend {
 
     // Tokens -> tagged tokens.
     Tagger tag_;
+#endif
 
     // Tagged tokens -> list of (possible tokens, tag).
     Uncontractor uncontract_;
-#endif
 };
 
 #endif  // CC_FRONTEND_FRONTEND_H_

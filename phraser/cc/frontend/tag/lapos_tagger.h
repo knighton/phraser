@@ -4,14 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "cc/tagging/lapos/lapos_token_preprocessor.h"
-#include "cc/tagging/tagger.h"
 #include "cc/third_party/lapos/crf.h"
 
 using std::string;
 using std::vector;
 
-class LaposTagger : public Tagger {
+class LaposTagger {
   public:
     LaposTagger();
     ~LaposTagger();
@@ -22,7 +20,6 @@ class LaposTagger : public Tagger {
 
   private:
     bool is_ok_;
-    LaposTokenPreprocessor preproc_;
     lapos::CRF_Model crfm_;
 };
 

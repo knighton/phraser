@@ -16,12 +16,7 @@ LaposTagger::~LaposTagger() {
 }
 
 bool LaposTagger::Init() {
-    bool is_enju = false;
     if (!crfm_.init_default()) {
-        return false;
-    }
-
-    if (!preproc_.Init()) {
         return false;
     }
 
@@ -29,15 +24,12 @@ bool LaposTagger::Init() {
     return true;
 }
 
-bool LaposTagger::Tag(const vector<string>& orig_ss,
+bool LaposTagger::Tag(const vector<string>& ss,
                       vector<string>* tags, string* error) {
     if (!is_ok_) {
         *error = "[LaposTagger] Tagger was not intialized.";
         return false;
     }
-
-    vector<string> ss = orig_ss;
-    preproc_.Preprocess(&ss);
 
     // TODO: construct lapos::Tokens ourselves.
     string s;
@@ -55,7 +47,7 @@ bool LaposTagger::Tag(const vector<string>& orig_ss,
     vector<map<string, double>> tag_p0;
     lapos::crf_decode_lookahead(tokens, crfm_, tag_p0);
 
-    tags->resize(orig_ss.size());
+    tags->resize(ss.size());
     for (auto i = 0u; i < tag_p0.size(); ++i) {
         map<double, string> f2s;
         for (auto& it : tag_p0[i]) {

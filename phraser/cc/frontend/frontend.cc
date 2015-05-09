@@ -52,6 +52,13 @@ bool Frontend::Init(string* error) {
         return false;
     }
 
+    if (!tag.Init()) {
+        *error = "[Frontend] LaposTagger initialization failed.";
+        return false;
+    }
+
+    uncontractor_.Init();
+
     is_ok_ = true;
     return true;
 }

@@ -8,6 +8,7 @@
 #include "cc/frontend/contractions/uncontractor.h"
 #include "cc/frontend/frontend_options.h"
 #include "cc/frontend/frontend_result.h"
+#include "cc/frontend/tag/lapos_tagger.h"
 
 using std::vector;
 
@@ -41,10 +42,10 @@ class Frontend {
 
     // Tokens -> tokens.
     vector<TokenRewriteStep*> token_steps_;
+#endif
 
     // Tokens -> tagged tokens.
-    Tagger tag_;
-#endif
+    LaposTagger tag_;
 
     // Tagged tokens -> list of (possible tokens, tag).
     Uncontractor uncontract_;

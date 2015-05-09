@@ -17,8 +17,8 @@ using std::vector;
 //
 // Pass any additional input or output needed by any of the steps in 'more_in'
 // and 'more_out'.
-template  <typename RewriteStep, typename ItemVector, typename Index,
-           typename AdditionalInput, typename AdditionalOutput>
+template <typename RewriteStep, typename ItemVector, typename Index,
+          typename AdditionalInput, typename AdditionalOutput>
 bool ApplyRewriteSteps(
     const vector<RewriteStep>& steps, const ItemVector& in,
     const AdditionalInput& more_in, ItemVector* out, vector<Index>* out2in,

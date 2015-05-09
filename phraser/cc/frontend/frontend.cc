@@ -52,12 +52,12 @@ bool Frontend::Init(string* error) {
         return false;
     }
 
-    if (!tag.Init()) {
+    if (!tag_.Init()) {
         *error = "[Frontend] LaposTagger initialization failed.";
         return false;
     }
 
-    uncontractor_.Init();
+    uncontract_.Init();
 
     is_ok_ = true;
     return true;

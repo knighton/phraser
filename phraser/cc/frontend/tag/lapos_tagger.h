@@ -1,5 +1,5 @@
-#ifndef CC_TAGGING_LAPOS_LAPOS_TAGGER_H_
-#define CC_TAGGING_LAPOS_LAPOS_TAGGER_H_
+#ifndef CC_FRONTEND_TAG_LAPOS_TAGGER_H_
+#define CC_FRONTEND_TAG_LAPOS_TAGGER_H_
 
 #include <string>
 #include <vector>
@@ -23,4 +23,4 @@ class LaposTagger {
     lapos::CRF_Model crfm_;
 };
 
-#endif  // CC_TAGGING_LAPOS_LAPOS_TAGGER_H_
+#endif  // CC_FRONTEND_TAG_LAPOS_TAGGER_H_

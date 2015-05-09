@@ -1,4 +1,4 @@
-#include "lapos_ascii_tokenizer.h"
+#include "lapos_tokenizer.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -196,11 +196,11 @@ size_t FindFirstNot(const string& s, size_t search_from, char c) {
 }
 
 bool GetSpans(const string& text, const vector<string>& tokens,
-              vector<Span>* spans) {
+              vector<TokenSpan>* spans) {
     spans->reserve(tokens.size());
     size_t search_from = 0;
     for (auto& token : tokens) {
-        Span span;
+        TokenSpan span;
         if (token == "''") {
             size_t x = FindOneOf(text, search_from, "\"'");
             if (UINT16_MAX < x) {
@@ -255,8 +255,8 @@ bool GetSpans(const string& text, const vector<string>& tokens,
 
 }  // namespace
 
-bool LaposASCIITokenizer::Tokenize(
-        const string& in, vector<string>* out, vector<Span>* spans) const {
+bool LaposTokenizer::Tokenize(
+        const string& in, vector<string>* out, vector<TokenSpan>* spans) const {
     // Assumptions we can make in order to efficiently compute original spans:
     //
     // * The input string's size < UINT16_MAX.

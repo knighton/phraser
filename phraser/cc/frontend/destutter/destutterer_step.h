@@ -1,7 +1,7 @@
 #ifndef CC_FRONTEND_DESTUTTER_DESTUTTERER_STEP_H_
 #define CC_FRONTEND_DESTUTTER_DESTUTTERER_STEP_H_
 
-#include "cc/frontend/unicode_rewrite_step.h"
+#include "cc/frontend/base/unicode_rewrite_step.h"
 #include "cc/frontend/destutter/destutterer.h"
 
 class DestuttererStep : public UnicodeRewriteStep {

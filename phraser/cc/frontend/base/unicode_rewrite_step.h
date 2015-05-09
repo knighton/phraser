@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "cc/base/unicode.h"
-#include "cc/frontend/chr_index.h"
+#include "cc/frontend/base/chr_index.h"
 
 using std::string;
 using std::unordered_map;

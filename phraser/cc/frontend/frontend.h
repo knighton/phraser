@@ -1,7 +1,14 @@
 #ifndef CC_FRONTEND_FRONTEND_H_
 #define CC_FRONTEND_FRONTEND_H_
 
-#include "cc/frontend/unicode_rewrite_step.h"
+#include <vector>
+
+#include "cc/frontend/ascii/ptb_ascii_normalizer.h"
+#include "cc/frontend/base/unicode_rewrite_step.h"
+#include "cc/frontend/frontend_options.h"
+#include "cc/frontend/frontend_result.h"
+
+using std::vector;
 
 class Frontend {
   public:
@@ -10,25 +17,29 @@ class Frontend {
 
     bool Init(string* error);
 
+    // Returns false on failure.
+    bool Parse(const ustring& original_text, const FrontendOptions& options,
+               FrontendResult* result, string* error) const;
+
   private:
     bool is_ok_;
 
-    // Unicode text -> Unicode text.
+    // Unicode text -> Unicode text (replace HTML, destutter).
     vector<UnicodeRewriteStep*> unicode_steps_no_html_;
     vector<UnicodeRewriteStep*> unicode_steps_with_html_;
 
-#if 0
     // Uncode text -> Penn Treebank ASCII text.
-    AsciiConverter u2a_;
+    PtbAsciiNormalizer u2a_;
 
-    // ASCII -> ASCII (inserts spaces for tokenization).
-    vector<AsciiRewriteStep> ascii_steps_;
+#if 0
+    // ASCII -> ASCII (insert spaces for tokenization).
+    vector<AsciiRewriteStep*> ascii_steps_;
 
     // ASCII text -> tokens.
     WhitespaceTokenizer tok_;
 
     // Tokens -> tokens.
-    vector<TokenRewriteStep> token_steps_;
+    vector<TokenRewriteStep*> token_steps_;
 
     // Tokens -> tagged tokens.
     Tagger tag_;

@@ -1,7 +1,7 @@
 #ifndef CC_FRONTEND_HTML_HTML_STEP_H_
 #define CC_FRONTEND_HTML_HTML_STEP_H_
 
-#include "cc/frontend/unicode_rewrite_step.h"
+#include "cc/frontend/base/unicode_rewrite_step.h"
 #include "cc/frontend/html/html_entity_parser.h"
 
 class HtmlStep : public UnicodeRewriteStep {

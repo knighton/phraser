@@ -1,25 +1,33 @@
 #include "tag_evaluator.h"
 
-TagEvaluator::TagEvaluator() : tagger_(NULL) {
+TagEvaluator::TagEvaluator() /* : tagger_(NULL) XXX */ {
 }
 
 TagEvaluator::~TagEvaluator() {
+#if 0
     if (tagger_) {
         delete tagger_;
         tagger_ = NULL;
     }
+#endif
 }
 
-bool TagEvaluator::Init(Tagger* tagger, string* error) {
+bool TagEvaluator::Init(/*Tagger* tagger,*/ string* error) {
+    return false;
+#if 0
     type_ = "tag";
     dimension2possible_values_.clear();
     tagger_ = tagger;
     return PostInit(error);
+#endif
 }
 
 bool TagEvaluator::AnalyzeTokens(const vector<string>& tokens,
                                  vector<string>* tags, string* error) const {
-    return tagger_->Tag(tokens, tags, error);
+    return false;
+#if 0
+    return tagger_->Tag(tokens, tags, error); XXX
+#endif
 }
 
 bool TagEvaluator::IsMatch(

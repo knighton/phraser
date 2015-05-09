@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "cc/english/verb/conjugation_spec.h"
-#include "cc/english/verb/conjugation_spec_derivation.h"
+#include "cc/phraser/english/verb/conjugation_spec.h"
+#include "cc/phraser/english/verb/conjugation_spec_derivation.h"
 
 using std::string;
 using std::unordered_map;

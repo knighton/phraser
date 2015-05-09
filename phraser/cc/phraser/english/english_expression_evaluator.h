@@ -1,8 +1,8 @@
 #ifndef CC_PHRASER_ENGLISH_ENGLISH_EXPRESSION_EVALUATOR_H_
 #define CC_PHRASER_ENGLISH_ENGLISH_EXPRESSION_EVALUATOR_H_
 
-#include "cc/english/personal/personal_manager.h"
-#include "cc/expression/expression_evaluator.h"
+#include "cc/phraser/english/personal/personal_manager.h"
+#include "cc/phraser/expression/expression_evaluator.h"
 
 #include <string>
 

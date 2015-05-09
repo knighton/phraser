@@ -1,8 +1,8 @@
 #ifndef CC_PHRASER_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_H_
 #define CC_PHRASER_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_H_
 
-#include "cc/misc/json.h"
-#include "cc/sequence_detection/sequence_detector.h"
+#include "cc/base/json.h"
+#include "cc/phraser/sequence_detection/sequence_detector.h"
 
 template <typename Atom>
 class EqualityAtomTokenComparer {

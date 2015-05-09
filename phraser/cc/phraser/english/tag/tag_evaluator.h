@@ -4,8 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "cc/expression/all_at_once_evaluator.h"
-#include "cc/tagging/tagger.h"
+#include "cc/phraser/expression/all_at_once_evaluator.h"
 
 using std::string;
 using std::vector;
@@ -16,7 +15,7 @@ class TagEvaluator : public AllAtOnceEvaluator<string> {
     ~TagEvaluator();
 
     // Takes ownership.
-    bool Init(Tagger* tagger, string* error);
+    bool Init(/*Tagger* tagger,*/ string* error);
 
     bool AnalyzeTokens(
         const vector<string>& tokens, vector<string>* tags,
@@ -30,7 +29,7 @@ class TagEvaluator : public AllAtOnceEvaluator<string> {
   private:
     bool AreArgsPossible(const vector<string>& args, string* error) const;
 
-    Tagger* tagger_;
+    // Tagger* tagger_;
 };
 
 #endif  // CC_PHRASER_ENGLISH_TAG_TAG_EVALUATOR_H_

@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "cc/misc/string_transform.h"
-#include "cc/english/verb/conjugation_spec.h"
+#include "cc/base/string_transform.h"
+#include "cc/phraser/english/verb/conjugation_spec.h"
 
 using std::string;
 using std::vector;

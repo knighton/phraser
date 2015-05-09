@@ -4,8 +4,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "cc/expression/expression_type_evaluator.h"
-#include "cc/expression/expression.h"
+#include "cc/phraser/expression/expression_type_evaluator.h"
+#include "cc/phraser/expression/expression.h"
 
 using std::string;
 using std::unordered_map;

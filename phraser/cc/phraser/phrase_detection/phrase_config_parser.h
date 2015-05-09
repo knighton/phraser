@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "cc/english/english_expression_evaluator.h"
-#include "cc/phrase_detection/phrase_config.h"
+#include "cc/phraser/english/english_expression_evaluator.h"
+#include "cc/phraser/phrase_detection/phrase_config.h"
 
 using std::string;
 

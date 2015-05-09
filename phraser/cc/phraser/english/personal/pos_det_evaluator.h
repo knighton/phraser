@@ -1,8 +1,8 @@
 #ifndef CC_PHRASER_ENGLISH_PERSONAL_POS_DET_EVALUATOR_H_
 #define CC_PHRASER_ENGLISH_PERSONAL_POS_DET_EVALUATOR_H_
 
-#include "cc/expression/precomputable_evaluator.h"
-#include "cc/english/personal/personal_manager.h"
+#include "cc/phraser/english/personal/personal_manager.h"
+#include "cc/phraser/expression/precomputable_evaluator.h"
 
 class PosDetEvaluator : public PrecomputableEvaluator {
   public:

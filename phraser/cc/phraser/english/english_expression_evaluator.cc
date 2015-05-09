@@ -3,16 +3,15 @@
 #include <string>
 #include <unordered_map>
 
-#include "cc/english/number/number_evaluator.h"
-#include "cc/english/personal/pers_pro_evaluator.h"
-#include "cc/english/personal/pos_pro_evaluator.h"
-#include "cc/english/personal/pos_det_evaluator.h"
-#include "cc/english/tag/tag_evaluator.h"
-#include "cc/english/verb/conjugator.h"
-#include "cc/english/verb/conjugation_spec.h"
-#include "cc/english/verb/conjugation_spec_derivation.h"
-#include "cc/english/verb/verb_evaluator.h"
-#include "cc/tagging/lapos/lapos_tagger.h"
+#include "cc/phraser/english/number/number_evaluator.h"
+#include "cc/phraser/english/personal/pers_pro_evaluator.h"
+#include "cc/phraser/english/personal/pos_pro_evaluator.h"
+#include "cc/phraser/english/personal/pos_det_evaluator.h"
+#include "cc/phraser/english/tag/tag_evaluator.h"
+#include "cc/phraser/english/verb/conjugator.h"
+#include "cc/phraser/english/verb/conjugation_spec.h"
+#include "cc/phraser/english/verb/conjugation_spec_derivation.h"
+#include "cc/phraser/english/verb/verb_evaluator.h"
 
 using std::string;
 using std::unordered_map;
@@ -71,6 +70,8 @@ NumberEvaluator* MakeNumberEvaluator(string* error) {
 }
 
 TagEvaluator* MakeTagEvaluator(string* error) {
+    /*
+XXX
     LaposTagger* tagger = new LaposTagger();
     if (!tagger) {
         *error = "Allocating the tagger failed.";
@@ -81,6 +82,7 @@ TagEvaluator* MakeTagEvaluator(string* error) {
         *error = "Tagger init failed.";
         return NULL;
     }
+    */
 
     TagEvaluator* e = new TagEvaluator();
     if (!e) {
@@ -88,7 +90,7 @@ TagEvaluator* MakeTagEvaluator(string* error) {
         return NULL;
     }
 
-    if (!e->Init(tagger, error)) {
+    if (!e->Init(/*tagger,*/ error)) {
         return NULL;
     }
 

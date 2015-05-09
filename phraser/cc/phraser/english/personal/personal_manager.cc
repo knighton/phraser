@@ -1,7 +1,7 @@
 #include "personal_manager.h"
 
-#include "cc/english/common.h"
-#include "cc/misc/combinatorics.h"
+#include "cc/base/combinatorics.h"
+#include "cc/phraser/english/common.h"
 
 namespace {
 

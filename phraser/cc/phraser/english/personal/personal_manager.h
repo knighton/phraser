@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/expression/expression.h"
+#include "cc/phraser/expression/expression.h"
 
 using std::string;
 using std::unordered_map;

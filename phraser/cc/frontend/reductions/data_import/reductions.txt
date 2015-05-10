@@ -1,13 +1,54 @@
-# Original, First, Second, Normalized First, Normalized Second
-cannot can  not  can   not
-d'ye   d'   ye   do    you
-gimme  gim  me   give  me
-gonna  gon  na   going to
-gotta  got  ta   got   to
-lemme  lem  me   let   me
-more'n more 'n   more  than
-'tis   't   is   it    is
-'twas  't   was  it    was
-wanna  wan  na   want  to
+# From the LAPOS tokenizer.
+cannot can not
+d'ye   do you
+gimme  give me
+# gonna  going to
+gotta  got to
+# lemme  let me
+more'n more than
+'tis   it is
+'twas  it was
+# wanna  want to
 
+# From https://en.wikipedia.org/wiki/Relaxed_pronunciation
 
+# Of, have, and to
+coulda  could have
+musta   must have
+shoulda should have
+woulda  would have
+lotta   lot of
+kinda   kind of
+outta   out of
+sorta   sort of
+gonna   going to
+hafta   have to
+wanna   want to
+oughta  ought to
+
+# You
+didja  did you
+d'ya   do you
+doncha don't you
+getcha get you
+wouldja would you
+
+# Other
+bout     about
+aright   alright
+aight    alright
+imma     i'm going to
+i'mma    i'm going to
+innit    isn't it
+lemme    let me
+prolly   probably
+probly   probably
+trynna   trying to
+wanna    want a
+whassup  what is up
+wassup   what is up
+sup      what is up
+whatcha  what are you
+whatcha  what have you
+whaddaya what do you
+whaddaya what are you

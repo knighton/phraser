@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+
+INDENT = ' ' * 4
+
+
 H_SRC = """
 #ifndef CC_FRONTEND_REDUCTIONS_REDUCTION_DATA_H_
 #define CC_FRONTEND_REDUCTIONS_REDUCTION_DATA_H_
@@ -12,19 +16,9 @@ using std::vector;
 
 // Automatically generated file -- do not edit!
 
-struct Reduction {
-    string reduced;      // "wanna"
-
-    string first;        // "wan"
-    string second;       // "na"
-
-    string norm_first;   // "want"
-    string norm_second;  // "to"
-};
-
 namespace reduction_data = {
 
-extern vector<Reduction> reductions;
+extern vector<vector<string>> reductions;
 
 }  // namespace
 
@@ -35,7 +29,7 @@ extern vector<Reduction> reductions;
 CC_SRC = """
 #include "reduction_data.h"
 
-vector<Reduction> reductions = {
+vector<vector<string>> reductions = {
 %s
 };
 
@@ -49,8 +43,9 @@ def each_line():
             if x != -1:
                 line = line[:x]
             ss = line.split()
-            if ss:
-                yield ss
+            if not ss:
+                continue
+            yield ss
 
 
 def escape(s):
@@ -60,9 +55,8 @@ def escape(s):
 def make_reductions_s():
     lines = []
     for ss in each_line():
-        print '!', ss
-        assert len(ss) == 5
-        line = '    {%s}' % ', '.join(map(escape, ss))
+        assert 2 <= len(ss)
+        line = '    {%s},' % ', '.join(map(escape, ss))
         lines.append(line)
     return '\n'.join(lines)
 

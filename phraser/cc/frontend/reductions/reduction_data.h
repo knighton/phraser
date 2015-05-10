@@ -11,7 +11,7 @@ using std::vector;
 
 namespace reduction_data = {
 
-extern vector<vector<string>> reductions;
+extern vector<vector<string>> REDUCTIONS;
 
 }  // namespace
 

@@ -18,7 +18,7 @@ using std::vector;
 
 namespace reduction_data = {
 
-extern vector<vector<string>> reductions;
+extern vector<vector<string>> REDUCTIONS;
 
 }  // namespace
 
@@ -29,7 +29,7 @@ extern vector<vector<string>> reductions;
 CC_SRC = """
 #include "reduction_data.h"
 
-vector<vector<string>> reductions = {
+vector<vector<string>> REDUCTIONS = {
 %s
 };
 

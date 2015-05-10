@@ -1,6 +1,6 @@
 #include "reduction_data.h"
 
-vector<vector<string>> reductions = {
+vector<vector<string>> REDUCTIONS = {
     {"cannot", "can", "not"},
     {"d'ye", "do", "you"},
     {"gimme", "give", "me"},

@@ -1,66 +1,69 @@
-# Reduced form (token) -> list of normalized tokens.
+# List of single-token reduced forms -> list of normalized forms.
 #
-# Reduced forms can map to multiple normalized forms.  If they do, the
-# normalized forms must all have the same length, and the same corresponding
-# parts of speech.
-#
-# Data is not case-sensitive.
-#
-# Contractions are OK, but they must be tokenized.
+# Notes:
+# * Data is not case-sensitive.
+# * Contractions are OK, but they must be tokenized.
+# * If there are multiple mormalized options, they must be the same number of
+#   tokens.
+# * Tags are required if they different between normalized options (eg, getcha
+#   -> get you/PRP, get your/PRP$).
+# * If no tag is provided, the tag will be provided automatically by the tagger.
+#   This happens by taking the first untagged word, or if there are none, the
+#   first word, from each Token, tagging that sequence, and applying those tags
+#   to the rest of the words in each Token.
 
 # From the LAPOS tokenizer.
-cannot   can not
-d'ye     do you
-gimme    give me
-# gonna  going to
-gotta    got to
-# lemme  let me
-more'n   more than
-'tis     it is
-'twas    it was
-# wanna  want to
+cannot  -> can not
+d'ye    -> do you
+gimme   -> give me
+# gonna -> going to
+gotta   -> got to
+# lemme -> let me
+more'n  -> more than
+'tis    -> it is
+'twas   -> it was
+# wanna -> want to
 
 # From https://en.wikipedia.org/wiki/Relaxed_pronunciation
 
 # Of, have, and to
-coulda  could have
-musta   must have
-shoulda should have
-woulda  would have
-lotta   lot of
-kinda   kind of
-outta   out of
-sorta   sort of
-gonna   going to
-hafta   have to
-wanna   want to
-oughta  ought to
+coulda  -> could have
+musta   -> must have
+shoulda -> should have
+woulda  -> would have
+lotta   -> lot of
+kinda   -> kind of
+outta   -> out of
+sorta   -> sort of
+gonna   -> going to
+hafta   -> have to
+wanna   -> want to
+oughta  -> ought to
 
 # You
-didja   did you
-d'ya    do you
-doncha  do n't you
-getcha  get you
-wouldja would you
+didja   -> did you
+d'ya    -> do you
+doncha  -> do n't you
+getcha  -> get you/PRP, get your/PRP$
+wouldja -> would you
 
 # Other
-bout     about
-aright   alright
-aight    alright
-ima      i 'm going to
-i'ma     i 'm going to
-imma     i 'm going to
-i'mma    i 'm going to
-innit    is n't it
-lemme    let me
-prolly   probably
-probly   probably
-trynna   trying to
-wanna    want a
-whassup  what is up
-wassup   what is up
-sup      what is up
-whatcha  what are you
-whatcha  what have you
-whaddaya what do you
-whaddaya what are you
+bout     -> about
+aright   -> alright
+aight    -> alright
+ima, imma, i'ma, i'mma -> i 'm going to
+innit    -> is n't it
+lemme    -> let me
+prolly   -> probably
+probly   -> probably
+trynna   -> trying to
+wanna    -> want a
+whassup  -> what is up
+wassup   -> what is up
+sup      -> what is up
+whatcha  -> what are you, what have you
+whaddaya -> what do you, what are you
+
+# More.
+donchaknow -> do n't you know
+alot       -> a lot

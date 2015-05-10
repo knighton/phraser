@@ -1,3 +1,9 @@
+# Token -> list of tokens.
+#
+# Data is not case-sensitive.
+#
+# Contractions are OK, but they must be tokenized.
+
 # From the LAPOS tokenizer.
 cannot can not
 d'ye   do you
@@ -27,19 +33,21 @@ wanna   want to
 oughta  ought to
 
 # You
-didja  did you
-d'ya   do you
-doncha don't you
-getcha get you
+didja   did you
+d'ya    do you
+doncha  do n't you
+getcha  get you
 wouldja would you
 
 # Other
 bout     about
 aright   alright
 aight    alright
-imma     i'm going to
-i'mma    i'm going to
-innit    isn't it
+ima      i 'm going to
+i'ma     i 'm going to
+imma     i 'm going to
+i'mma    i 'm going to
+innit    is n't it
 lemme    let me
 prolly   probably
 probly   probably

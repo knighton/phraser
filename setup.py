@@ -76,7 +76,7 @@ setup(
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',
     license='MIT',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     ext_modules=[phraser],
     long_description=resource_string(__name__, 'README.rst'),
 )

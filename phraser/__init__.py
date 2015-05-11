@@ -1,4 +1,4 @@
-from ext import phraser
+import ext as phraser
 
 
 def init(phrase_config_ff):

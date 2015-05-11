@@ -4,7 +4,6 @@ CC = clang++
 
 SRC_ROOT = phraser/
 BIN_DIR = bin/
-EXT_DIR = phraser/ext/
 
 PYENV = . env/bin/activate;
 PYTHON = $(PYENV) python
@@ -38,11 +37,8 @@ nuke: clean
 	rm -rf *.egg *.egg-info env bin cover coverage.xml nosetests.xml
 
 clean:
-	rm -rf $(BIN_DIR)
-	rm -rf $(EXT_DIR)
-	rm -f $(EXT_DIR)/*.so
 	python setup.py clean
-	rm -rf dist build
+	rm -rf dist build $(BIN_DIR)
 	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
 
 compare_against_impermium:
@@ -59,6 +55,5 @@ env/bin/activate: requirements.txt setup.py
 	test -f $@ || virtualenv --no-site-packages env
 	$(PYENV) pip install -U pip wheel
 	$(PYENV) pip install -e . -r $<
-	mkdir -p $(EXT_DIR)
-	$(PYTHON) setup.py build_ext
+	$(PYTHON) setup.py build_ext --inplace
 	touch $@

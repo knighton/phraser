@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 
-#include "cc/misc/unicode.h"
 #include "cc/analysis/analyzer.h"
+#include "cc/misc/unicode.h"
 
 using std::string;
 using std::vector;
@@ -274,6 +274,7 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
 
     // Check if initialized.
     if (!ANALYZER) {
+        Py_INCREF(Py_None);
         return MakeTuple(
             Py_None, PyUnicode_FromString("[Phraser] Call init() first."));
     }
@@ -289,6 +290,7 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
     AnalysisOptions options;
     string error;
     if (!AnalysisOptionsFromDict(options_dict, &options, &error)) {
+        Py_INCREF(Py_None);
         return MakeTuple(
             Py_None, PyUnicode_FromString(error.data()));
     }
@@ -296,6 +298,7 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
     // Analyze the text.
     AnalysisResult result;
     if (!ANALYZER->Analyze(text, options, &result, &error)) {
+        Py_INCREF(Py_None);
         return MakeTuple(
             Py_None, PyUnicode_FromString(error.data()));
     }
@@ -303,10 +306,12 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
     // Convert the results to a python dict.
     PyObject* result_dict;
     if (!(result_dict = DictFromAnalysisResult(result, &error))) {
+        Py_INCREF(Py_None);
         return MakeTuple(
             Py_None, PyUnicode_FromString(error.data()));
     }
 
+    Py_INCREF(Py_None);
     return MakeTuple(result_dict, Py_None);
 }
 

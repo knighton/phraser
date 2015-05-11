@@ -11,7 +11,7 @@ using std::vector;
 
 // Automatically generated file -- do not edit!
 
-namespace reduction_data = {
+namespace reduction_data {
 
 extern unordered_map<string, vector<vector<string>>> REDUCED2NORMAL;
 

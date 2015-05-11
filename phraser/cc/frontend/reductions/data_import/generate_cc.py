@@ -18,7 +18,7 @@ using std::vector;
 
 // Automatically generated file -- do not edit!
 
-namespace reduction_data = {
+namespace reduction_data {
 
 extern unordered_map<string, vector<vector<string>>> REDUCED2NORMAL;
 
@@ -31,9 +31,13 @@ extern unordered_map<string, vector<vector<string>>> REDUCED2NORMAL;
 CC_SRC = """
 #include "reduction_data.h"
 
+namespace reduction_data {
+
 unordered_map<string, vector<vector<string>>> REDUCED2NORMAL = {
 %s
 };
+
+}  // namespace
 
 """[1:]
 
@@ -90,11 +94,13 @@ def dump_list(ss):
 
 def dump_list_of_lists(sss):
     rr = []
-    rr.append('{')
+    rr.append('{\n')
     if sss:
+        rr.append('%s%s' % (INDENT, INDENT))
         rr += dump_list(sss[0])
     for ss in sss[1:]:
-        rr.append(', ')
+        rr.append(',\n')
+        rr.append('%s%s' % (INDENT, INDENT))
         rr += dump_list(ss)
     rr.append('}')
     return rr
@@ -107,7 +113,7 @@ def dump_line(reduced, sss):
     rr.append(escape(reduced))
     rr.append(', ')
     rr += dump_list_of_lists(sss)
-    rr.append('}')
+    rr.append('},')
     return ''.join(rr)
 
 

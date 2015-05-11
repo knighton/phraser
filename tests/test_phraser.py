@@ -9,14 +9,13 @@ class TestPhraser(unittest.TestCase):
     def test_phraser_simple(self):
         result = phraser.init([PHRASER_CONFIG])
         self.assertEqual(True, result)
-        text = u"u quote some string"
+        text = u'blah blah some string'
         obj = phraser.analyze(text)
         self.assertEqual(text, obj.original_text)
 
     def test_phraser_threat1(self):
         result = phraser.init([PHRASER_CONFIG])
         self.assertEqual(True, result)
-        text = u"I am going to kill you"
+        text = u'i will kill you.'
         obj = phraser.analyze(text)
-        # TODO: add actual test for phrase matches
-        obj.phrase_matches
+        self.assertNotEqual(obj.phrase_matches, [])

@@ -11,7 +11,7 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-class PtbEscaperStep : TokenRewriteInPlaceStep {
+class PtbEscaperStep : public TokenRewriteInPlaceStep {
   public:
     bool Init(string* error);
 

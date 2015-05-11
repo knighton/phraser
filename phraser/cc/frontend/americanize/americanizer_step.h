@@ -11,7 +11,7 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-class AmericanizerStep : TokenRewriteInPlaceStep {
+class AmericanizerStep : public TokenRewriteInPlaceStep {
   public:
     bool Init(string* error);
 

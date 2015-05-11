@@ -5,13 +5,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/frontend/base/token_norm_rewrite_in_place_step.h"
+#include "cc/frontend/base/token_rewrite_in_place_step.h"
 
 using std::string;
 using std::unordered_map;
 using std::vector;
 
-class PtbEscaperStep : TokenNormRewriteInPlaceStep {
+class PtbEscaperStep : TokenRewriteInPlaceStep {
   public:
     bool Init(string* error);
 

@@ -2,6 +2,8 @@
 
 #include "cc/frontend/destutter/destutterer_step.h"
 #include "cc/frontend/html/html_step.h"
+#include "cc/frontend/americanize/americanizer_step.h"
+#include "cc/frontend/ptb_escape/ptb_escaper_step.h"
 
 namespace {
 
@@ -11,6 +13,7 @@ bool MakeUnicodeSteps(
     {
         auto* step = new DestuttererStep();
         if (!step) {
+            *error = "[Frontend] Allocation failed.";
             return false;
         }
 
@@ -25,6 +28,7 @@ bool MakeUnicodeSteps(
     {
         auto* step = new HtmlStep();
         if (!step) {
+            *error = "[Frontend] Allocation failed.";
             return false;
         }
 
@@ -38,10 +42,46 @@ bool MakeUnicodeSteps(
     return true;
 }
 
+bool MakeTokenSteps(vector<TokenRewriteInPlaceStep*>* steps, string* error) {
+    {
+        auto* am = new AmericanizerStep();
+        if (!am) {
+            *error = "[Frontend] Allocation failed.";
+            return false;
+        }
+
+        if (!am->Init(error)) {
+            return false;
+        }
+
+        steps->emplace_back(am);
+    }
+
+    {
+        auto* esc = new PtbEscaperStep();
+        if (!esc) {
+            *error = "[Frontend] Allocation failed.";
+            return false;
+        }
+
+        if (!esc->Init(error)) {
+            return false;
+        }
+
+        steps->emplace_back(esc);
+    }
+
+    return true;
+}
+
 }  // namespace
 
 Frontend::~Frontend() {
     for (auto& p : unicode_steps_with_html_) {
+        delete p;
+    }
+
+    for (auto& p : token_steps_) {
         delete p;
     }
 }
@@ -49,6 +89,14 @@ Frontend::~Frontend() {
 bool Frontend::Init(string* error) {
     if (!MakeUnicodeSteps(&unicode_steps_no_html_, &unicode_steps_with_html_,
                           error)) {
+        return false;
+    }
+
+    if (!MakeTokenSteps(&token_steps_, error)) {
+        return false;
+    }
+
+    if (!unreduct_.InitDefault(error)) {
         return false;
     }
 
@@ -61,4 +109,10 @@ bool Frontend::Init(string* error) {
 
     is_ok_ = true;
     return true;
+}
+
+bool Frontend::Analyze(
+        const ustring& original_text, const FrontendOptions& options,
+        FrontendResult* result, string* error) const {
+    return false;  // XXX
 }

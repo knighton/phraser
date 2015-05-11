@@ -7,9 +7,9 @@
 using std::string;
 using std::vector;
 
-class TokenNormRewriteInPlaceStep {
+class TokenRewriteInPlaceStep {
   public:
-    virtual ~TokenNormRewriteInPlaceStep() {}
+    virtual ~TokenRewriteInPlaceStep() {}
 
     virtual bool RewriteInPlace(vector<string>* inout, string* error) const = 0;
 };

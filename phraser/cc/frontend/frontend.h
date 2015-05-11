@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "cc/frontend/ascii/ptb_ascii_normalizer.h"
+#include "cc/frontend/base/rewrite_in_place_step.h"
+#include "cc/frontend/base/token_rewrite_in_place_step.h"
 #include "cc/frontend/base/unicode_rewrite_step.h"
 #include "cc/frontend/contractions/uncontractor.h"
 #include "cc/frontend/frontend_options.h"
@@ -21,8 +23,8 @@ class Frontend {
     bool Init(string* error);
 
     // Returns false on failure.
-    bool Parse(const ustring& original_text, const FrontendOptions& options,
-               FrontendResult* result, string* error) const;
+    bool Analyze(const ustring& original_text, const FrontendOptions& options,
+                 FrontendResult* result, string* error) const;
 
   private:
     bool is_ok_;
@@ -47,13 +49,13 @@ class Frontend {
 
     // PTB ASCII text to token conversion.
     WhitespaceTokenizer tok_;
+#endif
 
     // In-place token normalization.
     //
     // 1. PTBEscaper
     // 2. Americanizer
     vector<TokenRewriteInPlaceStep*> token_steps_;
-#endif
 
     // Un-perform reductions that are not contractions.
     //

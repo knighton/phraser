@@ -1,0 +1,6 @@
+nose
+coverage
+nosexcover
+mock
+pytest
+ipdb>=0.8

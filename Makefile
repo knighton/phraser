@@ -1,55 +1,59 @@
+.PHONY: clean coverage develop env extras package release test virtualenv
+
 CC = clang++
 
 SRC_ROOT = phraser/
 BIN_DIR = bin/
-EXT_DIR = phraser/ext/
 
-FLAGS_BASE = \
-	-std=c++11 \
-	-fcolor-diagnostics \
-	-O3 \
-	-ferror-limit=5 \
-	-I$(SRC_ROOT) \
-	#-lboost_regex \
+PYENV = . env/bin/activate;
+PYTHON = $(PYENV) python
+EXTRAS_REQS := $(wildcard requirements-*.txt)
+DISTRIBUTE = sdist bdist_wheel
 
-FLAGS_WARN = \
-	-Wpedantic \
-	-Wall \
-	-Weverything \
-	-Wextra \
-	-Werror \
+package: env
+	$(PYTHON) setup.py $(DISTRIBUTE)
 
-FLAGS_WARN_DISABLE = \
-	-Wno-c++98-compat-pedantic \
-	-Wno-covered-switch-default \
-	-Wno-exit-time-destructors \
-	-Wno-global-constructors \
-	-Wno-padded \
-	-Wno-weak-vtables \
+release: env
+	$(PYTHON) setup.py $(DISTRIBUTE) upload -r livefyre
 
-FLAGS_WARN_DISABLE_LAPOS = \
-	-Wno-shorten-64-to-32 \
-	-Wno-sign-conversion \
-	-Wno-old-style-cast \
-	-Wno-sign-compare \
-	-Wno-float-equal \
-	-Wno-unused-variable \
-	-Wno-unused-parameter \
-	-Wno-unused-function \
+# if in local dev on Mac, `make coverage` will run tests and open
+# coverage report in the browser
+ifeq ($(shell uname -s), Darwin)
+coverage: test
+	open cover/index.html
+endif
 
-FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
-		$(FLAGS_WARN_DISABLE_LAPOS)
+test: extras
+	$(PYENV) nosetests $(NOSEARGS)
+	$(PYENV) py.test README.rst
+
+extras: env/make.extras
+env/make.extras: $(EXTRAS_REQS) | env
+	rm -rf env/build
+	$(PYENV) for req in $?; do pip install -r $$req; done
+	touch $@
+
+nuke: clean
+	rm -rf *.egg *.egg-info env bin cover coverage.xml nosetests.xml
 
 clean:
-	rm -rf $(BIN_DIR)
-	rm -rf $(EXT_DIR)
+	python setup.py clean
+	rm -rf dist build $(BIN_DIR)
+	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
 
 compare_against_impermium:
 	mkdir -p $(BIN_DIR)
 	$(CC) `find -type f -name "*.cc"` $(SRC_ROOT)/tools/compare_against_impermium.cpp -o $(BIN_DIR)/compare_against_impermium $(FLAGS)
 
-all:
-	mkdir -p $(EXT_DIR)
-	rm $(EXT_DIR)/*.so
-	python setup.py build_ext
-	rm -rf build/
+develop:
+	@echo "Installing for " `which pip`
+	pip uninstall $(PYMODULE) || true
+	python setup.py develop
+
+env virtualenv: env/bin/activate
+env/bin/activate: requirements.txt setup.py
+	test -f $@ || virtualenv --no-site-packages env
+	$(PYENV) pip install -U pip wheel
+	$(PYENV) pip install -e . -r $<
+	$(PYTHON) setup.py build_ext --inplace
+	touch $@

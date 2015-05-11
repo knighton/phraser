@@ -1,4 +1,4 @@
-from ext import phraser
+from phraser import ext
 
 
 def init(phrase_config_ff):
@@ -10,7 +10,7 @@ def init(phrase_config_ff):
     Call this first.
     """
     phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)
-    err = phraser.init(phrase_configs)
+    err = ext.init(phrase_configs)
     if err:
         raise err
     return True
@@ -22,7 +22,7 @@ def to_dict():
 
     Dump the module's state as a recursive dict.
     """
-    return phraser.to_dict()
+    return ext.to_dict()
 
 
 def to_html():
@@ -79,7 +79,7 @@ def analyze(text, options=None):
         assert isinstance(options, AnalysisOptions)
     else:
         options = AnalysisOptions()
-    d, err = phraser.analyze(text, options.to_dict())
+    d, err = ext.analyze(text, options.to_dict())
     if err:
         raise err
 

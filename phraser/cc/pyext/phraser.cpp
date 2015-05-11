@@ -324,8 +324,8 @@ PyMethodDef PHRASER_METHODS[] = {
 
 }  // namespace
 
-extern "C" void initphraser(void);
+extern "C" void initext(void);
 
-PyMODINIT_FUNC initphraser(void) {
-    Py_InitModule3("phraser", PHRASER_METHODS, PHRASER_DOC);
+PyMODINIT_FUNC initext(void) {
+    Py_InitModule3("ext", PHRASER_METHODS, PHRASER_DOC);
 }

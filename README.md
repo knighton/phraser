@@ -331,6 +331,10 @@ We list alternate forms of tokens ("ur" &rarr; "ur", "your", "you're").
 * Destuttering handles symbols ("😋😋😋" &rarr; "😋").
 * Added basic textspeak normalization.
 
+#### 0.0.3 (2015-05-10)
+
+* Fix release.
+
 #### 0.0.2 (2015-05-06)
 
 * Phraser is now importable via pip as a python module.

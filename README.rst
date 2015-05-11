@@ -492,17 +492,17 @@ Release notes
 0.1.0 Planned
 ^^^^^^^^^^^^^
 
-* User visible:
+User visible:
 
-  * Phrase configs are now defined in YAML (before, a custom text format).
-  * Boolean operators on expressions are added (and, or, not, etc.).
+* Phrase configs are now defined in YAML (before, a custom text format).
+* Boolean operators on expressions are added (and, or, not, etc.).
 
-* Backend:
+Backend:
 
-  * Integrated a rule-based sentence boundary detector for web comments (before, assumed one sentence per input).
-  * English contractions are automatically replaced with their uncontracted equivalents.
-  * All-at-once expressions removed (use dynamic expressions instead).
-  * Tagging is now done automatically in the frontend.
+* Integrated a rule-based sentence boundary detector for web comments (before, assumed one sentence per input).
+* English contractions are automatically replaced with their uncontracted equivalents.
+* All-at-once expressions removed (use dynamic expressions instead).
+* Tagging is now done automatically in the frontend.
 
 0.0.3 (2015-05-11)
 ^^^^^^^^^^^^^^^^^^

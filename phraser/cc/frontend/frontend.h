@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "cc/frontend/ascii/ptb_ascii_normalizer.h"
-#include "cc/frontend/base/rewrite_in_place_step.h"
+#include "cc/frontend/base/ascii_rewrite_step.h"
 #include "cc/frontend/base/token_rewrite_in_place_step.h"
 #include "cc/frontend/base/unicode_rewrite_step.h"
 #include "cc/frontend/contractions/uncontractor.h"
@@ -39,7 +39,6 @@ class Frontend {
     // Unicode to Penn Treebank ASCII conversion.
     PtbAsciiNormalizer u2a_;
 
-#if 0
     // ASCII text rewriting.
     //
     // 1. PunctuationClassifier
@@ -47,6 +46,7 @@ class Frontend {
     // 3. PunctuationDecoder
     vector<AsciiRewriteStep*> ascii_steps_;
 
+#if 0
     // PTB ASCII text to token conversion.
     WhitespaceTokenizer tok_;
 #endif

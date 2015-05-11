@@ -1,5 +1,5 @@
-#ifndef CC_FRONTEND_BASE_TOKEN_NORM_REWRITE_IN_PLACE_STEP_H_
-#define CC_FRONTEND_BASE_TOKEN_NORM_REWRITE_IN_PLACE_STEP_H_
+#ifndef CC_FRONTEND_BASE_TOKEN_REWRITE_IN_PLACE_STEP_H_
+#define CC_FRONTEND_BASE_TOKEN_REWRITE_IN_PLACE_STEP_H_
 
 #include <string>
 #include <vector>
@@ -14,4 +14,4 @@ class TokenRewriteInPlaceStep {
     virtual bool RewriteInPlace(vector<string>* inout, string* error) const = 0;
 };
 
-#endif  // CC_FRONTEND_BASE_TOKEN_NORM_REWRITE_IN_PLACE_STEP_H_
+#endif  // CC_FRONTEND_BASE_TOKEN_REWRITE_IN_PLACE_STEP_H_

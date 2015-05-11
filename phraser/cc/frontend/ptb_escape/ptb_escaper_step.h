@@ -1,5 +1,5 @@
-#ifndef CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_H_
-#define CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_H_
+#ifndef CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_STEP_H_
+#define CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_STEP_H_
 
 #include <string>
 #include <unordered_map>
@@ -21,4 +21,4 @@ class PtbEscaperStep : public TokenRewriteInPlaceStep {
     unordered_map<string, string> s2s_;
 };
 
-#endif  // CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_H_
+#endif  // CC_FRONTEND_PTB_ESCAPE_PTB_ESCAPER_STEP_H_

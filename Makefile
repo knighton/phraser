@@ -49,8 +49,7 @@ compare_against_impermium:
 	$(CC) `find -type f -name "*.cc"` $(SRC_ROOT)/tools/compare_against_impermium.cpp -o $(BIN_DIR)/compare_against_impermium $(FLAGS)
 
 all:
-	rm -rf $(EXT_DIR)
 	mkdir -p $(EXT_DIR)
-	touch $(EXT_DIR)/__init__.py
+	rm $(EXT_DIR)/*.so
 	python setup.py build_ext
 	rm -rf build/

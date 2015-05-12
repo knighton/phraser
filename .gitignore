@@ -1,0 +1,28 @@
+*.py[cod]
+*.pyo
+*.pyd
+*.d
+*.o
+*.so
+dist/
+build/
+.backup/
+*.stackdump
+*~
+*.egg-info
+setuptools-*.egg
+.ropeproject/
+
+*.egg
+
+*.sw[op]
+
+# Virtualenv
+env
+
+# tests and coverage
+.tox/
+.coverage
+cover/
+coverage.xml
+nosetests.xml

@@ -105,6 +105,10 @@ void ExpressionEvaluator::Clear() {
     token2precomputed_.clear();
 }
 
+ExpressionEvaluator::~ExpressionEvaluator() {
+    Clear();
+}
+
 bool ExpressionEvaluator::InitWithEvaluators(
         const unordered_map<string, PrecomputableEvaluator*>& type2precompute,
         const unordered_map<string, DynamicEvaluator*>& type2dynamic,

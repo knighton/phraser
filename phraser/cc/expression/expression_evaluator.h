@@ -61,6 +61,8 @@ class ExprEvalVocabulary {
 
 class ExpressionEvaluator {
   public:
+    ~ExpressionEvaluator();
+
     // Nuke everything.  You can't just do wipe out Evaluators or just the
     // vocabulary due to the precomputing.
     void Clear();

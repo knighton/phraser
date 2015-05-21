@@ -21,7 +21,8 @@ class CommentReader {
 
     bool Init(const vector<string>& comment_ff);
 
-    CommentReaderStatus Next(Comment* comment, string* error);
+    CommentReaderStatus Next(bool dump_file_names, Comment* comment,
+                             string* error);
 
   private:
     vector<string> comment_ff_;

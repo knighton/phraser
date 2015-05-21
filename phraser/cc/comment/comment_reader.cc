@@ -72,11 +72,16 @@ static bool ParseLine(const ustring& line, Comment* comment, string* error) {
     return true;
 }
 
-CommentReaderStatus CommentReader::Next(Comment* comment, string* error) {
+CommentReaderStatus CommentReader::Next(
+        bool dump_file_names, Comment* comment, string* error) {
     // If byte index is zero, load the file.
     if (!byte_index_) {
         if (file_index_ < comment_ff_.size()) {
             auto& f = comment_ff_[file_index_];
+            if (dump_file_names) {
+                printf("About to start extracting comments from [%s].\n",
+                       f.data());
+            }
             if (!files::FileToString(f, &bytes_)) {
                 *error = "Could not read file: [" + f + "]";
                 return CRS_ERROR;
@@ -91,7 +96,7 @@ CommentReaderStatus CommentReader::Next(Comment* comment, string* error) {
     if (!utf8::NextLine(bytes_.data(), bytes_.size(), &byte_index_, &line)) {
         ++file_index_;
         byte_index_ = 0;
-        return Next(comment, error);
+        return Next(dump_file_names, comment, error);
     }
 
     if (!ParseLine(line, comment, error)) {

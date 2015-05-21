@@ -107,7 +107,7 @@ develop:
 
 .PHONY: build_ext
 build_ext phraser/phraserext.so: env
-	$(PYTHON) setup.py build_ext --inplace --build-temp=$(BUILD_ROOT)
+	$(PYTHON) setup.py build_ext --inplace
 
 env virtualenv: env/bin/activate
 env/bin/activate: requirements.txt setup.py

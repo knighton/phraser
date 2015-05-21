@@ -1,5 +1,5 @@
-#ifndef CC_MISC_NEW_UTF8_H_
-#define CC_MISC_NEW_UTF8_H_
+#ifndef CC_BASE_UNICODE_UTF8_H_
+#define CC_BASE_UNICODE_UTF8_H_
 
 #include <cstddef>
 #include <cstdint>
@@ -159,4 +159,4 @@ void Decode(const char* s, size_t num_bytes, ustring* text);
 
 }  // namespace utf8
 
-#endif  // CC_MISC_NEW_UTF8_H_
+#endif  // CC_BASE_UNICODE_UTF8_H_

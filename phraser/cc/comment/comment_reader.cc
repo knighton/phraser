@@ -5,7 +5,7 @@
 
 #include "cc/comment/comment.h"
 #include "cc/base/files.h"
-#include "cc/base/utf8.h"
+#include "cc/base/unicode/utf8.h"
 
 using std::string;
 using std::vector;

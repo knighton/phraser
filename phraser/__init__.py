@@ -1,3 +1,4 @@
+import collections
 from phraser.phraserext import PhraserExt
 
 
@@ -60,10 +61,14 @@ class Phraser(object):
         if isinstance(text, str):
             text = text.decode(encoding)
         elif not isinstance(text, unicode):
-            text = unicode(text)
+            raise TypeError("Expected string or unicode type but got %s",
+                            type(options))
         if isinstance(options, AnalysisOptions):
             options = options.to_dict()
         elif options is None:
             options = {}
+        elif not isinstance(collections.Mapping):
+            raise TypeError("Expected a mapping type but got %s", type(options))
+
         result = self._extension.analyze(text, options)
         return AnalysisResult(result)

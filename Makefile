@@ -91,10 +91,13 @@ develop:
 	pip uninstall $(PYMODULE) || true
 	python setup.py develop
 
+.PHONY: build
+build phraser/phraserext.so: env
+	$(PYTHON) setup.py build_ext --inplace
+
 env virtualenv: env/bin/activate
 env/bin/activate: requirements.txt setup.py
 	test -f $@ || virtualenv --no-site-packages env
 	$(PYENV) pip install -U pip wheel
 	$(PYENV) pip install -e . -r $<
-	$(PYTHON) setup.py build_ext --inplace
 	touch $@

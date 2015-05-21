@@ -145,10 +145,10 @@ namespace utf8 {
 //     string bytes = "An\nexample\n...\n";
 //     ustring line;
 //     size_t x = 0;
-//     while (utf8::NextLine(bytes.data(), bytes.size(), &x, &line)) {
+//     while (utf8::EachLine(bytes.data(), bytes.size(), &x, &line)) {
 //         printf("Read %zu code points.\n", line.size());
 //     }
-bool NextLine(const char* s, size_t num_bytes, size_t* i, ustring* line);
+bool EachLine(const char* s, size_t num_bytes, size_t* i, ustring* line);
 
 // Decode UTF-8 encoded code points from raw bytes.
 //

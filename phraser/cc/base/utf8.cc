@@ -148,7 +148,7 @@ uchar utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
 
 namespace utf8 {
 
-bool NextLine(const char* s, size_t num_bytes, size_t* i, ustring* line) {
+bool EachLine(const char* s, size_t num_bytes, size_t* i, ustring* line) {
     if (num_bytes <= *i) {
         return false;
     }

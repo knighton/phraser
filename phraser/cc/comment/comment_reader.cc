@@ -93,7 +93,7 @@ CommentReaderStatus CommentReader::Next(
 
     // Try to load the next line.  If nothing, reset to the next file.
     ustring line;
-    if (!utf8::NextLine(bytes_.data(), bytes_.size(), &byte_index_, &line)) {
+    if (!utf8::EachLine(bytes_.data(), bytes_.size(), &byte_index_, &line)) {
         ++file_index_;
         byte_index_ = 0;
         return Next(dump_file_names, comment, error);

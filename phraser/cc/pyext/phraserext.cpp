@@ -45,14 +45,15 @@ PhraserExt_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     PhraserExt *self;
 
     if ((self = (PhraserExt *)type->tp_alloc(type, 0)) == NULL) {
-            PyErr_SetString(PyExc_MemoryError, "cannot allocate PhraserExt instance");
-            return NULL;
+        PyErr_SetString(PyExc_MemoryError, "cannot allocate PhraserExt instance");
+        return NULL;
     }
 
-    if ((self->ANALYZER = new Analyzer()) == NULL) {
-            Py_DECREF(self);
-            PyErr_SetString(PyExc_MemoryError, "cannot allocate analyzer object");
-            return NULL;
+    Analyzer* analyzer = new Analyzer();
+    if ((self->ANALYZER = analyzer) == NULL) {
+        Py_DECREF(self);
+        PyErr_SetString(PyExc_MemoryError, "cannot allocate analyzer object");
+        return NULL;
     }
 
     return (PyObject *)self;
@@ -82,7 +83,7 @@ PhraserExt_init(PhraserExt *self, PyObject *args, PyObject *kwds)
         PyObject* s = PyList_GetItem(list, i);
         if (!PyString_Check(s)) {
             PyErr_Format(PyExc_ValueError,
-                "[PhraserExt] List item at index %ld was not a string.", i);
+                    "[PhraserExt] List item at index %ld was not a string.", i);
             return -1;
         }
         phrase_configs.emplace_back(PyString_AsString(s));
@@ -404,7 +405,6 @@ PyMODINIT_FUNC initphraserext(void) {
 
     PyObject* m;
 
-    PhraserExtType.tp_new = PyType_GenericNew;
     if (PyType_Ready(&PhraserExtType) < 0)
         return;
 

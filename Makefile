@@ -6,6 +6,7 @@ SRC_ROOT = phraser
 BIN_DIR = bin
 BUILD_ROOT = build/temp
 BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
+TEST_FILE = tests/data/50k_comments.txt
 
 FLAGS_BASE = \
     -std=c++11 \
@@ -94,8 +95,10 @@ compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CC_FLAGS) $(O_INTERMEDIATES) $(COMPARE_MAIN) -o $(COMPARE_BIN) $(LD_FLAGS)
 
-memcheck:
-	time valgrind --leak-check=full --track-origins=yes ./bin/compare_against_impermium /media/x/impermium_dedup/50k_comments.txt > valgrind_stdout.txt 2> valgrind_stderr.txt
+memcheck: compare_against_impermium
+	time valgrind --leak-check=full --track-origins=yes \
+		$(COMPARE_BIN) $(TEST_FILE)
+		> valgrind_stdout.txt 2> valgrind_stderr.txt
 
 develop:
 	@echo "Installing for " `which pip`

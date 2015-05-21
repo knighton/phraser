@@ -1,5 +1,4 @@
-from distutils.core import setup
-from setuptools import Extension, find_packages
+from setuptools import setup, Extension, find_packages
 from pkg_resources import resource_string
 import os
 

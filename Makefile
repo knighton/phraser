@@ -2,9 +2,10 @@
 
 CC = clang++
 
-SRC_ROOT = phraser/
-BIN_DIR = bin/
-BUILD_DIR = build/xx/phraser
+SRC_ROOT = phraser
+BIN_DIR = bin
+BUILD_ROOT = build/temp
+BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 
 FLAGS_BASE = \
     -std=c++11 \
@@ -103,7 +104,7 @@ develop:
 
 .PHONY: build_ext
 build_ext phraser/phraserext.so: env
-	$(PYTHON) setup.py build_ext --inplace
+	$(PYTHON) setup.py build_ext --inplace --build-temp=$(BUILD_ROOT)
 
 env virtualenv: env/bin/activate
 env/bin/activate: requirements.txt setup.py

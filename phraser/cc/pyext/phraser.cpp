@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "cc/analysis/analyzer.h"
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::string;
 using std::vector;

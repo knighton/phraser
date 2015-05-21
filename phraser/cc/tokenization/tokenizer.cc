@@ -1,6 +1,6 @@
 #include "tokenizer.h"
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 #include "cc/tokenization/tokenizer_data.h"
 
 bool Tokenizer::Init(

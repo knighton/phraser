@@ -2,8 +2,8 @@
 
 #include <cstdio>
 
-#include "cc/misc/json.h"
-#include "cc/misc/strings.h"
+#include "cc/base/json.h"
+#include "cc/base/strings.h"
 
 void AnalysisResult::Clear() {
     original_text.clear();

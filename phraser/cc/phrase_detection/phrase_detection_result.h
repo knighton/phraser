@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 
 using std::string;
 using std::vector;

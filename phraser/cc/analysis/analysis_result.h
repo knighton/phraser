@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/json.h"
-#include "cc/misc/unicode.h"
+#include "cc/base/json.h"
+#include "cc/base/unicode.h"
 #include "cc/phrase_detection/phrase_detection_result.h"
 #include "cc/tokenization/span.h"
 

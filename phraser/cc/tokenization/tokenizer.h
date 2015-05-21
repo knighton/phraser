@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 #include "cc/tokenization/lapos_ascii_tokenizer.h"
 #include "cc/tokenization/span.h"
 

@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 
 using std::string;
 using std::unordered_map;

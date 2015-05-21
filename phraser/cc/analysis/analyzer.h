@@ -3,7 +3,7 @@
 
 #include "cc/analysis/analysis_options.h"
 #include "cc/analysis/analysis_result.h"
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 #include "cc/phrase_detection/phrase_detector.h"
 #include "cc/preprocess/preprocessor.h"
 #include "cc/tokenization/tokenizer.h"

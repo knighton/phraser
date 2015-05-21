@@ -1,6 +1,6 @@
 #include "phrase_detector.h"
 
-#include "cc/misc/files.h"
+#include "cc/base/files.h"
 
 bool PhraseDetector::LoadPhraseConfig(const string& text, string* error) {
     phrases_.resize(phrases_.size() + 1);

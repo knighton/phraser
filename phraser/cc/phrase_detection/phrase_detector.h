@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "cc/english/english_expression_evaluator.h"
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 #include "cc/phrase_detection/phrase_config.h"
 #include "cc/phrase_detection/phrase_config_parser.h"
 #include "cc/phrase_detection/phrase_detection_result.h"

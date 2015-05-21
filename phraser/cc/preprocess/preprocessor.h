@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_set>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode.h"
 #include "cc/preprocess/destutterer.h"
 #include "cc/preprocess/html_entity_parser.h"
 

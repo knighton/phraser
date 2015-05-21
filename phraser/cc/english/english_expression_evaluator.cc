@@ -7,12 +7,10 @@
 #include "cc/english/personal/pers_pro_evaluator.h"
 #include "cc/english/personal/pos_pro_evaluator.h"
 #include "cc/english/personal/pos_det_evaluator.h"
-#include "cc/english/tag/tag_evaluator.h"
 #include "cc/english/verb/conjugator.h"
 #include "cc/english/verb/conjugation_spec.h"
 #include "cc/english/verb/conjugation_spec_derivation.h"
 #include "cc/english/verb/verb_evaluator.h"
-#include "cc/tagging/lapos/lapos_tagger.h"
 
 using std::string;
 using std::unordered_map;
@@ -64,31 +62,6 @@ NumberEvaluator* MakeNumberEvaluator(string* error) {
     }
 
     if (!e->Init(error)) {
-        return NULL;
-    }
-
-    return e;
-}
-
-TagEvaluator* MakeTagEvaluator(string* error) {
-    LaposTagger* tagger = new LaposTagger();
-    if (!tagger) {
-        *error = "Allocating the tagger failed.";
-        return NULL;
-    }
-
-    if (!tagger->Init()) {
-        *error = "Tagger init failed.";
-        return NULL;
-    }
-
-    TagEvaluator* e = new TagEvaluator();
-    if (!e) {
-        *error = "Allocating the TagEvaluator failed.";
-        return NULL;
-    }
-
-    if (!e->Init(tagger, error)) {
         return NULL;
     }
 
@@ -177,16 +150,6 @@ bool EnglishExpressionEvaluator::Init(string* error) {
 
     // All-at-once evaluators.
     unordered_map<string, AllAtOnceEvaluator<string>*> type2all_at_once;
-    {
-        TagEvaluator* tag = MakeTagEvaluator(error);
-        if (!tag) {
-            return false;
-        }
-
-        type2all_at_once = {
-            {"tag", tag},
-        };
-    }
 
     return InitWithEvaluators(
         type2precomputable, type2dynamic, type2all_at_once);

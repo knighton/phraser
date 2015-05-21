@@ -98,7 +98,7 @@ compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 memcheck: compare_against_impermium
 	time valgrind --leak-check=full --track-origins=yes \
 		$(COMPARE_BIN) $(TEST_FILE)
-		> valgrind_stdout.txt 2> valgrind_stderr.txt
+		2> valgrind_stderr.txt
 
 develop:
 	@echo "Installing for " `which pip`

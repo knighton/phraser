@@ -16,18 +16,14 @@ namespace {
  *-----------------------------------------------------------------------------*/
 typedef struct {
         PyObject_HEAD
-        Analyzer* ANALYZER; // = NULL;
+        Analyzer* ANALYZER;
 } PhraserExt;
 
 
 char PHRASER_DOC[] =
-    "Python extension that detects phrases in text.\n";
-
-
-char INIT_DOC[] =
-    "phrase config texts -> error str or None.\n"
+    "Python extension that detects phrases in text.\n"
     "\n"
-    "Initialize the module.  Must call this first.\n"
+    "phrase config texts -> error str or None.\n"
     "\n"
     "    >>> open('plaudit.txt', 'wb').write('\\n'.join([\n"
     "            'plaudit = verb object',\n"
@@ -39,8 +35,8 @@ char INIT_DOC[] =
     "        ]))\n"
     "    >>> phrases_config_ff = ['plaudit.txt']\n"
     "    >>> phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)\n"
-    "    >>> err = _phraser.init(phrase_configs)\n"
-    "    >>> assert not err\n";
+    "    >>> phraser = PhraserExt(phrase_configs)\n"
+    "    >>> assert phraser\n";
 
 
 static PyObject *
@@ -107,30 +103,21 @@ PhraserExt_init(PhraserExt *self, PyObject *args, PyObject *kwds)
     return 0;
 }
 
-
-char TO_D_DOC[] =
-    "-> dict.\n"
-    "\n"
-    "Dump my state as a recursive dict.\n"
-    "\n"
-    "You can call phrase_detector_json_to_html.py to visualize the output as\n"
-    "pretty HTML.\n"
-    "\n"
-    "    >>> d = _phraser.to_dict()\n";
-
 char ANALYZE_DOC[] =
-    "text, options -> phrase detection result dict, error str.\n"
+    "Given an input Unicode string and a dict of options, analyze the string "
+    "and return a result dict\n"
     "\n"
-    "Analyze the text.  Returns a pair.  Either the results dict or the \n"
-    "error str will be None.\n"
+    "text, options -> phrase detection result dict.\n"
+    "\n"
+    "Analyze the text. Any errors are raised as exceptions\n"
     "\n"
     "    >>> text = u'This is a comment.'\n"
     "    >>> options = {\n"
     "            'destutter_max_consecutive': 3,\n"
     "            'replace_html_entities': True,\n"
     "        }\n"
-    "    >>> err = _phraser.analyze(text, options)\n"
-    "    >>> assert not err\n";
+    "    >>> result = phraserext.analyze(text, options)\n"
+    "    >>> assert isinstance(result, dict)\n";
 
 bool AnalysisOptionsFromDict(
         PyObject* obj, AnalysisOptions* options, string* error) {
@@ -351,8 +338,7 @@ PhraserExt_analyze(PhraserExt* self, PyObject* args) {
 }
 
 static PyMethodDef PhraserExt_methods[] = {
-    {"analyze", (PyCFunction)PhraserExt_analyze, METH_VARARGS,
-        "analyze a block of text (Unicode)"},
+    {"analyze", (PyCFunction)PhraserExt_analyze, METH_VARARGS, ANALYZE_DOC},
     { NULL, NULL, 0, NULL }  /* sentinel */
 };
 
@@ -380,9 +366,8 @@ static PyTypeObject PhraserExtType = {
         0,                         /* tp_getattro */
         0,                         /* tp_setattro */
         0,                         /* tp_as_buffer */
-        Py_TPFLAGS_DEFAULT |
-                Py_TPFLAGS_BASETYPE,   /* tp_flags */
-        "PhraserExt objects",           /* tp_doc */
+        Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,   /* tp_flags */
+        PHRASER_DOC,           /* tp_doc */
         0,                         /* tp_traverse */
         0,                         /* tp_clear */
         0,                         /* tp_richcompare */

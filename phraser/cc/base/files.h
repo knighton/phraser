@@ -1,13 +1,18 @@
 #ifndef CC_BASE_FILES_H_
 #define CC_BASE_FILES_H_
 
+#include <fstream>
 #include <string>
 #include <vector>
 
+using std::ifstream;
 using std::string;
 using std::vector;
 
 namespace files {
+
+// Returns true iff it got a line.
+bool EachCommentableLine(ifstream* in, string* line);
 
 // Whether the path is a file.
 bool IsFile(const string& file_name);

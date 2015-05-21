@@ -35,22 +35,35 @@ class AnalysisResult(object):
 
 class Phraser(object):
 
-    def __init__(self, phrase_config_ff):
-        phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)
-        self.ext = PhraserExt(phrase_configs)
-
-    def analyze(self, text, options=None):
+    def __init__(self, config_paths):
         """
-        unicode -> AnalysisResult
-        unicode, AnalysisOptions -> AnalysisResult
-
-        Analyze the test.  Returns (a) what it did to the text and (b) phrase match
-        results.
+        :param config_paths: an iterable of paths to config files
         """
-        assert isinstance(text, unicode)
-        if options:
-            assert isinstance(options, AnalysisOptions)
-        else:
-            options = AnalysisOptions()
-        result = self.ext.analyze(text, options.to_dict())
+        config_contents = []
+        for config_path in config_paths:
+            with open(config_path, "r") as fh:
+                config_contents.append(fh.read())
+        self._extension = PhraserExt(config_contents)
+
+    def analyze(self, text, encoding='utf-8', options=None):
+        """
+        Analyze input text
+
+        :param text: input text
+        :param encoding: which encoding to use if input text is `str`
+        :param options: dict or `AnalysisOptions` instance
+        :rtype: AnalysisResult
+
+        This method returns (a) what was done to the text,
+        and (b) phrase match results.
+        """
+        if isinstance(text, str):
+            text = text.decode(encoding)
+        elif not isinstance(text, unicode):
+            text = unicode(text)
+        if isinstance(options, AnalysisOptions):
+            options = options.to_dict()
+        elif options is None:
+            options = {}
+        result = self._extension.analyze(text, options)
         return AnalysisResult(result)

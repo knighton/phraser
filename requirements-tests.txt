@@ -4,3 +4,5 @@ nosexcover
 mock
 pytest
 ipdb>=0.8
+psutil==2.2.1
+memory-profiler==0.32

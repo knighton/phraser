@@ -1,5 +1,5 @@
-#ifndef CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
-#define CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#ifndef CC_PREPROCESS_HTML_ENTITY_PARSER_H_
+#define CC_PREPROCESS_HTML_ENTITY_PARSER_H_
 
 #include <string>
 #include <unordered_map>
@@ -39,4 +39,4 @@ class HTMLEntityParser {
     unordered_map<string, uchar> name2code_;
 };
 
-#endif  // CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#endif  // CC_PREPROCESS_HTML_ENTITY_PARSER_H_

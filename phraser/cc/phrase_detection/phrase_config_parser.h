@@ -1,5 +1,5 @@
-#ifndef CC_PHRASING_PHRASE_CONFIG_PARSER_H_
-#define CC_PHRASING_PHRASE_CONFIG_PARSER_H_
+#ifndef CC_PHRASE_DETECTION_PHRASE_CONFIG_PARSER_H_
+#define CC_PHRASE_DETECTION_PHRASE_CONFIG_PARSER_H_
 
 #include <string>
 
@@ -35,4 +35,4 @@ class PhraseConfigParser {
                PhraseConfig* phrase, string* error) const;
 };
 
-#endif  // CC_PHRASING_PHRASE_CONFIG_PARSER_H_
+#endif  // CC_PHRASE_DETECTION_PHRASE_CONFIG_PARSER_H_

@@ -1,5 +1,5 @@
-#ifndef CC_PHRASING_PHRASE_DETECTOR_H_
-#define CC_PHRASING_PHRASE_DETECTOR_H_
+#ifndef CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_
+#define CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_
 
 #include <string>
 #include <vector>
@@ -38,4 +38,4 @@ class PhraseDetector {
     vector<VectorMembershipSequenceDetector<TokenGroupID>> detectors_;
 };
 
-#endif  // CC_PHRASING_PHRASE_DETECTOR_H_
+#endif  // CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_

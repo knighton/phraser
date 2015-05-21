@@ -1,5 +1,5 @@
-#ifndef CC_MAIN_ANALYZER_H_
-#define CC_MAIN_ANALYZER_H_
+#ifndef CC_ANALYSIS_ANALYZER_H_
+#define CC_ANALYSIS_ANALYZER_H_
 
 #include "cc/analysis/analysis_options.h"
 #include "cc/analysis/analysis_result.h"
@@ -26,4 +26,4 @@ class Analyzer {
     PhraseDetector phrase_;
 };
 
-#endif  // CC_MAIN_ANALYZER_H_
+#endif  // CC_ANALYSIS_ANALYZER_H_

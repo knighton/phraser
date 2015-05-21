@@ -2,7 +2,7 @@ import phraser
 import unittest
 from pkg_resources import resource_filename
 
-PHRASER_CONFIG = resource_filename(__name__, "./threat_statement.txt")
+PHRASER_CONFIG = resource_filename(__name__, "data/threat_statement.txt")
 
 
 class TestPhraser(unittest.TestCase):

@@ -20,6 +20,8 @@ setuptools-*.egg
 # Virtualenv
 env
 
+bin/
+
 # tests and coverage
 .tox/
 .coverage

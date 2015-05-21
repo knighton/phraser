@@ -49,8 +49,9 @@ PhraserExt_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
 
-    Analyzer* analyzer = new Analyzer();
-    if ((self->ANALYZER = analyzer) == NULL) {
+    self->ANALYZER = new Analyzer();
+    //printf("Created analyzer instance %p\n", (void*)self->ANALYZER);
+    if (self->ANALYZER == NULL) {
         Py_DECREF(self);
         PyErr_SetString(PyExc_MemoryError, "cannot allocate analyzer object");
         return NULL;
@@ -63,6 +64,7 @@ PhraserExt_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 static void
 PhraserExt_dealloc(PhraserExt* self)
 {
+    //printf("Removing analyzer instance %p\n", (void*)self->ANALYZER);
     delete self->ANALYZER;
     Py_TYPE(self)->tp_free((PyObject*)self);
 }

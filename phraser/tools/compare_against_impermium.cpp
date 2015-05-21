@@ -6,6 +6,7 @@
 #include "cc/analysis/analyzer.h"
 #include "cc/comment/comment.h"
 #include "cc/comment/comment_reader.h"
+#include "cc/misc/files.h"
 
 using std::string;
 using std::vector;
@@ -53,11 +54,20 @@ static bool HandleComment(
     return true;
 }
 
-static bool Run(
-        const string& lapos_model_f, const vector<string>& phrase_config_ff,
-        const vector<string>& comment_ff, string* error) {
+static bool Run(const vector<string>& phrase_config_ff,
+                const vector<string>& comment_ff, string* error) {
+    vector<string> phrase_config_texts;
+    for (auto& f : phrase_config_ff) {
+        string s;
+        if (!files::FileToString(f, &s)) {
+            *error = "Phrase config file does not exist.";
+            return false;
+        }
+        phrase_config_texts.emplace_back(s);
+    }
+
     Analyzer anal;
-    if (!anal.Init(lapos_model_f, phrase_config_ff, error)) {
+    if (!anal.Init(phrase_config_texts, error)) {
         return false;
     }
 
@@ -74,9 +84,11 @@ static bool Run(
     vector<FILE*> files = {james_f, both_f, impermium_f};
 
     AnalysisOptions options;
+    bool dump_file_names = true;
     Comment comment;
     CommentReaderStatus r;
-    while ((r = reader.Next(&comment, error)) == CRS_HAVE_COMMENT) {
+    while ((r = reader.Next(dump_file_names, &comment, error)) ==
+           CRS_HAVE_COMMENT) {
         if (!HandleComment(anal, options, comment, james_f, both_f, impermium_f,
                            error)) {
             return false;
@@ -101,8 +113,6 @@ static bool Run(
 }
 
 int main(int argc, char* argv[]) {
-    string lapos_model_f = "phraser/cc/third_party/lapos/model_wsj02-21/model.la";
-
     vector<string> phrase_config_ff = {
         "phraser/config/threat_command.txt",
         "phraser/config/threat_statement.txt",
@@ -114,7 +124,7 @@ int main(int argc, char* argv[]) {
     }
 
     string error;
-    if (!Run(lapos_model_f, phrase_config_ff, comment_ff, &error)) {
+    if (!Run(phrase_config_ff, comment_ff, &error)) {
         OutputError(error);
         return 1;
     } 

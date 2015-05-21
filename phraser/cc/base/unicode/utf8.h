@@ -5,12 +5,12 @@
 #include <cstdint>
 #include <vector>
 
-#include "cc/base/unicode.h"
+#include "cc/base/unicode/unicode.h"
 
 using std::vector;
 
-uchar utf8_nextCharSafeBody(
-    const uint8_t* s, size_t* pi, size_t length, uchar c, int8_t strict);
+ucode utf8_nextCharSafeBody(
+    const uint8_t* s, size_t* pi, size_t length, ucode c, int8_t strict);
 
 /*
  * Returns 0 for 0..0xbf as well as for 0xfe and 0xff.
@@ -106,7 +106,7 @@ uchar utf8_nextCharSafeBody(
  * @param s const uint8_t * string
  * @param i size_t string offset, must be i<length
  * @param length size_t string length
- * @param c output uchar variable, set to <0 in case of an error
+ * @param c output ucode variable, set to <0 in case of an error
  * @see U8_NEXT_UNSAFE
  * @stable ICU 2.4
  */
@@ -120,8 +120,8 @@ uchar utf8_nextCharSafeBody(
             (__t1=(uint8_t)((s)[i]-0x80))<=0x3f && \
             (__t2=(uint8_t)((s)[(i)+1]-0x80))<= 0x3f \
         ) { \
-            /* no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (uchar) */ \
-            (c)=(uchar)(((c)<<12)|(__t1<<6)|__t2); \
+            /* no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (ucode) */ \
+            (c)=(ucode)(((c)<<12)|(__t1<<6)|__t2); \
             (c)%=0x10000; /* this line added by iamknighton@gmail.com to fix eg. U+2122 */ \
             (i)+=2; \
         } else if( /* handle U+0080..U+07FF inline */ \

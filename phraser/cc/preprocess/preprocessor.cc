@@ -39,7 +39,7 @@ void CombineMappings(const vector<uint16_t>& mid2in,
 bool Preprocessor::Preprocess(
         const ustring& in, bool replace_html_entities,
         size_t destutter_max_consecutive, ustring* out,
-        vector<uint16_t>* out2in, unordered_map<uchar, size_t>* chr2drop,
+        vector<uint16_t>* out2in, unordered_map<ucode, size_t>* chr2drop,
         string* error) const {
     out->clear();
     out2in->clear();

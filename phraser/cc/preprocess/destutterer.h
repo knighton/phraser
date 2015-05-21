@@ -6,7 +6,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "cc/base/unicode.h"
+#include "cc/base/unicode/unicode.h"
 
 using std::string;
 using std::unordered_map;
@@ -34,13 +34,13 @@ class Destutterer {
     // Returns false on failure.  If it failed, saves reason in |error|.
     bool Destutter(
         const ustring& in, size_t max_consecutive, ustring* out,
-        vector<uint16_t>* out2in, unordered_map<uchar, size_t>* chr2drop,
+        vector<uint16_t>* out2in, unordered_map<ucode, size_t>* chr2drop,
         string* error) const;
 
   private:
     // List of digits in all the scripts of the world.  We don't destutter
     // digits.
-    unordered_set<uchar> digits_;
+    unordered_set<ucode> digits_;
 };
 
 #endif  // CC_PREPROCESS_DESTUTTERER_H_

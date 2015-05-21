@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "cc/base/json.h"
-#include "cc/base/unicode.h"
+#include "cc/base/unicode/unicode.h"
 #include "cc/phrase_detection/phrase_detection_result.h"
 #include "cc/tokenization/span.h"
 
@@ -35,7 +35,7 @@ struct AnalysisResult {
     // * Code point -> number of times it was dropped by destuttering.
     ustring clean_text;
     vector<uint16_t> clean2original;
-    unordered_map<uchar, size_t> chr2drop;
+    unordered_map<ucode, size_t> chr2drop;
 
     // Tokenization results:
     // * The fully processed tokens.

@@ -21,7 +21,7 @@ bool CommentReader::Init(const vector<string>& comment_ff) {
 static bool ParseLine(const ustring& line, Comment* comment, string* error) {
     size_t count = 0;
     size_t x = 0;
-    uchar c;
+    ucode c;
     bool found = false;
     while (x < line.size() && (c = line[x++]) != ' ') {
         found = true;

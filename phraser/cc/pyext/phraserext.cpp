@@ -1,4 +1,5 @@
 #include <Python.h>
+#include "structmember.h"
 #include <string>
 #include <vector>
 
@@ -10,10 +11,18 @@ using std::vector;
 
 namespace {
 
+/*-----------------------------------------------------------------------------
+ *  PhraserExt object
+ *-----------------------------------------------------------------------------*/
+typedef struct {
+        PyObject_HEAD
+        Analyzer* ANALYZER; // = NULL;
+} PhraserExt;
+
+
 char PHRASER_DOC[] =
     "Python extension that detects phrases in text.\n";
 
-Analyzer* ANALYZER = NULL;
 
 char INIT_DOC[] =
     "phrase config texts -> error str or None.\n"
@@ -33,11 +42,41 @@ char INIT_DOC[] =
     "    >>> err = _phraser.init(phrase_configs)\n"
     "    >>> assert not err\n";
 
-PyObject* Init(PyObject* self, PyObject* args) {
+
+static PyObject *
+PhraserExt_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    PhraserExt *self;
+
+    if ((self = (PhraserExt *)type->tp_alloc(type, 0)) == NULL) {
+            PyErr_SetString(PyExc_MemoryError, "cannot allocate PhraserExt instance");
+            return NULL;
+    }
+
+    if ((self->ANALYZER = new Analyzer()) == NULL) {
+            Py_DECREF(self);
+            PyErr_SetString(PyExc_MemoryError, "cannot allocate analyzer object");
+            return NULL;
+    }
+
+    return (PyObject *)self;
+}
+
+
+static void
+PhraserExt_dealloc(PhraserExt* self)
+{
+    delete self->ANALYZER;
+    Py_TYPE(self)->tp_free((PyObject*)self);
+}
+
+static int
+PhraserExt_init(PhraserExt *self, PyObject *args, PyObject *kwds)
+{
     // Get args.
     PyObject* list;
     if (!PyArg_ParseTuple(args, "O!", &PyList_Type, &list)) {
-        return NULL;
+        return -1;
     }
 
     // Extract phrase configs from list.
@@ -46,26 +85,28 @@ PyObject* Init(PyObject* self, PyObject* args) {
     for (Py_ssize_t i = 0; i < length; ++i) {
         PyObject* s = PyList_GetItem(list, i);
         if (!PyString_Check(s)) {
-            return PyUnicode_FromFormat(
-                "[Phraser] List item at index %ld was not a string.", i);
+            PyErr_Format(PyExc_ValueError,
+                "[PhraserExt] List item at index %ld was not a string.", i);
+            return -1;
         }
         phrase_configs.emplace_back(PyString_AsString(s));
     }
 
-    // Allocate the Analyzer.
-    if (!ANALYZER) {
-        ANALYZER = new Analyzer();
+    if (!self->ANALYZER) {
+        PyErr_SetString(PyExc_RuntimeError, "not initialized");
+        return -1;
     }
 
     // Call Init().
     string error;
-    if (!ANALYZER->Init(phrase_configs, &error)) {
-        return PyUnicode_FromString(error.data());
+    if (!self->ANALYZER->Init(phrase_configs, &error)) {
+        PyErr_SetString(PyExc_RuntimeError, error.data());
+        return -1;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    return 0;
 }
+
 
 char TO_D_DOC[] =
     "-> dict.\n"
@@ -76,10 +117,6 @@ char TO_D_DOC[] =
     "pretty HTML.\n"
     "\n"
     "    >>> d = _phraser.to_dict()\n";
-
-PyObject* ToDict(PyObject* self, PyObject* args) {
-    return PyDict_New();  // TODO
-}
 
 char ANALYZE_DOC[] =
     "text, options -> phrase detection result dict, error str.\n"
@@ -102,13 +139,13 @@ bool AnalysisOptionsFromDict(
     PyObject* value;
     while (PyDict_Next(obj, &pos, &key, &value)) {
         if (!PyString_Check(key)) {
-            *error = "[Phraser] Analysis options key is not a string.";
+            *error = "[PhraserExt] Analysis options key is not a string.";
             return false;
         }
         const char* key_s = PyString_AsString(key);
         if (!strcmp(key_s, "destutter_max_consecutive")) {
             if (!PyInt_Check(value)) {
-                *error = "[Phraser] Analysis option "
+                *error = "[PhraserExt] Analysis option "
                          "'destutter_max_consecutive' is an integer.";
                 return false;
             }
@@ -116,13 +153,13 @@ bool AnalysisOptionsFromDict(
             options->destutter_max_consecutive = static_cast<size_t>(size);
         } else if (!strcmp(key_s, "replace_html_entities")) {
             if (!PyBool_Check(value)) {
-                *error = "[Phraser] Analysis option 'replace_html_entities' is "
+                *error = "[PhraserExt] Analysis option 'replace_html_entities' is "
                          "a bool.";
                 return false;
             }
             options->replace_html_entities = PyObject_IsTrue(value);
         } else {
-            *error = "[Phraser] Unknown analysis option.";
+            *error = "[PhraserExt] Unknown analysis option.";
             return false;
         }
     }
@@ -265,19 +302,20 @@ PyObject* MakeTuple(PyObject* first, PyObject* second) {
     return r;
 }
 
-PyObject* Analyze(PyObject* self, PyObject* args) {
+static PyObject*
+PhraserExt_analyze(PhraserExt* self, PyObject* args) {
     // Get args.
     PyObject* py_text;
     PyObject* options_dict;
     if (!PyArg_ParseTuple(args, "UO!", &py_text, &PyDict_Type, &options_dict)) {
+        // TODO: call PyErr_SetString here as well?
         return NULL;
     }
 
     // Check if initialized.
-    if (!ANALYZER) {
-        Py_INCREF(Py_None);
-        return MakeTuple(
-            Py_None, PyUnicode_FromString("[Phraser] Call init() first."));
+    if (!self->ANALYZER) {
+        PyErr_SetString(PyExc_RuntimeError, "PhraserExt has not been initialized");
+        return NULL;
     }
 
     // Get the input text to analyze.
@@ -291,42 +329,103 @@ PyObject* Analyze(PyObject* self, PyObject* args) {
     AnalysisOptions options;
     string error;
     if (!AnalysisOptionsFromDict(options_dict, &options, &error)) {
-        Py_INCREF(Py_None);
-        return MakeTuple(
-            Py_None, PyUnicode_FromString(error.data()));
+        PyErr_SetString(PyExc_RuntimeError, error.data());
+        return NULL;
     }
 
     // Analyze the text.
     AnalysisResult result;
-    if (!ANALYZER->Analyze(text, options, &result, &error)) {
-        Py_INCREF(Py_None);
-        return MakeTuple(
-            Py_None, PyUnicode_FromString(error.data()));
+    if (!self->ANALYZER->Analyze(text, options, &result, &error)) {
+        PyErr_SetString(PyExc_RuntimeError, error.data());
+        return NULL;
     }
 
     // Convert the results to a python dict.
     PyObject* result_dict;
     if (!(result_dict = DictFromAnalysisResult(result, &error))) {
-        Py_INCREF(Py_None);
-        return MakeTuple(
-            Py_None, PyUnicode_FromString(error.data()));
+        PyErr_SetString(PyExc_RuntimeError, error.data());
+        return NULL;
     }
 
-    Py_INCREF(Py_None);
-    return MakeTuple(result_dict, Py_None);
+    return result_dict;
 }
 
-PyMethodDef PHRASER_METHODS[] = {
-    {"init",    Init,    METH_VARARGS, INIT_DOC},
-    {"to_dict", ToDict,  METH_VARARGS, TO_D_DOC},
-    {"analyze", Analyze, METH_VARARGS, ANALYZE_DOC},
-    {nullptr,   nullptr, 0,            nullptr},
+static PyMethodDef PhraserExt_methods[] = {
+    {"analyze", (PyCFunction)PhraserExt_analyze, METH_VARARGS,
+        "analyze a block of text (Unicode)"},
+    { NULL, NULL, 0, NULL }  /* sentinel */
+};
+
+static PyMemberDef PhraserExt_members[] = {
+    { NULL, 0, 0, 0, NULL }  /* sentinel */
+};
+
+static PyTypeObject PhraserExtType = {
+        PyVarObject_HEAD_INIT(NULL, 0)
+                "phraserext.PhraserExt",     /* tp_name */
+        sizeof(PhraserExt),             /* tp_basicsize */
+        0,                              /* tp_itemsize */
+        (destructor)PhraserExt_dealloc, /* tp_dealloc */
+        0,                         /* tp_print */
+        0,                         /* tp_getattr */
+        0,                         /* tp_setattr */
+        0,                         /* tp_reserved */
+        0,                         /* tp_repr */
+        0,                         /* tp_as_number */
+        0,                         /* tp_as_sequence */
+        0,                         /* tp_as_mapping */
+        0,                         /* tp_hash  */
+        0,                         /* tp_call */
+        0,                         /* tp_str */
+        0,                         /* tp_getattro */
+        0,                         /* tp_setattro */
+        0,                         /* tp_as_buffer */
+        Py_TPFLAGS_DEFAULT |
+                Py_TPFLAGS_BASETYPE,   /* tp_flags */
+        "PhraserExt objects",           /* tp_doc */
+        0,                         /* tp_traverse */
+        0,                         /* tp_clear */
+        0,                         /* tp_richcompare */
+        0,                         /* tp_weaklistoffset */
+        0,                         /* tp_iter */
+        0,                         /* tp_iternext */
+        PhraserExt_methods,        /* tp_methods */
+        PhraserExt_members,        /* tp_members */
+        0,                         /* tp_getset */
+        0,                         /* tp_base */
+        0,                         /* tp_dict */
+        0,                         /* tp_descr_get */
+        0,                         /* tp_descr_set */
+        0,                         /* tp_dictoffset */
+        (initproc)PhraserExt_init, /* tp_init */
+        0,                         /* tp_alloc */
+        PhraserExt_new,            /* tp_new */
+        0,                      /*  tp_free */
+        0,                      /* tp_is_gc */
+        0,                      /* tp_bases */
+        0,                      /* tp_mro */
+        0,                      /* tp_cache */
+        0,                      /* tp_subclasses */
+        0,                      /* tp_weaklist */
+        0,                      /*  tp_del */
+        0,                      /*  tp_version_tag */
 };
 
 }  // namespace
 
-extern "C" void initext(void);
+extern "C" void initphraserext(void);
 
-PyMODINIT_FUNC initext(void) {
-    Py_InitModule3("ext", PHRASER_METHODS, PHRASER_DOC);
+PyMODINIT_FUNC initphraserext(void) {
+
+    PyObject* m;
+
+    PhraserExtType.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&PhraserExtType) < 0)
+        return;
+
+    m = Py_InitModule3("phraserext", PhraserExt_methods,
+                       "Example module that creates an extension type.");
+
+    Py_INCREF(&PhraserExtType);
+    PyModule_AddObject(m, "PhraserExt", (PyObject *)&PhraserExtType);
 }

@@ -61,8 +61,8 @@ os.environ['CXX'] = 'clang++'
 
 
 phraser = Extension(
-    'phraser.ext',
-    sources=find_cc_files(SRC_ROOT) + ['phraser/cc/pyext/phraser.cpp'],
+    'phraser.phraserext',
+    sources=find_cc_files(SRC_ROOT) + ['phraser/cc/pyext/phraserext.cpp'],
     extra_compile_args=COMPILE_FLAGS,
     include_dirs=[SRC_ROOT, '.'],
     libraries=['boost_regex'],

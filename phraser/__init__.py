@@ -1,4 +1,4 @@
-from phraser import ext
+from phraser.phraserext import PhraserExt as ext
 
 
 def init(phrase_config_ff):
@@ -10,7 +10,7 @@ def init(phrase_config_ff):
     Call this first.
     """
     phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)
-    err = ext.init(phrase_configs)
+    err = ext(phrase_configs)
     if err:
         raise err
     return True
@@ -79,8 +79,5 @@ def analyze(text, options=None):
         assert isinstance(options, AnalysisOptions)
     else:
         options = AnalysisOptions()
-    d, err = ext.analyze(text, options.to_dict())
-    if err:
-        raise err
-
-    return AnalysisResult(d)
+    result = ext.analyze(text, options.to_dict())
+    return AnalysisResult(result)

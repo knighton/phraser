@@ -40,6 +40,7 @@ clean:
 	python setup.py clean
 	rm -rf dist build $(BIN_DIR)
 	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
+	find . -path ./env -prune -o -type f -name "*.so" -exec rm {} \;
 
 compare_against_impermium:
 	mkdir -p $(BIN_DIR)

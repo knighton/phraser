@@ -95,9 +95,15 @@ compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CC_FLAGS) $(O_INTERMEDIATES) $(COMPARE_MAIN) -o $(COMPARE_BIN) $(LD_FLAGS)
 
-memcheck: compare_against_impermium
+.PHONY: memcheck_cc memcheck_python
+
+memcheck_cc: compare_against_impermium
 	time valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
+
+memcheck_python: build_ext
+	valgrind --tool=memcheck --leak-check=full --suppressions=valgrind-python.supp \
+		env/bin/python scripts/testmem.py 2> val_out_leak.txt
 
 develop:
 	@echo "Installing for " `which pip`

@@ -232,7 +232,7 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
     value = PyList_New(result.tokens.size());
     for (auto i = 0u; i < result.tokens.size(); ++i) {
         PyObject* token = PyString_FromString(result.tokens[i].data());
-        PyList_SET_ITEM(value, i, token);
+        PyList_SetItem(value, i, token);
     }
     keys.emplace_back(key);
     values.emplace_back(value);
@@ -256,7 +256,7 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
         for (auto j = 0u; j < phrase_result.piece_names.size(); ++j) {
             PyObject* subsequence_name =
                 PyString_FromString(phrase_result.piece_names[j].data());
-            PyList_SET_ITEM(tmp_value, j, subsequence_name);
+            PyList_SetItem(tmp_value, j, subsequence_name);
         }
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
@@ -269,17 +269,17 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
                 match.piece_begin_indexes.size() + 1);
             for (auto k = 0u; k < match.piece_begin_indexes.size(); ++k) {
                 PyObject* item = PyInt_FromLong(match.piece_begin_indexes[k]);
-                PyList_SET_ITEM(index_list, k, item);
+                PyList_SetItem(index_list, k, item);
             }
             PyObject* item = PyInt_FromLong(match.end_excl);
-            PyList_SET_ITEM(index_list, match.piece_begin_indexes.size(), item);
-            PyList_SET_ITEM(tmp_value, j, index_list);
+            PyList_SetItem(index_list, match.piece_begin_indexes.size(), item);
+            PyList_SetItem(tmp_value, j, index_list);
         }
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
 
         PyObject* tmp_d = MakeDict(tmp_keys, tmp_values);
-        PyList_SET_ITEM(value, i, tmp_d);
+        PyList_SetItem(value, i, tmp_d);
     }
     keys.emplace_back(key);
     values.emplace_back(value);

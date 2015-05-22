@@ -189,6 +189,8 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
         if (PyDict_SetItem(d, k, v)) {
             return NULL;
         }
+        Py_DECREF(k);
+        Py_DECREF(v);
     }
 
     return d;
@@ -285,16 +287,10 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
     return MakeDict(keys, values);
 }
 
-PyObject* MakeTuple(PyObject* first, PyObject* second) {
-    PyObject* r = PyTuple_New(2);
-    PyTuple_SetItem(r, 0, first);
-    PyTuple_SetItem(r, 1, second);
-    return r;
-}
-
 static PyObject*
 PhraserExt_analyze(PhraserExt* self, PyObject* args) {
     // Get args.
+    //
     PyObject* py_text;
     PyObject* options_dict;
     if (!PyArg_ParseTuple(args, "UO!", &py_text, &PyDict_Type, &options_dict)) {

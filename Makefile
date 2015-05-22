@@ -96,7 +96,7 @@ compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 	$(CC) $(CC_FLAGS) $(O_INTERMEDIATES) $(COMPARE_MAIN) -o $(COMPARE_BIN) $(LD_FLAGS)
 
 memcheck: compare_against_impermium
-	time valgrind --leak-check=full --track-origins=yes \
+	time valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
 
 develop:

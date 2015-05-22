@@ -171,7 +171,8 @@ PyObject* UnicodeFromUstring(const ustring& s) {
 }
 
 PyObject* MakeDict(const vector<PyObject*>& keys,
-                   const vector<PyObject*>& values)
+                   const vector<PyObject*>& values,
+                   string* error)
 {
     auto num_keys = keys.size();
     auto num_vals = values.size();
@@ -181,12 +182,12 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
         PyObject* k = keys[i];
         PyObject* v = values[i];
         if (!k) {
-            PyErr_Format(PyExc_KeyError, "Missing key at index %u", i);
+            *error = "Missing key";
             Py_DECREF(d);
             return NULL;
         }
         else if (!v) {
-            PyErr_Format(PyExc_ValueError, "Missing value at index %u", i);
+            *error = "Missing value";
             Py_DECREF(d);
             return NULL;
         }
@@ -194,7 +195,7 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
         Py_DECREF(k);
         Py_DECREF(v);
         if (code) {
-            PyErr_Format(PyExc_RuntimeError, "Could not set item at index %u", i);
+            *error = "Could not set item";
             Py_DECREF(d);
             return NULL;
         }
@@ -284,13 +285,14 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
 
-        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values);
+        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values, error);
+        if (!tmp_d) { return NULL; }
         PyList_SET_ITEM(value, i, tmp_d);
     }
     keys.emplace_back(key);
     values.emplace_back(value);
 
-    return MakeDict(keys, values);
+    return MakeDict(keys, values, error);
 }
 
 static PyObject*

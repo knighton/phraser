@@ -4,6 +4,13 @@
 
 bool HTMLEntityParser::Init(string* error) {
     name2code_ = html_entity_parser_data::HTML2UNICODE;
+    max_name_length_ = 0;
+    for (auto& it : name2code_) {
+        auto& name = it.first;
+        if (max_name_length_ < name.size()) {
+            max_name_length_ = name.size();
+        }
+    }
     return true;
 }
 

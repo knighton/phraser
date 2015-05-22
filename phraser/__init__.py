@@ -1,3 +1,5 @@
+__version__ = "0.1.2"
+
 import collections
 from phraser.phraserext import PhraserExt
 

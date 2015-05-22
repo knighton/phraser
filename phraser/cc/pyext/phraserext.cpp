@@ -191,14 +191,13 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
             Py_DECREF(d);
             return NULL;
         }
-        auto code = PyDict_SetItem(d, k, v);
-        Py_DECREF(k);
-        Py_DECREF(v);
-        if (code) {
+        if (PyDict_SetItem(d, k, v)) {
             *error = "Could not set item";
             Py_DECREF(d);
             return NULL;
         }
+        Py_DECREF(k);
+        Py_DECREF(v);
     }
     return d;
 }

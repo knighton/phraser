@@ -1,7 +1,7 @@
-#ifndef CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_H_
-#define CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_H_
+#ifndef CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_H_
+#define CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_H_
 
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 #include "cc/sequence_detection/sequence_detector.h"
 
 template <typename Atom>
@@ -21,4 +21,4 @@ using EqualitySequenceDetector =
 
 #include "equality_sequence_detector_impl.h"
 
-#endif  // CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_H_
+#endif  // CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_H_

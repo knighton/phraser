@@ -6,7 +6,7 @@
 #include "cc/analysis/analyzer.h"
 #include "cc/comment/comment.h"
 #include "cc/comment/comment_reader.h"
-#include "cc/misc/files.h"
+#include "cc/base/files.h"
 
 using std::string;
 using std::vector;

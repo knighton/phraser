@@ -1,6 +1,6 @@
 #include "phrase_config_parser.h"
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 
 // Parse the top line of a phrases config.
 //

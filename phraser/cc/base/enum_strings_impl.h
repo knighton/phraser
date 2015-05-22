@@ -1,7 +1,7 @@
-#ifndef CC_MISC_ENUM_STRINGS_IMPL_H_
-#define CC_MISC_ENUM_STRINGS_IMPL_H_
+#ifndef CC_BASE_ENUM_STRINGS_IMPL_H_
+#define CC_BASE_ENUM_STRINGS_IMPL_H_
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 
 template <typename E>
 vector<E> EnumRange(uint64_t a, uint64_t z_excl) {
@@ -67,4 +67,4 @@ bool EnumStrings<E>::MaybeGetEnumValue(const string& s, E* e) const {
     return true;
 }
 
-#endif  // CC_MISC_ENUM_STRINGS_IMPL_H_
+#endif  // CC_BASE_ENUM_STRINGS_IMPL_H_

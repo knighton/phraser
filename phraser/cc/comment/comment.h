@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode/unicode.h"
 
 using std::string;
 using std::vector;

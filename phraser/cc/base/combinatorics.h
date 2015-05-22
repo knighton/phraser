@@ -1,5 +1,5 @@
-#ifndef CC_MISC_COMBINATORICS_H_
-#define CC_MISC_COMBINATORICS_H_
+#ifndef CC_BASE_COMBINATORICS_H_
+#define CC_BASE_COMBINATORICS_H_
 
 #include <vector>
 

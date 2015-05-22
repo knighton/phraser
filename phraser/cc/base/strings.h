@@ -1,5 +1,5 @@
-#ifndef CC_MISC_STRINGS_H_
-#define CC_MISC_STRINGS_H_
+#ifndef CC_BASE_STRINGS_H_
+#define CC_BASE_STRINGS_H_
 
 #include <string>
 #include <vector>
@@ -8,6 +8,14 @@ using std::string;
 using std::vector;
 
 namespace strings {
+
+template <typename Int>
+bool ParseDec(const string& s, Int* n);
+
+template <typename Int>
+bool ParseHex(const string& s, Int* n);
+
+bool IsSpace(const string& s);
 
 // Split a string |s| into pieces separated by |c| into |v|.
 //
@@ -30,6 +38,8 @@ void SStringPrintf(string* output, const char* format, ...);
 void StringAppendF(string* output, const char* format, ...);
 string StringPrintf(const char* format, ...);
 
-}  // namespace string
+}  // namespace strings
 
-#endif  // CC_MISC_STRINGS_H_
+#include "cc/base/strings_impl.h"
+
+#endif  // CC_BASE_STRINGS_H_

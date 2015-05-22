@@ -44,16 +44,16 @@
 
 #define U_SENTINEL (-1)
 
-static const uchar
+static const ucode
 utf8_minLegal[4]={ 0, 0x80, 0x800, 0x10000 };
 
-static const uchar
+static const ucode
 utf8_errorValue[6]={
     UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE, 0x10ffff,
     0x3ffffff, 0x7fffffff
 };
 
-static uchar
+static ucode
 errorValue(size_t count, int8_t strict) {
     if(strict>=0) {
         return utf8_errorValue[count];
@@ -86,8 +86,8 @@ errorValue(size_t count, int8_t strict) {
  *
  * Note that a UBool is the same as an int8_t.
  */
-uchar utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
-                            uchar c, int8_t strict) {
+ucode utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
+                            ucode c, int8_t strict) {
     size_t i=*pi;
     uint8_t count=U8_COUNT_TRAIL_BYTES(c);
     assert(count <= 5); /* U8_COUNT_TRAIL_BYTES returns value 0...5 */
@@ -148,14 +148,14 @@ uchar utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
 
 namespace utf8 {
 
-bool NextLine(const char* s, size_t num_bytes, size_t* i, ustring* line) {
+bool EachLine(const char* s, size_t num_bytes, size_t* i, ustring* line) {
     if (num_bytes <= *i) {
         return false;
     }
 
     line->clear();
     while (*i < num_bytes) {
-        uchar c;
+        ucode c;
         U8_NEXT(s, *i, num_bytes, c);
         line->emplace_back(c);
         if (c == '\n') {
@@ -171,7 +171,7 @@ void Decode(const char* s, size_t num_bytes, ustring* text) {
     text->reserve(num_bytes);  // Best guess.
     size_t i = 0;
     while (i < num_bytes) {
-        uchar c;
+        ucode c;
         U8_NEXT(s, i, num_bytes, c);
         text->emplace_back(c);
     }

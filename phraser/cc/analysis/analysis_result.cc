@@ -2,8 +2,8 @@
 
 #include <cstdio>
 
-#include "cc/misc/json.h"
-#include "cc/misc/strings.h"
+#include "cc/base/json.h"
+#include "cc/base/strings.h"
 
 void AnalysisResult::Clear() {
     original_text.clear();
@@ -52,7 +52,7 @@ json::Object* AnalysisResult::ToJSON() const {
     });
 }
 
-static char PrintableAsciiOnly(uchar c) {
+static char PrintableAsciiOnly(ucode c) {
     if (0x20 <= c && c <= 0x7E) {
         return static_cast<char>(c);
     } else {
@@ -117,7 +117,7 @@ void AnalysisResult::Dump() const {
     }
 }
 
-static void AppendCharHTML(uchar c, string* s) {
+static void AppendCharHTML(ucode c, string* s) {
     if (0x20 <= c && c <= 0x7E) {
         *s += static_cast<char>(c);
     } else if (c == '\n') {

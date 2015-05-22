@@ -1,11 +1,11 @@
-#ifndef CC_PHRASING_PHRASE_DETECTOR_H_
-#define CC_PHRASING_PHRASE_DETECTOR_H_
+#ifndef CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_
+#define CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_
 
 #include <string>
 #include <vector>
 
 #include "cc/english/english_expression_evaluator.h"
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 #include "cc/phrase_detection/phrase_config.h"
 #include "cc/phrase_detection/phrase_config_parser.h"
 #include "cc/phrase_detection/phrase_detection_result.h"
@@ -38,4 +38,4 @@ class PhraseDetector {
     vector<VectorMembershipSequenceDetector<TokenGroupID>> detectors_;
 };
 
-#endif  // CC_PHRASING_PHRASE_DETECTOR_H_
+#endif  // CC_PHRASE_DETECTION_PHRASE_DETECTOR_H_

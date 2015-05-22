@@ -2,9 +2,14 @@
 
 CC = clang++
 
+PYENV = . env/bin/activate;
+PYTHON = $(PYENV) python
+EXTRAS_REQS := $(wildcard requirements-*.txt)
+DISTRIBUTE = sdist bdist_wheel
+
 SRC_ROOT = phraser
 BIN_DIR = bin
-BUILD_ROOT = build/temp
+BUILD_ROOT = $(shell $(PYTHON) ./scripts/get_build_dir.py)
 BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 TEST_FILE = tests/data/50k_comments.txt
 
@@ -45,11 +50,6 @@ CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 
 LD_FLAGS = -lboost_regex
 
-PYENV = . env/bin/activate;
-PYTHON = $(PYENV) python
-EXTRAS_REQS := $(wildcard requirements-*.txt)
-DISTRIBUTE = sdist bdist_wheel
-
 package: env
 	$(PYTHON) setup.py $(DISTRIBUTE)
 
@@ -78,7 +78,7 @@ nuke: clean
 
 clean:
 	python setup.py clean
-	rm -rf dist $(BUILD_DIR) $(BIN_DIR)
+	rm -rf dist build $(BIN_DIR)
 	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
 	find . -path ./env -prune -o -type f -name "*.so" -exec rm {} \;
 

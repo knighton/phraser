@@ -1,37 +1,5 @@
-from phraser import ext
-
-
-def init(phrase_config_ff):
-    """
-    phrase config file names -> None.
-
-    Initialize the module with some phrase configs to match against.
-
-    Call this first.
-    """
-    phrase_configs = map(lambda f: open(f).read(), phrase_config_ff)
-    err = ext.init(phrase_configs)
-    if err:
-        raise err
-    return True
-
-
-def to_dict():
-    """
-    -> dict
-
-    Dump the module's state as a recursive dict.
-    """
-    return ext.to_dict()
-
-
-def to_html():
-    """
-    -> unicode
-
-    Dump the module's state as pretty HTML.
-    """
-    raise NotImplementedError
+import collections
+from phraser.phraserext import PhraserExt
 
 
 class AnalysisOptions(object):
@@ -66,21 +34,41 @@ class AnalysisResult(object):
             self.phrase_matches.append(phrase)
 
 
-def analyze(text, options=None):
-    """
-    unicode -> AnalysisResult
-    unicode, AnalysisOptions -> AnalysisResult
+class Phraser(object):
 
-    Analyze the test.  Returns (a) what it did to the text and (b) phrase match
-    results.
-    """
-    assert isinstance(text, unicode)
-    if options:
-        assert isinstance(options, AnalysisOptions)
-    else:
-        options = AnalysisOptions()
-    d, err = ext.analyze(text, options.to_dict())
-    if err:
-        raise err
+    def __init__(self, config_paths):
+        """
+        :param config_paths: an iterable of paths to config files
+        """
+        config_contents = []
+        for config_path in config_paths:
+            with open(config_path, "r") as fh:
+                config_contents.append(fh.read())
+        self._extension = PhraserExt(config_contents)
 
-    return AnalysisResult(d)
+    def analyze(self, text, encoding='utf-8', options=None):
+        """
+        Analyze input text
+
+        :param text: input text
+        :param encoding: which encoding to use if input text is `str`
+        :param options: dict or `AnalysisOptions` instance
+        :rtype: AnalysisResult
+
+        This method returns (a) what was done to the text,
+        and (b) phrase match results.
+        """
+        if isinstance(text, str):
+            text = text.decode(encoding)
+        elif not isinstance(text, unicode):
+            raise TypeError("Expected string or unicode type but got %s",
+                            type(options))
+        if isinstance(options, AnalysisOptions):
+            options = options.to_dict()
+        elif options is None:
+            options = {}
+        elif not isinstance(collections.Mapping):
+            raise TypeError("Expected a mapping type but got %s", type(options))
+
+        result = self._extension.analyze(text, options)
+        return AnalysisResult(result)

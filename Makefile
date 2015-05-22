@@ -2,17 +2,18 @@
 
 CC = clang++
 
-SRC_ROOT = phraser/
-BIN_DIR = bin/
-
+SRC_ROOT = phraser
+BIN_DIR = bin
+BUILD_ROOT = build/temp
+BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
+TEST_FILE = tests/data/50k_comments.txt
 
 FLAGS_BASE = \
     -std=c++11 \
     -fcolor-diagnostics \
     -O3 \
     -ferror-limit=5 \
-    -I$(SRC_ROOT) \
-    -lboost_regex \
+    -I$(SRC_ROOT)
 
 FLAGS_WARN = \
     -Wpedantic \
@@ -39,8 +40,10 @@ FLAGS_WARN_DISABLE_LAPOS = \
     -Wno-unused-parameter \
     -Wno-unused-function \
 
-FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
+CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
         $(FLAGS_WARN_DISABLE_LAPOS)
+
+LD_FLAGS = -lboost_regex
 
 PYENV = . env/bin/activate;
 PYTHON = $(PYENV) python
@@ -75,25 +78,39 @@ nuke: clean
 
 clean:
 	python setup.py clean
-	rm -rf dist build $(BIN_DIR)
+	rm -rf dist $(BUILD_DIR) $(BIN_DIR)
 	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
+	find . -path ./env -prune -o -type f -name "*.so" -exec rm {} \;
 
-compare_against_impermium:
+CC_SOURCES = $(shell find $(SRC_ROOT) -name "*.cc")
+O_INTERMEDIATES := $(patsubst $(SRC_ROOT)/%,$(BUILD_DIR)/%,$(CC_SOURCES:.cc=.o))
+COMPARE_MAIN = $(SRC_ROOT)/tools/compare_against_impermium.cpp
+COMPARE_BIN = $(BIN_DIR)/compare_against_impermium
+
+$(BUILD_DIR)/%.o: $(SRC_ROOT)/%.cc
+	mkdir -p $(dir $@)
+	$(CC) -c $< -o $@ $(CC_FLAGS)
+
+compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 	mkdir -p $(BIN_DIR)
-	$(CC) `find -type f -name "*.cc"` $(SRC_ROOT)/tools/compare_against_impermium.cpp -o $(BIN_DIR)/compare_against_impermium $(FLAGS)
+	$(CC) $(CC_FLAGS) $(O_INTERMEDIATES) $(COMPARE_MAIN) -o $(COMPARE_BIN) $(LD_FLAGS)
 
-memcheck:
-	time valgrind --leak-check=full --track-origins=yes ./bin/compare_against_impermium /media/x/impermium_dedup/50k_comments.txt > valgrind_stdout.txt 2> valgrind_stderr.txt
+memcheck: compare_against_impermium
+	time valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
 
 develop:
 	@echo "Installing for " `which pip`
 	pip uninstall $(PYMODULE) || true
 	python setup.py develop
 
+.PHONY: build_ext
+build_ext phraser/phraserext.so: env
+	$(PYTHON) setup.py build_ext --inplace
+
 env virtualenv: env/bin/activate
 env/bin/activate: requirements.txt setup.py
 	test -f $@ || virtualenv --no-site-packages env
 	$(PYENV) pip install -U pip wheel
 	$(PYENV) pip install -e . -r $<
-	$(PYTHON) setup.py build_ext --inplace
 	touch $@

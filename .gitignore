@@ -20,9 +20,17 @@ setuptools-*.egg
 # Virtualenv
 env
 
+bin/
+
 # tests and coverage
 .tox/
 .coverage
 cover/
 coverage.xml
 nosetests.xml
+
+# debug files
+valgrind_stderr.txt
+both.txt
+impermium_only.txt
+james_only.txt

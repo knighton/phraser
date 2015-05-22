@@ -290,7 +290,6 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
     }
     keys.emplace_back(key);
     values.emplace_back(value);
-
     return MakeDict(keys, values, error);
 }
 
@@ -314,8 +313,9 @@ PhraserExt_analyze(PhraserExt* self, PyObject* args) {
     // Get the input text to analyze.
     ustring text;
     Py_ssize_t size = PyUnicode_GetSize(py_text);
+    Py_UNICODE* text_src = PyUnicode_AsUnicode(py_text);
     for (Py_ssize_t i = 0; i < size; ++i) {
-        text.emplace_back(PyUnicode_AsUnicode(py_text)[i]);
+        text.emplace_back(text_src[i]);
     }
 
     // Set the analysis options.
@@ -414,7 +414,7 @@ PyMODINIT_FUNC initphraserext(void) {
         return;
 
     m = Py_InitModule3("phraserext", PhraserExt_methods,
-                       "Example module that creates an extension type.");
+                       "A module for matching phrases in text.");
 
     Py_INCREF(&PhraserExtType);
     PyModule_AddObject(m, "PhraserExt", (PyObject *)&PhraserExtType);

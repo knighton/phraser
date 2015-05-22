@@ -1,5 +1,4 @@
-from distutils.core import setup
-from setuptools import Extension, find_packages
+from setuptools import setup, Extension, find_packages
 from pkg_resources import resource_string
 import os
 
@@ -61,8 +60,8 @@ os.environ['CXX'] = 'clang++'
 
 
 phraser = Extension(
-    'phraser.ext',
-    sources=find_cc_files(SRC_ROOT) + ['phraser/cc/pyext/phraser.cpp'],
+    'phraser.phraserext',
+    sources=find_cc_files(SRC_ROOT) + ['phraser/cc/pyext/phraserext.cpp'],
     extra_compile_args=COMPILE_FLAGS,
     include_dirs=[SRC_ROOT, '.'],
     libraries=['boost_regex'],
@@ -76,7 +75,7 @@ setup(
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',
     license='MIT',
-    packages=find_packages(exclude=['tests']),
+    packages=find_packages(exclude=['tests', 'scripts']),
     ext_modules=[phraser],
     long_description=resource_string(__name__, 'README.rst'),
 )

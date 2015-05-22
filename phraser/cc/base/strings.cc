@@ -1,6 +1,17 @@
 #include "strings.h"
 
+#include <cctype>
+
 namespace strings {
+
+bool IsSpace(const string& s) {
+    for (auto& c : s) {
+        if (!isspace(c)) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void Split(const string& s, char c, vector<string>* v) {
     v->clear();
@@ -45,8 +56,8 @@ void Trim(string* s) {
         return;
     }
 
-    auto begin = ~0u;
-    for (auto i = 0u; i < s->size(); ++i) {
+    auto begin = ~0ul;
+    for (auto i = 0ul; i < s->size(); ++i) {
         auto& c = (*s)[i];
         if (!isspace(c)) {
             begin = i;
@@ -54,21 +65,21 @@ void Trim(string* s) {
         }
     }
 
-    if (begin == ~0u) {
+    if (begin == ~0ul) {
         s->clear();
         return;
     }
 
-    auto end = ~0u;
-    for (auto i = s->size() - 1; i != ~0u; --i) {
+    auto end_incl = ~0ul;
+    for (auto i = s->size() - 1; i != ~0ul; --i) {
         auto& c = (*s)[i];
-        if (isspace(c)) {
-            end = i;
+        if (!isspace(c)) {
+            end_incl = i;
             break;
         }
     }
 
-    *s = s->substr(begin, end - begin);
+    *s = s->substr(begin, end_incl - begin + 1);
 }
 
 static void InternalStringPrintf(string* output, const char* format, va_list ap) {

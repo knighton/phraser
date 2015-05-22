@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 
 using std::string;
 using std::vector;

@@ -1,11 +1,11 @@
 #include "tokenizer.h"
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 #include "cc/tokenization/tokenizer_data.h"
 
 bool Tokenizer::Init(
         const string& ascii_data,
-        const unordered_map<uchar, uint16_t>& unicode2ascii,
+        const unordered_map<ucode, uint16_t>& unicode2ascii,
         const unordered_map<string, string>& token2token, string* error) {
     ascii_data_ = ascii_data;
     unicode2ascii_ = unicode2ascii;

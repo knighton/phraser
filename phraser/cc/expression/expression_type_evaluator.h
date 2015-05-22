@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "cc/expression/expression.h"
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 
 using std::string;
 using std::unordered_map;

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "cc/misc/strings.h"
+#include "cc/base/strings.h"
 
 bool ExprEvalVocabulary::IdentifyToken(const string& token, size_t* index) {
     auto it = token2index_.find(token);

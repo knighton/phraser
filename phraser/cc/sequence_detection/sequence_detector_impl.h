@@ -1,5 +1,5 @@
-#ifndef CC_SEQUENCES_SEQUENCE_DETECTOR_IMPL_H_
-#define CC_SEQUENCES_SEQUENCE_DETECTOR_IMPL_H_
+#ifndef CC_SEQUENCE_DETECTION_SEQUENCE_DETECTOR_IMPL_H_
+#define CC_SEQUENCE_DETECTION_SEQUENCE_DETECTOR_IMPL_H_
 
 #include <algorithm>
 #include <cstdio>
@@ -227,4 +227,4 @@ void SequenceDetector<Atom, Token, AtomTokenComparer>::GetMatches(
     }
 }
 
-#endif  // CC_SEQUENCES_SEQUENCE_DETECTOR_IMPL_H_
+#endif  // CC_SEQUENCE_DETECTION_SEQUENCE_DETECTOR_IMPL_H_

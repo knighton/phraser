@@ -1,7 +1,7 @@
 #ifndef CC_ENGLISH_COMMON_H_
 #define CC_ENGLISH_COMMON_H_
 
-#include "cc/misc/enum_strings.h"
+#include "cc/base/enum_strings.h"
 
 enum Number {
     N_SING,

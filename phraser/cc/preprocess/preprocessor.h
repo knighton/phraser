@@ -5,7 +5,7 @@
 #include <vector>
 #include <unordered_set>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode/unicode.h"
 #include "cc/preprocess/destutterer.h"
 #include "cc/preprocess/html_entity_parser.h"
 
@@ -27,7 +27,7 @@ class Preprocessor {
         const ustring& original, bool replace_html_entities,
         size_t destutter_max_consecutive, ustring* clean,
         vector<uint16_t>* clean2original_or_null,
-        unordered_map<uchar, size_t>* chr2drop_or_null, string* error) const;
+        unordered_map<ucode, size_t>* chr2drop_or_null, string* error) const;
 
   private:
     bool ready_;

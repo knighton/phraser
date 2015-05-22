@@ -1,5 +1,5 @@
-#ifndef CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
-#define CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#ifndef CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#define CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
 
 template <typename Atom>
 size_t EqualityAtomTokenComparer<Atom>::NumAtoms(const Atom& atom) {
@@ -34,4 +34,4 @@ json::Object* VectorMembershipAtomTokenComparer<Atom>::TokenToJSON(
     return new json::Object(token);
 }
 
-#endif  // CC_SEQUENCES_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_
+#endif  // CC_SEQUENCE_DETECTION_EQUALITY_SEQUENCE_DETECTOR_IMPL_H_

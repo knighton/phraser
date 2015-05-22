@@ -1,5 +1,5 @@
-#ifndef CC_TOKENIZATION_ASCII_TOKENIZER_H_
-#define CC_TOKENIZATION_ASCII_TOKENIZER_H_
+#ifndef CC_TOKENIZATION_LAPOS_ASCII_TOKENIZER_H_
+#define CC_TOKENIZATION_LAPOS_ASCII_TOKENIZER_H_
 
 #include <string>
 #include <vector>
@@ -15,4 +15,4 @@ class LaposASCIITokenizer {
                   vector<Span>* out2in) const;
 };
 
-#endif  // CC_TOKENIZATION_ASCII_TOKENIZER_H_
+#endif  // CC_TOKENIZATION_LAPOS_ASCII_TOKENIZER_H_

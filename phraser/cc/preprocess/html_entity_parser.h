@@ -1,11 +1,11 @@
-#ifndef CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
-#define CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#ifndef CC_PREPROCESS_HTML_ENTITY_PARSER_H_
+#define CC_PREPROCESS_HTML_ENTITY_PARSER_H_
 
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode/unicode.h"
 
 using std::string;
 using std::unordered_map;
@@ -27,16 +27,16 @@ class HTMLEntityParser {
 
   private:
     bool ParseHTMLEntity(
-        const ustring& in, size_t begin, size_t end_excl, uchar* code) const;
+        const ustring& in, size_t begin, size_t end_excl, ucode* code) const;
 
     void AppendPossibleHTMLEntity(
         const ustring& in, size_t amp_index, size_t semicolon_index,
         ustring* out, vector<uint16_t>* out2in) const;
 
-    bool IsPossibleHTMLEntityChar(uchar c) const;
+    bool IsPossibleHTMLEntityChar(ucode c) const;
 
     size_t max_name_length_;
-    unordered_map<string, uchar> name2code_;
+    unordered_map<string, ucode> name2code_;
 };
 
-#endif  // CC_PREPROCESS_HTML_ENTITY_REPLACER_H_
+#endif  // CC_PREPROCESS_HTML_ENTITY_PARSER_H_

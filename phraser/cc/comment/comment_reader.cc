@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "cc/comment/comment.h"
-#include "cc/misc/files.h"
-#include "cc/misc/utf8.h"
+#include "cc/base/files.h"
+#include "cc/base/unicode/utf8.h"
 
 using std::string;
 using std::vector;
@@ -21,7 +21,7 @@ bool CommentReader::Init(const vector<string>& comment_ff) {
 static bool ParseLine(const ustring& line, Comment* comment, string* error) {
     size_t count = 0;
     size_t x = 0;
-    uchar c;
+    ucode c;
     bool found = false;
     while (x < line.size() && (c = line[x++]) != ' ') {
         found = true;
@@ -93,7 +93,7 @@ CommentReaderStatus CommentReader::Next(
 
     // Try to load the next line.  If nothing, reset to the next file.
     ustring line;
-    if (!utf8::NextLine(bytes_.data(), bytes_.size(), &byte_index_, &line)) {
+    if (!utf8::EachLine(bytes_.data(), bytes_.size(), &byte_index_, &line)) {
         ++file_index_;
         byte_index_ = 0;
         return Next(dump_file_names, comment, error);

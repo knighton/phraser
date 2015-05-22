@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "cc/misc/unicode.h"
+#include "cc/base/unicode/unicode.h"
 #include "cc/tokenization/lapos_ascii_tokenizer.h"
 #include "cc/tokenization/span.h"
 
@@ -24,7 +24,7 @@ class Tokenizer {
   public:
     // Init with configuration.
     bool Init(const string& ascii_data,
-              const unordered_map<uchar, uint16_t>& unicode2ascii,
+              const unordered_map<ucode, uint16_t>& unicode2ascii,
               const unordered_map<string, string>& token2token, string* error);
 
     // Initialize from definitions in tokenizer_data.h.
@@ -50,7 +50,7 @@ class Tokenizer {
     //
     // If not present, maps to whitespace (0x20).
     string ascii_data_;
-    unordered_map<uchar, uint16_t> unicode2ascii_;
+    unordered_map<ucode, uint16_t> unicode2ascii_;
 
     // Step 2: ASCII tokenizer trained on the Penn Treebank.
     LaposASCIITokenizer ascii_tokenizer_;

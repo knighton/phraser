@@ -1,9 +1,9 @@
-#ifndef CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_
-#define CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_
+#ifndef CC_SEQUENCE_DETECTION_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_
+#define CC_SEQUENCE_DETECTION_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_
 
 #include <vector>
 
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 #include "cc/sequence_detection/sequence_detector.h"
 
 using std::vector; 
@@ -25,4 +25,4 @@ using VectorMembershipSequenceDetector = SequenceDetector<
 
 #include "vector_membership_sequence_detector_impl.h"
 
-#endif  // CC_SEQUENCES_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_
+#endif  // CC_SEQUENCE_DETECTION_VECTOR_MEMBERSHIP_SEQUENCE_DETECTOR_H_

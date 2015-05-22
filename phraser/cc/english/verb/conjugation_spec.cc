@@ -1,6 +1,6 @@
 #include "conjugation_spec.h"
 
-#include "cc/misc/combinatorics.h"
+#include "cc/base/combinatorics.h"
 #include "cc/english/common.h"
 
 EnumStrings<ConjSpecFieldType> ConjSpecFieldTypeStrings =

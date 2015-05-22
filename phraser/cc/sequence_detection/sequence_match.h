@@ -1,5 +1,5 @@
-#ifndef CC_SEQUENCES_SEQUENCE_MATCH_H_
-#define CC_SEQUENCES_SEQUENCE_MATCH_H_
+#ifndef CC_SEQUENCE_DETECTION_SEQUENCE_MATCH_H_
+#define CC_SEQUENCE_DETECTION_SEQUENCE_MATCH_H_
 
 #include <cstddef>
 #include <vector>
@@ -21,4 +21,4 @@ class SequenceMatch {
     vector<size_t> option_choices_;
 };
 
-#endif  // CC_SEQUENCES_SEQUENCE_MATCH_H_
+#endif  // CC_SEQUENCE_DETECTION_SEQUENCE_MATCH_H_

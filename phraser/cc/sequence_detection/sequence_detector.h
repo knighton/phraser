@@ -1,12 +1,12 @@
-#ifndef CC_SEQUENCES_SEQUENCE_DETECTOR_H_
-#define CC_SEQUENCES_SEQUENCE_DETECTOR_H_
+#ifndef CC_SEQUENCE_DETECTION_SEQUENCE_DETECTOR_H_
+#define CC_SEQUENCE_DETECTION_SEQUENCE_DETECTOR_H_
 
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
-#include "cc/misc/json.h"
+#include "cc/base/json.h"
 #include "cc/sequence_detection/sequence_match.h"
 
 using std::string;

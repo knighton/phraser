@@ -2,7 +2,7 @@
 
 #include "cc/preprocess/destutterer_data.h"
 
-static bool LoadDigits(unordered_set<uchar>* digits, string* error) {
+static bool LoadDigits(unordered_set<ucode>* digits, string* error) {
     for (auto i = 0u; i < destutterer_data::DIGITS_SIZE; ++i) {
         auto digit = destutterer_data::DIGITS[i];
         auto it = digits->find(digit);
@@ -27,7 +27,7 @@ bool Destutterer::Init(string* error) {
 
 bool Destutterer::Destutter(
         const ustring& in, size_t max_consecutive, ustring* out,
-        vector<uint16_t>* out2in, unordered_map<uchar, size_t>* chr2drop,
+        vector<uint16_t>* out2in, unordered_map<ucode, size_t>* chr2drop,
         string* error) const {
     out->clear();
     out2in->clear();
@@ -37,7 +37,7 @@ bool Destutterer::Destutter(
         return true;
     }
 
-    uchar prev_c = in[0];
+    ucode prev_c = in[0];
     out->emplace_back(prev_c);
     out2in->emplace_back(0);
     auto run_length = 1;

@@ -48,7 +48,7 @@ def find_cc_files(root_dir):
     ff = []
     for root, dirs, files in os.walk(root_dir):
         for name in files:
-            if name.endswith('.cc'):
+            if name.endswith('.cc') or name.endswith('.h'):
                 f = os.path.join(root, name)
                 ff.append(f)
     return ff
@@ -70,7 +70,7 @@ phraser = Extension(
 
 setup(
     name='phraser',
-    version='0.1.0',
+    version='0.1.1',
     author='James Knighton',
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',

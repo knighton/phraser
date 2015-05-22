@@ -48,7 +48,7 @@ def find_cc_files(root_dir):
     ff = []
     for root, dirs, files in os.walk(root_dir):
         for name in files:
-            if name.endswith('.cc') or name.endswith('.h'):
+            if name.endswith('.cc'):
                 f = os.path.join(root, name)
                 ff.append(f)
     return ff

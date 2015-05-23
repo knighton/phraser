@@ -2,9 +2,14 @@
 
 CC = clang++
 
+PYENV = . env/bin/activate;
+PYTHON = $(PYENV) python
+EXTRAS_REQS := $(wildcard requirements-*.txt)
+DISTRIBUTE = sdist bdist_wheel
+
 SRC_ROOT = phraser
 BIN_DIR = bin
-BUILD_ROOT = build/temp
+BUILD_ROOT = $(shell $(PYTHON) ./scripts/get_build_dir.py)
 BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 TEST_FILE = tests/data/50k_comments.txt
 
@@ -45,11 +50,6 @@ CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
 
 LD_FLAGS = -lboost_regex
 
-PYENV = . env/bin/activate;
-PYTHON = $(PYENV) python
-EXTRAS_REQS := $(wildcard requirements-*.txt)
-DISTRIBUTE = sdist bdist_wheel
-
 package: env
 	$(PYTHON) setup.py $(DISTRIBUTE)
 
@@ -78,7 +78,7 @@ nuke: clean
 
 clean:
 	python setup.py clean
-	rm -rf dist $(BUILD_DIR) $(BIN_DIR)
+	rm -rf dist build $(BIN_DIR)
 	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
 	find . -path ./env -prune -o -type f -name "*.so" -exec rm {} \;
 
@@ -95,10 +95,15 @@ compare_against_impermium $(COMPARE_BIN): $(O_INTERMEDIATES)
 	mkdir -p $(BIN_DIR)
 	$(CC) $(CC_FLAGS) $(O_INTERMEDIATES) $(COMPARE_MAIN) -o $(COMPARE_BIN) $(LD_FLAGS)
 
-memcheck: compare_against_impermium
-	time valgrind --leak-check=full --track-origins=yes \
-		$(COMPARE_BIN) $(TEST_FILE)
-		2> valgrind_stderr.txt
+.PHONY: memcheck_cc memcheck_python
+
+memcheck_cc: compare_against_impermium
+	time valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
+
+memcheck_python: build_ext
+	valgrind --tool=memcheck --leak-check=full --suppressions=valgrind-python.supp \
+		env/bin/python scripts/testmem.py 2> val_out_leak.txt
 
 develop:
 	@echo "Installing for " `which pip`

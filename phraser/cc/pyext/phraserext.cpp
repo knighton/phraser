@@ -171,26 +171,34 @@ PyObject* UnicodeFromUstring(const ustring& s) {
 }
 
 PyObject* MakeDict(const vector<PyObject*>& keys,
-                   const vector<PyObject*>& values) {
-    if (keys.size() != values.size()) {
-        return NULL;
-    }
-
+                   const vector<PyObject*>& values,
+                   string* error)
+{
+    auto num_keys = keys.size();
+    auto num_vals = values.size();
+    auto num_pairs = std::min(num_keys, num_vals);
     PyObject* d = PyDict_New();
-    for (auto i = 0u; i < keys.size(); ++i) {
+    for (auto i = 0u; i < num_pairs; ++i) {
         PyObject* k = keys[i];
         PyObject* v = values[i];
         if (!k) {
+            *error = "Missing key";
+            Py_DECREF(d);
             return NULL;
         }
-        if (!v) {
+        else if (!v) {
+            *error = "Missing value";
+            Py_DECREF(d);
             return NULL;
         }
         if (PyDict_SetItem(d, k, v)) {
+            *error = "Could not set item";
+            Py_DECREF(d);
             return NULL;
         }
+        Py_DECREF(k);
+        Py_DECREF(v);
     }
-
     return d;
 }
 
@@ -276,25 +284,19 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
 
-        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values);
+        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values, error);
+        if (!tmp_d) { return NULL; }
         PyList_SET_ITEM(value, i, tmp_d);
     }
     keys.emplace_back(key);
     values.emplace_back(value);
-
-    return MakeDict(keys, values);
-}
-
-PyObject* MakeTuple(PyObject* first, PyObject* second) {
-    PyObject* r = PyTuple_New(2);
-    PyTuple_SetItem(r, 0, first);
-    PyTuple_SetItem(r, 1, second);
-    return r;
+    return MakeDict(keys, values, error);
 }
 
 static PyObject*
 PhraserExt_analyze(PhraserExt* self, PyObject* args) {
     // Get args.
+    //
     PyObject* py_text;
     PyObject* options_dict;
     if (!PyArg_ParseTuple(args, "UO!", &py_text, &PyDict_Type, &options_dict)) {
@@ -311,8 +313,9 @@ PhraserExt_analyze(PhraserExt* self, PyObject* args) {
     // Get the input text to analyze.
     ustring text;
     Py_ssize_t size = PyUnicode_GetSize(py_text);
+    Py_UNICODE* text_src = PyUnicode_AsUnicode(py_text);
     for (Py_ssize_t i = 0; i < size; ++i) {
-        text.emplace_back(PyUnicode_AsUnicode(py_text)[i]);
+        text.emplace_back(text_src[i]);
     }
 
     // Set the analysis options.
@@ -411,7 +414,7 @@ PyMODINIT_FUNC initphraserext(void) {
         return;
 
     m = Py_InitModule3("phraserext", PhraserExt_methods,
-                       "Example module that creates an extension type.");
+                       "A module for matching phrases in text.");
 
     Py_INCREF(&PhraserExtType);
     PyModule_AddObject(m, "PhraserExt", (PyObject *)&PhraserExtType);

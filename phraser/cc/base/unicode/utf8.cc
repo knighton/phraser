@@ -39,8 +39,10 @@
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-// #define UTF_IS_ERROR(c) \
-//     (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
+/*
+#define UTF_IS_ERROR(c) \
+    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
+*/
 
 #define U_SENTINEL (-1)
 
@@ -109,7 +111,8 @@ ucode utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
             c=(c<<6)|trail;
             /* c>=0x110 would result in code point>0x10ffff, outside Unicode */
             if(c>=0x110 || trail>0x3f) { break; }
-        [[clang::fallthrough]]; case 2:
+        /*  [[clang::fallthrough]]; case 2: */
+        case 2:
             trail=s[i++]-0x80;
             c=(c<<6)|trail;
             /*
@@ -117,7 +120,8 @@ ucode utf8_nextCharSafeBody(const uint8_t *s, size_t *pi, size_t length,
              * before the last (c<<6), a surrogate is c=360..37f
              */
             if(((c&0xffe0)==0x360 && strict!=-2) || trail>0x3f) { break; }
-        [[clang::fallthrough]]; case 1:
+        /*  [[clang::fallthrough]]; case 1: */
+        case 1:
             trail=s[i++]-0x80;
             c=(c<<6)|trail;
             if(trail>0x3f) { break; }

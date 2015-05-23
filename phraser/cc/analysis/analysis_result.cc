@@ -16,7 +16,7 @@ void AnalysisResult::Clear() {
     token2clean.clear();
 
     phrase_results.clear();
-};
+}
 
 json::Object* AnalysisResult::ToJSON() const {
     map<string, json::Object*> chr2drop_j;

@@ -1,6 +1,10 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-CC = clang++
+CC = g++
+UNAME_S = $(shell uname -s)
+ifeq ($(UNAME_S), Darwin)
+	CC = g++-4.8
+endif
 
 PYENV = . env/bin/activate;
 PYTHON = $(PYENV) python
@@ -15,28 +19,32 @@ TEST_FILE = tests/data/50k_comments.txt
 
 FLAGS_BASE = \
     -std=c++11 \
-    -fcolor-diagnostics \
     -O3 \
-    -ferror-limit=5 \
     -I$(SRC_ROOT)
 
 FLAGS_WARN = \
     -Wpedantic \
     -Wall \
-    -Weverything \
     -Wextra \
     -Werror \
+
+CLANG_FLAGS_WARN = \
+	-Weverything \
+	-fcolor-diagnostics \
+    -ferror-limit=5 \
 
 FLAGS_WARN_DISABLE = \
     -Wno-c++98-compat-pedantic \
     -Wno-covered-switch-default \
     -Wno-exit-time-destructors \
-    -Wno-global-constructors \
     -Wno-padded \
+	-Wno-unknown-pragmas \
+
+CLANG_FLAGS_WARN_DISABLE = \
     -Wno-weak-vtables \
+    -Wno-global-constructors \
 
 FLAGS_WARN_DISABLE_LAPOS = \
-    -Wno-shorten-64-to-32 \
     -Wno-sign-conversion \
     -Wno-old-style-cast \
     -Wno-sign-compare \
@@ -44,6 +52,9 @@ FLAGS_WARN_DISABLE_LAPOS = \
     -Wno-unused-variable \
     -Wno-unused-parameter \
     -Wno-unused-function \
+
+CLANG_FLAGS_WARN_DISABLE_LAPOS = \
+    -Wno-shorten-64-to-32 \
 
 CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
         $(FLAGS_WARN_DISABLE_LAPOS)

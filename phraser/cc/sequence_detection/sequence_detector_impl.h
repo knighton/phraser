@@ -151,7 +151,7 @@ void SequenceDetector<Atom, Token, AtomTokenComparer>::AppendMatchesInner(
 
     // Check each atom in the sequence.
     //
-    // The caller has already checked index 0 (that is how control flow got\
+    // The caller has already checked index 0 (that is how control flow got
     // here).
     for (auto i = 1u; i < atoms_to_match.size(); ++i) {
         auto& atom_need = atoms_to_match[i];

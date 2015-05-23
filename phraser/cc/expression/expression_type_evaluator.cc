@@ -17,7 +17,7 @@ bool ExpressionTypeEvaluator::PostInit(string* error) {
         }
     }
     return true;
-};
+}
 
 json::Object* ExpressionTypeEvaluator::ToJSON() const {
     map<string, json::Object*> dim2values;

@@ -1,6 +1,6 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-USE_CLANG = 0
+USE_CLANG = 1
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
@@ -29,37 +29,37 @@ BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 TEST_FILE = tests/data/50k_comments.txt
 
 COMMON_FLAGS = \
-    -std=c++11 \
-    -O3 \
-    -I$(SRC_ROOT) \
-    -Wpedantic \
-    -Wall \
-    -Wextra \
-    -Werror \
-    -Wno-c++98-compat-pedantic \
-    -Wno-covered-switch-default \
-    -Wno-padded \
+	-std=c++11 \
+	-O3 \
+	-I$(SRC_ROOT) \
+	-Wpedantic \
+	-Wall \
+	-Wextra \
+	-Werror \
+	-Wno-c++98-compat-pedantic \
+	-Wno-covered-switch-default \
+	-Wno-padded \
 	-Wno-unknown-pragmas \
 
 COMMON_LAPOS_FLAGS = \
-    -Wno-sign-conversion \
-    -Wno-old-style-cast \
-    -Wno-sign-compare \
-    -Wno-float-equal \
-    -Wno-unused-variable \
-    -Wno-unused-parameter \
-    -Wno-unused-function \
+	-Wno-sign-conversion \
+	-Wno-old-style-cast \
+	-Wno-sign-compare \
+	-Wno-float-equal \
+	-Wno-unused-variable \
+	-Wno-unused-parameter \
+	-Wno-unused-function \
 
 CLANG_FLAGS = \
 	-Weverything \
 	-fcolor-diagnostics \
-    -ferror-limit=5 \
-    -Wno-weak-vtables \
-    -Wno-global-constructors \
+	-ferror-limit=5 \
+	-Wno-weak-vtables \
+	-Wno-global-constructors \
 
 CLANG_LAPOS_FLAGS = \
-    -Wno-exit-time-destructors \
-    -Wno-shorten-64-to-32 \
+	-Wno-exit-time-destructors \
+	-Wno-shorten-64-to-32 \
 
 CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
 

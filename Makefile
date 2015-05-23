@@ -1,9 +1,12 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-CC = g++
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
-	CC = g++-4.8
+	# Using clang for binary compatibility with boost.
+	# CC = g++-4.8
+	CC = clang++
+else
+	CC = g++
 endif
 
 PYENV = . env/bin/activate;

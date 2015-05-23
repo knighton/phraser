@@ -1,9 +1,17 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
+USE_CLANG = 0
+
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
 	# Using clang for binary compatibility with boost.
 	# CC = g++-4.8
+	USE_CLANG = 1
+else
+	USE_CLANG = 0
+endif
+
+ifeq ($(USE_CLANG), 1)
 	CC = clang++
 else
 	CC = g++
@@ -20,34 +28,20 @@ BUILD_ROOT = $(shell $(PYTHON) ./scripts/get_build_dir.py)
 BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 TEST_FILE = tests/data/50k_comments.txt
 
-FLAGS_BASE = \
+COMMON_FLAGS = \
     -std=c++11 \
     -O3 \
-    -I$(SRC_ROOT)
-
-FLAGS_WARN = \
+    -I$(SRC_ROOT) \
     -Wpedantic \
     -Wall \
     -Wextra \
     -Werror \
-
-CLANG_FLAGS_WARN = \
-	-Weverything \
-	-fcolor-diagnostics \
-    -ferror-limit=5 \
-
-FLAGS_WARN_DISABLE = \
     -Wno-c++98-compat-pedantic \
     -Wno-covered-switch-default \
-    -Wno-exit-time-destructors \
     -Wno-padded \
 	-Wno-unknown-pragmas \
 
-CLANG_FLAGS_WARN_DISABLE = \
-    -Wno-weak-vtables \
-    -Wno-global-constructors \
-
-FLAGS_WARN_DISABLE_LAPOS = \
+COMMON_LAPOS_FLAGS = \
     -Wno-sign-conversion \
     -Wno-old-style-cast \
     -Wno-sign-compare \
@@ -56,11 +50,22 @@ FLAGS_WARN_DISABLE_LAPOS = \
     -Wno-unused-parameter \
     -Wno-unused-function \
 
-CLANG_FLAGS_WARN_DISABLE_LAPOS = \
+CLANG_FLAGS = \
+	-Weverything \
+	-fcolor-diagnostics \
+    -ferror-limit=5 \
+    -Wno-weak-vtables \
+    -Wno-global-constructors \
+
+CLANG_LAPOS_FLAGS = \
+    -Wno-exit-time-destructors \
     -Wno-shorten-64-to-32 \
 
-CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
-        $(FLAGS_WARN_DISABLE_LAPOS)
+CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
+
+ifeq ($(USE_CLANG), 1)
+	$(CC_FLAGS) = $(CC_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+endif
 
 LD_FLAGS = -lboost_regex
 

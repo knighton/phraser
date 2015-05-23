@@ -44,6 +44,7 @@ CLANG_FLAGS = """
     -Wno-covered-switch-default
     -Wno-weak-vtables
     -Wno-global-constructors
+    -Wno-implicit-fallthrough
 """.split()
 
 

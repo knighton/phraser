@@ -171,9 +171,11 @@ PyObject* UnicodeFromUstring(const ustring& s) {
 }
 
 PyObject* MakeDict(const vector<PyObject*>& keys,
-                   const vector<PyObject*>& values,
-                   string* error)
+                   const vector<PyObject*>& values)
 {
+    // Createa a Python dictionary from a vector pair of keys anbd values
+    // Steals references to all members of the two input vectors
+    //
     auto num_keys = keys.size();
     auto num_vals = values.size();
     auto num_pairs = std::min(num_keys, num_vals);
@@ -181,21 +183,7 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
     for (auto i = 0u; i < num_pairs; ++i) {
         PyObject* k = keys[i];
         PyObject* v = values[i];
-        if (!k) {
-            *error = "Missing key";
-            Py_DECREF(d);
-            return NULL;
-        }
-        else if (!v) {
-            *error = "Missing value";
-            Py_DECREF(d);
-            return NULL;
-        }
-        if (PyDict_SetItem(d, k, v)) {
-            *error = "Could not set item";
-            Py_DECREF(d);
-            return NULL;
-        }
+        PyDict_SetItem(d, k, v);
         Py_DECREF(k);
         Py_DECREF(v);
     }
@@ -218,7 +206,7 @@ PyObject* MakeDict(const vector<PyObject*>& keys,
 //     'subsequence_names': ['subject', 'aux', 'verb'],
 //     'index_lists': [...]
 // }
-PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
+PyObject* DictFromAnalysisResult(const AnalysisResult& result) {
     PyObject* key;
     PyObject* value;
     vector<PyObject*> keys;
@@ -283,14 +271,11 @@ PyObject* DictFromAnalysisResult(const AnalysisResult& result, string* error) {
         }
         tmp_keys.emplace_back(tmp_key);
         tmp_values.emplace_back(tmp_value);
-
-        PyObject* tmp_d = MakeDict(tmp_keys, tmp_values, error);
-        if (!tmp_d) { return NULL; }
-        PyList_SET_ITEM(value, i, tmp_d);
+        PyList_SET_ITEM(value, i, MakeDict(tmp_keys, tmp_values));
     }
     keys.emplace_back(key);
     values.emplace_back(value);
-    return MakeDict(keys, values, error);
+    return MakeDict(keys, values);
 }
 
 static PyObject*
@@ -333,14 +318,7 @@ PhraserExt_analyze(PhraserExt* self, PyObject* args) {
         return NULL;
     }
 
-    // Convert the results to a python dict.
-    PyObject* result_dict;
-    if (!(result_dict = DictFromAnalysisResult(result, &error))) {
-        PyErr_SetString(PyExc_RuntimeError, error.data());
-        return NULL;
-    }
-
-    return result_dict;
+    return DictFromAnalysisResult(result);
 }
 
 static PyMethodDef PhraserExt_methods[] = {

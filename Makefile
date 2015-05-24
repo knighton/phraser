@@ -121,7 +121,9 @@ memcheck_cc: compare_against_impermium
 		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
 
 memcheck_python: build_ext
-	valgrind --tool=memcheck --leak-check=full --suppressions=valgrind-python.supp \
+	valgrind --tool=memcheck --dsymutil=yes \
+		--leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--suppressions=valgrind-python.supp \
 		env/bin/python scripts/testmem.py 2> val_out_leak.txt
 
 develop:

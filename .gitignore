@@ -30,6 +30,7 @@ coverage.xml
 nosetests.xml
 
 # debug files
+*.dSYM/
 valgrind_stderr.txt
 both.txt
 impermium_only.txt

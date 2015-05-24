@@ -32,6 +32,7 @@ nosetests.xml
 # debug files
 *.dSYM/
 valgrind_stderr.txt
+valgrind_python_stderr.txt
 both.txt
 impermium_only.txt
 james_only.txt

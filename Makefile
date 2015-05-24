@@ -124,7 +124,7 @@ memcheck_python: build_ext
 	valgrind --tool=memcheck --dsymutil=yes \
 		--leak-check=full --show-leak-kinds=all --track-origins=yes \
 		--suppressions=valgrind-python.supp \
-		env/bin/python scripts/testmem.py 2> val_out_leak.txt
+		env/bin/python scripts/testmem.py 2> valgrind_python_stderr.txt
 
 develop:
 	@echo "Installing for " `which pip`

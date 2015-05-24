@@ -173,7 +173,7 @@ PyObject* UnicodeFromUstring(const ustring& s) {
 PyObject* MakeDict(const vector<PyObject*>& keys,
                    const vector<PyObject*>& values)
 {
-    // Createa a Python dictionary from a vector pair of keys anbd values
+    // Create a Python dictionary from a vector pair of keys and values
     // Steals references to all members of the two input vectors
     //
     auto num_keys = keys.size();

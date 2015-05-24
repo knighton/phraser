@@ -4,16 +4,14 @@ import collections
 from phraser.phraserext import PhraserExt
 
 
-class AnalysisOptions(object):
-    def __init__(self):
-        self.destutter_max_consecutive = 3
-        self.replace_html_entities = True
-
+class OptionsBag(object):
     def to_dict(self):
-        return {
-            'destutter_max_consecutive': self.destutter_max_consecutive,
-            'replace_html_entities': self.replace_html_entities,
-        }
+        return self.__dict__
+
+
+class AnalysisOptions(OptionsBag):
+    destutter_max_consecutive = 3
+    replace_html_entities = True
 
 
 class PhraseResult(object):

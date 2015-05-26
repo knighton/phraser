@@ -1,6 +1,21 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-CC = clang++
+USE_CLANG = 1
+
+UNAME_S = $(shell uname -s)
+ifeq ($(UNAME_S), Darwin)
+	# Using clang for binary compatibility with boost.
+	# CC = g++-4.8
+	USE_CLANG = 1
+else
+	USE_CLANG = 0
+endif
+
+ifeq ($(USE_CLANG), 1)
+	CC = clang++
+else
+	CC = g++
+endif
 
 PYENV = . env/bin/activate;
 PYTHON = $(PYENV) python
@@ -13,40 +28,44 @@ BUILD_ROOT = $(shell $(PYTHON) ./scripts/get_build_dir.py)
 BUILD_DIR = $(BUILD_ROOT)/$(SRC_ROOT)
 TEST_FILE = tests/data/50k_comments.txt
 
-FLAGS_BASE = \
-    -std=c++11 \
-    -fcolor-diagnostics \
-    -O3 \
-    -ferror-limit=5 \
-    -I$(SRC_ROOT)
+COMMON_FLAGS = \
+	-std=c++11 \
+	-O3 \
+	-I$(SRC_ROOT) \
+	-Wpedantic \
+	-Wall \
+	-Wextra \
+	-Werror \
+	-Wno-c++98-compat-pedantic \
+	-Wno-covered-switch-default \
+	-Wno-padded \
+	-Wno-unknown-pragmas \
 
-FLAGS_WARN = \
-    -Wpedantic \
-    -Wall \
-    -Weverything \
-    -Wextra \
-    -Werror \
+COMMON_LAPOS_FLAGS = \
+	-Wno-sign-conversion \
+	-Wno-old-style-cast \
+	-Wno-sign-compare \
+	-Wno-float-equal \
+	-Wno-unused-variable \
+	-Wno-unused-parameter \
+	-Wno-unused-function \
 
-FLAGS_WARN_DISABLE = \
-    -Wno-c++98-compat-pedantic \
-    -Wno-covered-switch-default \
-    -Wno-exit-time-destructors \
-    -Wno-global-constructors \
-    -Wno-padded \
-    -Wno-weak-vtables \
+CLANG_FLAGS = \
+	-Weverything \
+	-fcolor-diagnostics \
+	-ferror-limit=5 \
+	-Wno-weak-vtables \
+	-Wno-global-constructors \
 
-FLAGS_WARN_DISABLE_LAPOS = \
-    -Wno-shorten-64-to-32 \
-    -Wno-sign-conversion \
-    -Wno-old-style-cast \
-    -Wno-sign-compare \
-    -Wno-float-equal \
-    -Wno-unused-variable \
-    -Wno-unused-parameter \
-    -Wno-unused-function \
+CLANG_LAPOS_FLAGS = \
+	-Wno-exit-time-destructors \
+	-Wno-shorten-64-to-32 \
 
-CC_FLAGS = $(FLAGS_BASE) $(FLAGS_WARN) $(FLAGS_WARN_DISABLE) \
-        $(FLAGS_WARN_DISABLE_LAPOS)
+CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
+
+ifeq ($(USE_CLANG), 1)
+	$(CC_FLAGS) = $(CC_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+endif
 
 LD_FLAGS = -lboost_regex
 
@@ -102,8 +121,10 @@ memcheck_cc: compare_against_impermium
 		$(COMPARE_BIN) $(TEST_FILE) 2> valgrind_stderr.txt
 
 memcheck_python: build_ext
-	valgrind --tool=memcheck --leak-check=full --suppressions=valgrind-python.supp \
-		env/bin/python scripts/testmem.py 2> val_out_leak.txt
+	valgrind --tool=memcheck --dsymutil=yes \
+		--leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--suppressions=valgrind-python.supp \
+		env/bin/python scripts/testmem.py 2> valgrind_python_stderr.txt
 
 develop:
 	@echo "Installing for " `which pip`

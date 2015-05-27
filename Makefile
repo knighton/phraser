@@ -18,7 +18,7 @@ endif
 ifeq ($(USE_CLANG), 1)
 	CC = clang++
 else
-	CC = g++
+	CC = g++-4.7
 endif
 
 PYENV = . env/bin/activate;

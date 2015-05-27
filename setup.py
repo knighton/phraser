@@ -16,11 +16,6 @@ COMMON_FLAGS = ("""
     -O3
     -I%s
 
-    -Wpedantic
-    -Wall
-    -Wextra
-
-    -Wno-padded
 """ % SRC_ROOT).split()
 
 
@@ -36,6 +31,10 @@ COMMON_LAPOS_FLAGS = """
 
 
 CLANG_FLAGS = """
+    -Wno-padded
+    -Wall
+    -Wextra
+    -Wpedantic
     -Werror
     -Weverything
     -fcolor-diagnostics
@@ -71,8 +70,8 @@ if platform.system() == 'Darwin':
     os.environ['CC'] = 'clang++'
     os.environ['CXX'] = 'clang++'
 else:
-    os.environ['CC'] = 'g++'
-    os.environ['CXX'] = 'g++'
+    os.environ['CC'] = 'g++-4.7'
+    os.environ['CXX'] = 'g++-4.7'
 
 
 if os.environ.get('CXX', None) == 'clang++':
@@ -92,7 +91,7 @@ phraser = Extension(
 
 setup(
     name='phraser',
-    version='0.1.4',
+    version='0.1.5',
     author='James Knighton',
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',

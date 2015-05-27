@@ -1,6 +1,6 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-USE_CLANG = 1
+OVERRIDE_USE_CLANG = 1
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
@@ -8,7 +8,11 @@ ifeq ($(UNAME_S), Darwin)
 	# CC = g++-4.8
 	USE_CLANG = 1
 else
-	USE_CLANG = 0
+	ifeq ($(OVERRIDE_USE_CLANG), 1)
+		USE_CLANG = 1
+	else
+		USE_CLANG = 0
+	endif
 endif
 
 ifeq ($(USE_CLANG), 1)
@@ -32,10 +36,8 @@ COMMON_FLAGS = \
 	-std=c++11 \
 	-O3 \
 	-I$(SRC_ROOT) \
-	-Wpedantic \
 	-Wall \
 	-Wextra \
-	-Werror \
 	-Wno-c++98-compat-pedantic \
 	-Wno-covered-switch-default \
 	-Wno-padded \
@@ -51,20 +53,23 @@ COMMON_LAPOS_FLAGS = \
 	-Wno-unused-function \
 
 CLANG_FLAGS = \
+	-Werror \
+	-Wpedantic \
 	-Weverything \
 	-fcolor-diagnostics \
 	-ferror-limit=5 \
 	-Wno-weak-vtables \
 	-Wno-global-constructors \
+	-Wno-implicit-fallthrough \
 
 CLANG_LAPOS_FLAGS = \
 	-Wno-exit-time-destructors \
 	-Wno-shorten-64-to-32 \
 
-CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
-
 ifeq ($(USE_CLANG), 1)
-	$(CC_FLAGS) = $(CC_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+	CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+else
+	CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
 endif
 
 LD_FLAGS = -lboost_regex

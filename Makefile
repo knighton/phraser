@@ -1,6 +1,6 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-OVERRIDE_USE_CLANG = 1
+OVERRIDE_USE_CLANG = 0
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)

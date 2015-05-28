@@ -11,11 +11,10 @@ SRC_ROOT = 'phraser/'
 # 2. Max out warnings.
 # 3. Disable some warnings.
 # 4. Disable more warnings for LAPOS.
-COMMON_FLAGS = ("""
+COMMON_BASE_FLAGS = ("""
     -std=c++11
     -O3
     -I%s
-
 """ % SRC_ROOT).split()
 
 
@@ -30,13 +29,17 @@ COMMON_LAPOS_FLAGS = """
 """.split()
 
 
-CLANG_FLAGS = """
-    -Wno-padded
+CLANG_BASE_FLAGS = """
     -Wall
     -Wextra
     -Wpedantic
     -Werror
     -Weverything
+""".split()
+
+
+CLANG_DISABLE_FLAGS = """
+    -Wno-padded
     -fcolor-diagnostics
     -ferror-limit=5
     -Wno-c++98-compat-pedantic
@@ -75,9 +78,10 @@ else:
 
 
 if os.environ.get('CXX', None) == 'clang++':
-    FLAGS = COMMON_FLAGS + COMMON_LAPOS_FLAGS + CLANG_FLAGS + CLANG_LAPOS_FLAGS
+    FLAGS = COMMON_BASE_FLAGS + CLANG_BASE_FLAGS + COMMON_LAPOS_FLAGS + \
+            CLANG_DISABLE_FLAGS + CLANG_LAPOS_FLAGS
 else:
-    FLAGS = COMMON_FLAGS + COMMON_LAPOS_FLAGS
+    FLAGS = COMMON_BASE_FLAGS + COMMON_LAPOS_FLAGS
 
 
 phraser = Extension(

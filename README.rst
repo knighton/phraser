@@ -478,6 +478,14 @@ Correctness:
   Can't solve it by just NFC normalization, have to take combining diacritical
   marks into account.  Also do NFC normalization before calling it.
 
+Requirements
+^^^^^^^^^^^^
+
+Phraser is a nonessential python extension around a C++ codebase that uses several C++11 features.  You'll need python and a recent compiler.
+
+We support clang++ (Ubuntu and Mac OS X) and g++ (Ubuntu only), going back to g++ 4.7 (released March 2012) and clang++ 3.4 (released January 2014).  Earlier clang versions could probably be supported by dropping some flags.  Further than that would require nontrivial code changes.
+
+Currently, the build flags are much stricter when using clang.  It's geared toward development being done against clang, and deployment using g++ on an older system.
 
 Release notes
 ~~~~~~~~~~~~~

@@ -504,10 +504,15 @@ Backend:
 * All-at-once expressions removed (use dynamic expressions instead).
 * Tagging is now done automatically in the frontend.
 
+0.1.6 (2015-05-28)
+^^^^^^^^^^^^^^^^^^
+
+- Fix build_ext on modern Ubuntu releases.  Chooses compiler based on /etc/lsb-release.
+
 0.1.5 (2015-05-27)
 ^^^^^^^^^^^^^^^^^^
 
-- Have setup.py default to building the python extension using g++-4.7 when not on Darwin in order for build_ext to work on an older system.  build_ext is now broken on python 2.7.8.
+- Have setup.py default to building the python extension using g++-4.7 when not on Darwin in order for build_ext to work on an older system.  build_ext is now broken on python 2.7.8 due to flags setup.py automatically inserts.
 
 0.1.4 (2015-05-27)
 ^^^^^^^^^^^^^^^^^^

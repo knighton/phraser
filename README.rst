@@ -478,6 +478,14 @@ Correctness:
   Can't solve it by just NFC normalization, have to take combining diacritical
   marks into account.  Also do NFC normalization before calling it.
 
+Requirements
+~~~~~~~~~~~~
+
+Phraser is a nonessential python extension around a C++ codebase that uses several C++11 features.  You'll need python and a recent C++ compiler.
+
+We support clang++ (Ubuntu and Mac OS X) and g++ (Ubuntu only), going back to g++ 4.7 (released March 2012) and clang++ 3.4 (released January 2014).  Earlier clang versions could probably be supported by dropping some flags.  Further than that would require nontrivial code changes.
+
+Currently, the build flags are much stricter when using clang.  It's geared toward development being done against clang, and deployment using g++ on an older system.
 
 Release notes
 ~~~~~~~~~~~~~
@@ -504,10 +512,15 @@ Backend:
 * All-at-once expressions removed (use dynamic expressions instead).
 * Tagging is now done automatically in the frontend.
 
+0.1.6 (2015-05-28)
+^^^^^^^^^^^^^^^^^^
+
+- Fix release: fix build_ext for more recent Ubuntu releases.  Chooses compiler based on /etc/lsb-release.
+
 0.1.5 (2015-05-27)
 ^^^^^^^^^^^^^^^^^^
 
-- Have setup.py default to building the python extension using g++-4.7 when not on Darwin in order for build_ext to work on an older system.  build_ext is now broken on python 2.7.8.
+- Fix release: setup.py defaults to building the python extension using g++-4.7 when not on Darwin in order for build_ext to work on an older system.  build_ext is now broken on python 2.7.8 due to flags setup.py automatically inserts.
 
 0.1.4 (2015-05-27)
 ^^^^^^^^^^^^^^^^^^

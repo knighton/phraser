@@ -1,6 +1,6 @@
 .PHONY: clean coverage develop env extras package release test virtualenv
 
-USE_CLANG = 1
+OVERRIDE_USE_CLANG = 0
 
 UNAME_S = $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
@@ -8,13 +8,17 @@ ifeq ($(UNAME_S), Darwin)
 	# CC = g++-4.8
 	USE_CLANG = 1
 else
-	USE_CLANG = 0
+	ifeq ($(OVERRIDE_USE_CLANG), 1)
+		USE_CLANG = 1
+	else
+		USE_CLANG = 0
+	endif
 endif
 
 ifeq ($(USE_CLANG), 1)
 	CC = clang++
 else
-	CC = g++
+	CC = g++-4.7
 endif
 
 PYENV = . env/bin/activate;
@@ -32,39 +36,33 @@ COMMON_FLAGS = \
 	-std=c++11 \
 	-O3 \
 	-I$(SRC_ROOT) \
-	-Wpedantic \
 	-Wall \
 	-Wextra \
-	-Werror \
 	-Wno-c++98-compat-pedantic \
 	-Wno-covered-switch-default \
 	-Wno-padded \
 	-Wno-unknown-pragmas \
-
-COMMON_LAPOS_FLAGS = \
-	-Wno-sign-conversion \
 	-Wno-old-style-cast \
-	-Wno-sign-compare \
-	-Wno-float-equal \
 	-Wno-unused-variable \
 	-Wno-unused-parameter \
 	-Wno-unused-function \
 
 CLANG_FLAGS = \
+	-Werror \
+	-Wpedantic \
 	-Weverything \
 	-fcolor-diagnostics \
 	-ferror-limit=5 \
 	-Wno-weak-vtables \
 	-Wno-global-constructors \
-
-CLANG_LAPOS_FLAGS = \
+	-Wno-implicit-fallthrough \
 	-Wno-exit-time-destructors \
 	-Wno-shorten-64-to-32 \
 
-CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
-
 ifeq ($(USE_CLANG), 1)
-	$(CC_FLAGS) = $(CC_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+	CC_FLAGS = $(COMMON_FLAGS) $(CLANG_FLAGS)
+else
+	CC_FLAGS = $(COMMON_FLAGS)
 endif
 
 LD_FLAGS = -lboost_regex
@@ -82,7 +80,7 @@ coverage: test
 	open cover/index.html
 endif
 
-test: extras
+test: extras build_ext
 	$(PYENV) nosetests $(NOSEARGS)
 	$(PYENV) py.test README.rst
 

@@ -44,7 +44,7 @@ vector<PersonalColumnInfo> COL_INFOS = {
 
 struct PersonalRowInfo {
     string row_name;
-    vector<int> fields;
+    vector<uint32_t> fields;
 };
 
 // Row name -> list of feature values that can be wildcards (NUM_X).
@@ -172,7 +172,7 @@ bool ParsePersonalTable(
         for (auto i = 0u; i < info.fields.size(); ++i) {
             auto& value = info.fields[i];
             auto num_options = options_per_noneable_field[i].size();
-            if (!(0 <= value && value <= num_options)) {
+            if (!(value <= num_options)) {
                 *error = "[PersonalManager] Impossible metadata field value.";
                 return false;
             }
@@ -180,7 +180,7 @@ bool ParsePersonalTable(
     }
 
     // Expand noneable row infos to resolved row infos.
-    vector<vector<vector<int>>> value_lists_per_row;
+    vector<vector<vector<uint32_t>>> value_lists_per_row;
     {
         value_lists_per_row.resize(noneable_row_infos.size());
 
@@ -189,7 +189,7 @@ bool ParsePersonalTable(
             return false;
         }
 
-        vector<int> num_options_per_field;
+        vector<uint32_t> num_options_per_field;
         num_options_per_field.reserve(noneable_row_infos[0].fields.size());
         for (auto& options : options_per_noneable_field) {
             num_options_per_field.emplace_back(options.size());

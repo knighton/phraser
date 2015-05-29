@@ -119,7 +119,7 @@ int main(int argc, char* argv[]) {
     };
 
     vector<string> comment_ff;
-    for (auto i = 1u; i < argc; ++i) {
+    for (auto i = 1u; i < static_cast<uint32_t>(argc); ++i) {
         comment_ff.emplace_back(argv[i]);
     }
 

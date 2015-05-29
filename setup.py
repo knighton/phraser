@@ -11,16 +11,10 @@ SRC_ROOT = 'phraser/'
 # 2. Max out warnings.
 # 3. Disable some warnings.
 # 4. Disable more warnings for LAPOS.
-COMMON_FLAGS = ("""
+COMMON_BASE_FLAGS = ("""
     -std=c++11
     -O3
     -I%s
-
-    -Wpedantic
-    -Wall
-    -Wextra
-
-    -Wno-padded
 """ % SRC_ROOT).split()
 
 
@@ -35,9 +29,17 @@ COMMON_LAPOS_FLAGS = """
 """.split()
 
 
-CLANG_FLAGS = """
+CLANG_BASE_FLAGS = """
+    -Wall
+    -Wextra
+    -Wpedantic
     -Werror
     -Weverything
+""".split()
+
+
+CLANG_DISABLE_FLAGS = """
+    -Wno-padded
     -fcolor-diagnostics
     -ferror-limit=5
     -Wno-c++98-compat-pedantic
@@ -67,18 +69,47 @@ def find_cc_files(root_dir):
     return ff
 
 
+UBUNTU_VERSION_F = '/etc/lsb-release'
+RELEASE_FIELD_NAME = 'DISTRIB_RELEASE'
+
+
+def get_ubuntu_release():
+    with open(UBUNTU_VERSION_F) as f:
+        lines = f.readlines()
+    kk_vv = map(lambda s: s.split('='), lines)
+    k2v = dict(kk_vv)
+    release = k2v[RELEASE_FIELD_NAME]
+    nn = map(int, release.split('.'))
+    assert len(nn) == 2
+    return nn
+
+
+def is_ubuntu_old():
+    try:
+        major, minor = get_ubuntu_release()
+    except:
+        return False  # Guess it's recent.
+
+    return major < 13  # Compat required.
+
+
 if platform.system() == 'Darwin':
     os.environ['CC'] = 'clang++'
     os.environ['CXX'] = 'clang++'
 else:
-    os.environ['CC'] = 'g++'
-    os.environ['CXX'] = 'g++'
+    if is_ubuntu_old():
+        os.environ['CC'] = 'g++-4.7'
+        os.environ['CXX'] = 'g++-4.7'
+    else:
+        os.environ['CC'] = 'g++'
+        os.environ['CXX'] = 'g++'
 
 
-if os.environ.get('CXX', None) == 'clang++':
-    FLAGS = COMMON_FLAGS + COMMON_LAPOS_FLAGS + CLANG_FLAGS + CLANG_LAPOS_FLAGS
+if os.environ.get('CXX') == 'clang++':
+    FLAGS = COMMON_BASE_FLAGS + CLANG_BASE_FLAGS + COMMON_LAPOS_FLAGS + \
+            CLANG_DISABLE_FLAGS + CLANG_LAPOS_FLAGS
 else:
-    FLAGS = COMMON_FLAGS + COMMON_LAPOS_FLAGS
+    FLAGS = COMMON_BASE_FLAGS + COMMON_LAPOS_FLAGS
 
 
 phraser = Extension(
@@ -92,7 +123,7 @@ phraser = Extension(
 
 setup(
     name='phraser',
-    version='0.1.3',
+    version='0.1.6',
     author='James Knighton',
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',

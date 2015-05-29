@@ -508,8 +508,6 @@ bool UnicodeManager::Normalize(
     case UNM_NFKC:
         Compose(nfkd_c2cc_, s);
         break;
-    default:
-        return false;
     }
 
     return true;

@@ -121,7 +121,7 @@ ucode utf8_nextCharSafeBody(
             (__t2=(uint8_t)((s)[(i)+1]-0x80))<= 0x3f \
         ) { \
             /* no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (ucode) */ \
-            (c)=(ucode)(((c)<<12)|(__t1<<6)|__t2); \
+            (c)=(ucode)(((c)<<12)|(ucode)(__t1<<6)|(ucode)__t2); \
             (c)%=0x10000; /* this line added by iamknighton@gmail.com to fix eg. U+2122 */ \
             (i)+=2; \
         } else if( /* handle U+0080..U+07FF inline */ \

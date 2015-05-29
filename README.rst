@@ -479,9 +479,9 @@ Correctness:
   marks into account.  Also do NFC normalization before calling it.
 
 Requirements
-^^^^^^^^^^^^
+~~~~~~~~~~~~
 
-Phraser is a nonessential python extension around a C++ codebase that uses several C++11 features.  You'll need python and a recent compiler.
+Phraser is a nonessential python extension around a C++ codebase that uses several C++11 features.  You'll need python and a recent C++ compiler.
 
 We support clang++ (Ubuntu and Mac OS X) and g++ (Ubuntu only), going back to g++ 4.7 (released March 2012) and clang++ 3.4 (released January 2014).  Earlier clang versions could probably be supported by dropping some flags.  Further than that would require nontrivial code changes.
 

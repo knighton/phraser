@@ -482,15 +482,15 @@ Correctness:
 Release notes
 ~~~~~~~~~~~~~
 
-0.1.1 Planned
-^^^^^^^^^^^^^
+Further planned
+^^^^^^^
 
 -  Destuttering handles bigrams ("hahahahaha" → "haha").
 -  Destuttering handles symbols ("😋😋😋" → "😋").
 -  Added basic textspeak normalization.
 
-0.1.0 Planned
-^^^^^^^^^^^^^
+Planned
+^^^^^^^
 
 User visible:
 
@@ -503,6 +503,37 @@ Backend:
 * English contractions are automatically replaced with their uncontracted equivalents.
 * All-at-once expressions removed (use dynamic expressions instead).
 * Tagging is now done automatically in the frontend.
+
+0.1.5 (2015-05-27)
+^^^^^^^^^^^^^^^^^^
+
+- Have setup.py default to building the python extension using g++-4.7 when not on Darwin in order for build_ext to work on an older system.  build_ext is now broken on python 2.7.8.
+
+0.1.4 (2015-05-27)
+^^^^^^^^^^^^^^^^^^
+
+- Add support for g++ 4.7 and 4.8 when on Linux (tested versions: 4.7.4-2ubuntu1, 4.8.3-12ubuntu3).
+
+0.1.3 (2015-05-22)
+^^^^^^^^^^^^^^^^^^
+
+- Add support for g++ when on Linux (tested version: 4.9.1-16ubuntu6).
+
+0.1.2 (2015-05-22)
+^^^^^^^^^^^^^^^^^^
+
+- Fix release: add graft command.
+
+0.1.1 (2015-05-22)
+^^^^^^^^^^^^^^^^^^
+
+- Fix release: package the header files as well.
+
+0.1.0 (2015-05-22)
+^^^^^^^^^^^^^^^^^^
+
+- Rewrite the python extension to return an object that contains the state, instead of calling init at the module level.
+- Add valgrind invocations.
 
 0.0.3 (2015-05-11)
 ^^^^^^^^^^^^^^^^^^

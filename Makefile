@@ -80,7 +80,7 @@ coverage: test
 	open cover/index.html
 endif
 
-test: extras
+test: extras build_ext
 	$(PYENV) nosetests $(NOSEARGS)
 	$(PYENV) py.test README.rst
 

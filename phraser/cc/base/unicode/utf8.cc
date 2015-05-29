@@ -44,7 +44,7 @@
     (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
 */
 
-#define U_SENTINEL (-1)
+#define U_SENTINEL static_cast<ucode>(~0u)
 
 static const ucode
 utf8_minLegal[4]={ 0, 0x80, 0x800, 0x10000 };

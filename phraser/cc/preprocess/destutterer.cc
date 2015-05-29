@@ -40,7 +40,7 @@ bool Destutterer::Destutter(
     ucode prev_c = in[0];
     out->emplace_back(prev_c);
     out2in->emplace_back(0);
-    auto run_length = 1;
+    auto run_length = 1u;
     for (auto i = 1u; i < in.size(); ++i) {
         auto& c = in[i];
 

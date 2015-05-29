@@ -36,12 +36,10 @@ void Replace(string& s, const string& s1, const string& s2, const char skip=0,
 }
 
 void SeparateCommas(string& s) {
-    const int n = s.size();
-
     string t;
-    for (int i = 0; i < n; i++) {
+    for (auto i = 0u; i < s.size(); i++) {
         if (s[i] == ',') {
-            if (!(i > 0 && isdigit(s[i - 1]) && i < n - 1 &&
+            if (!(i > 0 && isdigit(s[i - 1]) && i < s.size() - 1 &&
                   isdigit(s[i + 1]))) {
                 t += " , ";
                 continue;
@@ -91,21 +89,23 @@ void ReallyTokenize(const string& input_text, vector<string>* out) {
     Replace(s, "%", " % ");
     Replace(s, "&", " & ");
 
-    int pos = s.size() - 1;
-    while (pos > 0 && s[pos] == ' ') {
-        pos--;
-    }
-    while (pos > 0) {
-        char c = s[pos];
-        if (c == '[' || c == ']' || c == ')' || c == '}' || c == '>' ||
-            c == '"' || c == '\'') {
+    size_t pos = s.size() - 1;
+    if (pos != ~0ul) {
+        while (pos > 0 && s[pos] == ' ') {
             pos--;
-            continue;
         }
-        break;
-    }
-    if (s[pos] == '.' && !(pos > 0 && s[pos - 1] == '.')) {
-        s.replace(pos, 1, " .");
+        while (pos > 0) {
+            char c = s[pos];
+            if (c == '[' || c == ']' || c == ')' || c == '}' || c == '>' ||
+                c == '"' || c == '\'') {
+                pos--;
+                continue;
+            }
+            break;
+        }
+        if (s[pos] == '.' && !(pos > 0 && s[pos - 1] == '.')) {
+            s.replace(pos, 1, " .");
+        }
     }
 
     Replace(s, "?", " ? ");

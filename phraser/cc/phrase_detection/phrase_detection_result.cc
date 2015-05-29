@@ -8,7 +8,7 @@ json::Object* PhraseMatch::ToJSON() const {
         *reinterpret_cast<const vector<uint64_t>*>(&piece_begin_indexes);
     return new json::Object({
         {"piece_begin_indexes", new json::Object(tmp)},
-        {"end_excl", new json::Object(end_excl)},
+        {"end_excl", new json::Object(static_cast<int64_t>(end_excl))},
     });
 }
 

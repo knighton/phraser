@@ -42,12 +42,7 @@ COMMON_FLAGS = \
 	-Wno-covered-switch-default \
 	-Wno-padded \
 	-Wno-unknown-pragmas \
-
-COMMON_LAPOS_FLAGS = \
-	-Wno-sign-conversion \
 	-Wno-old-style-cast \
-	-Wno-sign-compare \
-	-Wno-float-equal \
 	-Wno-unused-variable \
 	-Wno-unused-parameter \
 	-Wno-unused-function \
@@ -61,15 +56,13 @@ CLANG_FLAGS = \
 	-Wno-weak-vtables \
 	-Wno-global-constructors \
 	-Wno-implicit-fallthrough \
-
-CLANG_LAPOS_FLAGS = \
 	-Wno-exit-time-destructors \
 	-Wno-shorten-64-to-32 \
 
 ifeq ($(USE_CLANG), 1)
-	CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS) $(CLANG_FLAGS) $(CLANG_LAPOS_FLAGS)
+	CC_FLAGS = $(COMMON_FLAGS) $(CLANG_FLAGS)
 else
-	CC_FLAGS = $(COMMON_FLAGS) $(COMMON_LAPOS_FLAGS)
+	CC_FLAGS = $(COMMON_FLAGS)
 endif
 
 LD_FLAGS = -lboost_regex

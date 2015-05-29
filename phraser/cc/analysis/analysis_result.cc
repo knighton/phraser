@@ -22,7 +22,7 @@ json::Object* AnalysisResult::ToJSON() const {
     map<string, json::Object*> chr2drop_j;
     for (auto& it : chr2drop) {
         auto chr_s = strings::StringPrintf("0x", it.first);
-        chr2drop_j[chr_s] = new json::Object(it.second);
+        chr2drop_j[chr_s] = new json::Object(static_cast<int64_t>(it.second));
     }
 
     vector<json::Object*> token2clean_j;
@@ -63,7 +63,7 @@ static char PrintableAsciiOnly(ucode c) {
 static void PrintableAsciiOnly(const string& in, string* out) {
     out->clear();
     for (auto& c : in) {
-        *out += PrintableAsciiOnly(c);
+        *out += PrintableAsciiOnly(static_cast<ucode>(c));
     }
 }
 

@@ -37,7 +37,7 @@ static bool ParseLine(const ustring& line, Comment* comment, string* error) {
     }
 
     vector<string> tags;
-    for (auto i = 0; i < count; ++i) {
+    for (auto i = 0u; i < count; ++i) {
         while (x < line.size() && (c = line[x]) == ' ') {
             ++x;
         }

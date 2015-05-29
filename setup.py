@@ -105,7 +105,7 @@ else:
         os.environ['CXX'] = 'g++'
 
 
-if os.environ.get('CXX', None) == 'clang++':
+if os.environ.get('CXX') == 'clang++':
     FLAGS = COMMON_BASE_FLAGS + CLANG_BASE_FLAGS + COMMON_LAPOS_FLAGS + \
             CLANG_DISABLE_FLAGS + CLANG_LAPOS_FLAGS
 else:

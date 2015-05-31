@@ -96,8 +96,7 @@ nuke: clean
 clean:
 	python setup.py clean
 	rm -rf dist build $(BIN_DIR)
-	find . -path ./env -prune -o -type f -name "*.pyc" -exec rm {} \;
-	find . -path ./env -prune -o -type f -name "*.so" -exec rm {} \;
+	find . -path ./env -prune -o -type f -regex '.*\.pyc' -or -regex '.*\.so' -exec rm {} \;
 
 CC_SOURCES = $(shell find $(SRC_ROOT) -name "*.cc")
 O_INTERMEDIATES := $(patsubst $(SRC_ROOT)/%,$(BUILD_DIR)/%,$(CC_SOURCES:.cc=.o))
@@ -126,8 +125,8 @@ memcheck_python: build_ext
 
 develop:
 	@echo "Installing for " `which pip`
-	pip uninstall $(PYMODULE) || true
-	python setup.py develop
+	-pip uninstall --yes $(PYMODULE)
+	pip install -e .
 
 .PHONY: build_ext
 build_ext phraser/phraserext.so: env

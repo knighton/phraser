@@ -12,8 +12,6 @@ dependencies:
 test:
   override:
     - make test
-  post:
-    - make package
 
 deployment:
   production:
@@ -25,4 +23,3 @@ deployment:
 general:
   artifacts:
     - "cover"
-    - "dist"

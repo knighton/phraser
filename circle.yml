@@ -7,11 +7,20 @@ dependencies:
   override:
     - make extras
 
+test:
+  override:
+    - make test
+  post:
+    - make package
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - bash create_pypirc.sh
+      - make release
+
 general:
   artifacts:
     - "cover"
     - "dist"
-
-test:
-  override:
-    - make test

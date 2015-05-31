@@ -4,6 +4,7 @@ dependencies:
   pre:
     - sudo apt-get update
     - sudo apt-get install g++-4.7
+    - sudo apt-get install libboost1.55-all-dev
   override:
     - make extras
 

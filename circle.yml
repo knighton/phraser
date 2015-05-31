@@ -1,0 +1,17 @@
+dependencies:
+  cache_directories:
+    - "env"
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install g++-4.7
+  override:
+    - make extras
+
+general:
+  artifacts:
+    - "cover"
+    - "dist"
+
+test:
+  override:
+    - make test

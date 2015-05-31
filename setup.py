@@ -1,7 +1,18 @@
 from setuptools import setup, Extension, find_packages
+from setuptools.dist import Distribution
 from pkg_resources import resource_string
 import os
 import platform
+
+
+class BinaryDistribution(Distribution):
+    """
+    Subclass the setuptools Distribution to flip the purity flag to false.
+    See http://lucumr.pocoo.org/2014/1/27/python-on-wheels/
+    """
+    def is_pure(self):
+        # TODO: verify whether this is still necessary in Python v2.7
+        return False
 
 
 SRC_ROOT = 'phraser/'
@@ -107,7 +118,7 @@ else:
 
 if os.environ.get('CXX') == 'clang++':
     FLAGS = COMMON_BASE_FLAGS + CLANG_BASE_FLAGS + COMMON_LAPOS_FLAGS + \
-            CLANG_DISABLE_FLAGS + CLANG_LAPOS_FLAGS
+        CLANG_DISABLE_FLAGS + CLANG_LAPOS_FLAGS
 else:
     FLAGS = COMMON_BASE_FLAGS + COMMON_LAPOS_FLAGS
 
@@ -123,7 +134,7 @@ phraser = Extension(
 
 setup(
     name='phraser',
-    version='0.1.6',
+    version='0.1.8',
     author='James Knighton',
     author_email='iamknighton@gmail.com',
     description='Detects phrases in English text',
@@ -131,4 +142,5 @@ setup(
     packages=find_packages(exclude=['tests', 'scripts']),
     ext_modules=[phraser],
     long_description=resource_string(__name__, 'README.rst'),
+    distclass=BinaryDistribution,
 )

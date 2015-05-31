@@ -1,0 +1,25 @@
+dependencies:
+  cache_directories:
+    - "env"
+  pre:
+    - yes | sudo add-apt-repository ppa:boost-latest/ppa
+    - sudo apt-get update
+    - sudo apt-get install g++-4.7
+    - sudo apt-get install libboost1.55-all-dev
+  override:
+    - make extras
+
+test:
+  override:
+    - make test
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - bash create_pypirc.sh
+      - make release
+
+general:
+  artifacts:
+    - "cover"

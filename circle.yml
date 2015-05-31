@@ -7,11 +7,13 @@ dependencies:
   override:
     - make extras
 
+test:
+  override:
+    - make test
+  post:
+    - make package
+
 general:
   artifacts:
     - "cover"
     - "dist"
-
-test:
-  override:
-    - make test

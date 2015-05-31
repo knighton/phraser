@@ -13,6 +13,13 @@ test:
   post:
     - make package
 
+deployment:
+  production:
+    branch: master
+    commands:
+      - bash create_pypirc.sh
+      - make release
+
 general:
   artifacts:
     - "cover"

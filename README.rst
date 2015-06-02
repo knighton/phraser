@@ -512,6 +512,21 @@ Backend:
 * All-at-once expressions removed (use dynamic expressions instead).
 * Tagging is now done automatically in the frontend.
 
+0.1.9 (2015-05-31)
+^^^^^^^^^^^^^^^^^^
+
+- Fix release: Circle CI deployment.
+
+0.1.8 (2015-05-30)
+^^^^^^^^^^^^^^^^^^
+
+- CircleCI deployment.
+
+0.1.7 (2015-05-30)
+^^^^^
+
+- Testing CircleCI deployment.
+
 0.1.6 (2015-05-28)
 ^^^^^^^^^^^^^^^^^^
 

@@ -35,15 +35,22 @@ def date_from_file_name(s):
 
 
 def tags_from_log(j):
-    # tags = j['magicmod']['result']['tags']
     try:
-        tags = j['impermium']['result']['tags']
+        return j['magicmod']['result']['tags']
     except:
-        try:
-            tags = j['impermium']['result']['4.0']['tags']
-        except:
-            tags = None
-    return tags
+        pass
+
+    try:
+        return j['impermium']['result']['tags']
+    except:
+        pass
+
+    try:
+        return j['impermium']['result']['4.0']['tags']
+    except:
+        pass
+
+    return None
 
 
 def main(args):
@@ -51,8 +58,13 @@ def main(args):
     f2key2stuff = defaultdict(dict)
     threat_tags = ['mild_threat', 'strong_threat', 'threat']
     for file_name in sorted(glob(args.in_glob)):
+        no_content = 0
         date = date_from_file_name(file_name)
-        f = open('%s%s.txt' % (args.out_prefix, date), 'wb')
+        fn = '%s%s.txt' % (args.out_prefix, date)
+        if os.path.exists(fn):
+            print '%s exists, skipping...' % fn
+            continue
+        f = open(fn, 'wb')
         no_tags_field = 0
         ok = 0
         tag2count = defaultdict(int)
@@ -68,12 +80,22 @@ def main(args):
 
             tags = map(lambda tag: tag.encode('utf-8'), tags)
             num_tags = str(len(tags))
-            text = j['object']['content']
+            try:
+                text = j['object']['content']
+            except:
+                no_content += 1
+                continue
             text = ' '.join(text.split()).encode('utf-8')
 
             line = ' '.join([num_tags] + tags + [text])
             f.write('%s\n' % line)
             ok += 1
+
+        # Sanity checks.
+        if ok:
+            assert no_tags_field < ok
+        assert no_content < 5
+
         f2key2stuff[file_name]['ok'] = ok
         f2key2stuff[file_name]['no_tags_field'] = no_tags_field
         f2key2stuff[file_name]['tag2count'] = tag2count
@@ -82,6 +104,7 @@ def main(args):
             'time': t1 - t0,
             'file_name': file_name,
             'f2key2stuff': f2key2stuff[file_name],
+            'no_content': no_content,
         })
         f.close()
     print json.dumps(f2key2stuff, indent=4)

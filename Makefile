@@ -48,9 +48,7 @@ COMMON_FLAGS = \
 	-Wno-unused-function \
 
 CLANG_FLAGS = \
-	-Werror \
 	-Wpedantic \
-	-Weverything \
 	-fcolor-diagnostics \
 	-ferror-limit=5 \
 	-Wno-weak-vtables \
